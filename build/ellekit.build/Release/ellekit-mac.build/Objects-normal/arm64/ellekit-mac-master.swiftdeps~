@@ -1,0 +1,13 @@
+version: "Apple Swift version 5.7.1 (swiftlang-5.7.1.135.2 clang-1400.0.29.51)"
+options: "6a5a8f46091c90efa0c8b3e354d0ffe927204bd95fd58e86418e29f61c6c9182"
+build_start_time: [1667090718, 332211017]
+build_end_time: [1667090718, 348113059]
+inputs:
+  "/Users/charlotte/Developer/ellekit/ellekit/Branches.swift": !dirty [1667006855, 434830188]
+  "/Users/charlotte/Developer/ellekit/ellekit/Hook.swift": !dirty [1667087821, 73086738]
+  "/Users/charlotte/Developer/ellekit/ellekit/Math.swift": !dirty [1666092598, 301937818]
+  "/Users/charlotte/Developer/ellekit/ellekit/MobileSubstrate.swift": !dirty [1667088667, 709177017]
+  "/Users/charlotte/Developer/ellekit/ellekit/Register.swift": !dirty [1666092598, 310293197]
+  "/Users/charlotte/Developer/ellekit/ellekit/ellekit.swift": !dirty [1667006093, 320352554]
+  "/Users/charlotte/Developer/ellekit/ellekit/exec.swift": !dirty [1667007793, 44042587]
+  "/Users/charlotte/Developer/ellekit/ellekit/main.swift": !dirty [1667087561, 563290596]

@@ -1,0 +1,126 @@
+//
+//  Branches.swift
+//  Assembler
+//
+//  Created by evelyn on 2022-10-28.
+//
+
+func disassembleBranchImm(_ opcode: UInt64) -> UInt64 {
+    let imm = bits(UInt64(reverse(Int(opcode))), 0, 25);
+        
+    return UInt64(sign_extend(Int(imm << 2), 28))
+}
+
+func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: UnsafeMutableRawPointer) -> [UInt8] {
+    let pcRel = disassembleBranchImm(isn)
+
+    let originalTarget = Int(UInt(bitPattern: target)) + (Int(pcRel) * 4)
+    let newTarget = (Int(UInt(bitPattern: originalTarget)) - Int(UInt(bitPattern: ptr))) / 4
+    
+    print("Targeted:", target)
+    
+    print("Now targeting:", newTarget)
+    
+    let offset = calculateOffset(ptr, UnsafeMutableRawPointer(bitPattern: originalTarget)!)
+    
+    var code = [UInt8]()
+    if (offset / 1024 / 1024) > 128 { // 128mb tiny branch not allowed
+        @InstructionBuilder
+        var codeBuilt: [UInt8] {
+            movz(.x16, 0)
+            movk(.x16, originalTarget % 65536)
+            movk(.x16, (originalTarget / 65536) % 65536, lsl: 16)
+            movk(.x16, ((originalTarget / 65536) / 65536) % 65536, lsl: 32)
+            movk(.x16, ((originalTarget / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
+            br(.x16)
+        }
+        code = codeBuilt
+    } else {
+        @InstructionBuilder
+        var codeBuilt: [UInt8] {
+            b(offset)
+        }
+        code = codeBuilt
+    }
+    return code
+}
+
+class b: Instruction {
+    required init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    init(_ addr: Int) {
+        var base = Self.base
+        base |= (addr & 0x3ffffff)
+        self.value = reverse(base)
+    }
+    
+    static let base = 0b0_00101_00000000000000000000000000
+}
+
+class bl: Instruction {
+    required init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    init(_ addr: Int) {
+        var base = Self.base
+        base |= addr
+        self.value = reverse(base)
+    }
+    
+    static let base = 0b1_00101_00000000000000000000000000
+}
+
+class blr: Instruction {
+    required init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    init(_ register: Register) {
+        var base = Self.base
+        base |= (register.value << 5)
+        self.value = reverse(base)
+    }
+    
+    static let base = 0b1101011_0_0_01_11111_0000_0_0_00000_00000
+}
+
+class br: Instruction {
+    required init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    init(_ register: Register) {
+        var base = Self.base
+        base |= register.value << 5
+        self.value = reverse(base)
+    }
+    
+    static let base = 0b1101011_0_0_00_11111_0000_0_0_00000_00000
+}

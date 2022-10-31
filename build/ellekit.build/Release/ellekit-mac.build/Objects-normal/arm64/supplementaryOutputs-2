@@ -1,0 +1,8 @@
+"/Users/charlotte/Developer/ellekit/ellekit/MobileSubstrate.swift":
+  objc-header: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac-Swift.h"
+  dependencies: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit-mac-master.d"
+  abi-baseline-json: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.abi.json"
+  swiftdoc: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftdoc"
+  swiftmodule: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftmodule"
+  swiftsourceinfo: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftsourceinfo"
+  diagnostics: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit-mac-master.dia"

@@ -7,7 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
+		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
+		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E92AA8B290D47540018604C /* ellekit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* ellekit.swift */; };
+		9E92AA9D290D4A040018604C /* Assembly.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* Assembly.c */; };
+		9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
+		9E92AA9F290D4A040018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
+		9E92AAA0290D4A040018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
+		9E92AAA1290D4A040018604C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
+		9E92AAA2290D4A040018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
+		9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
+		9E92AAAE290D4E7A0018604C /* Assembly.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* Assembly.c */; };
+		9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
+		9E92AAB0290D4E7A0018604C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
+		9E92AAB1290D4E7A0018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
+		9E92AAB3290D4E7A0018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
+		9E92AAB4290D4E7A0018604C /* ellekit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* ellekit.swift */; };
+		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9E92AAB6290D4E7A0018604C /* ellekit-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +43,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
+		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* ellekit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ellekit.swift; sourceTree = "<group>"; };
+		9E92AA95290D4A040018604C /* Assembly.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Assembly.c; sourceTree = "<group>"; };
+		9E92AA96290D4A040018604C /* MobileSubstrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileSubstrate.swift; sourceTree = "<group>"; };
+		9E92AA97290D4A040018604C /* exec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = exec.swift; sourceTree = "<group>"; };
+		9E92AA98290D4A040018604C /* Register.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
+		9E92AA99290D4A040018604C /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
+		9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ellekit-Bridging-Header.h"; sourceTree = "<group>"; };
+		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
+		9E92AAA9290D4E680018604C /* libellekit-mac.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libellekit-mac.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,9 +66,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9E92AAA7290D4E680018604C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E48018C290FE5C3007E433F /* PAC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PAC;
+			sourceTree = "<group>";
+		};
 		9E92AA7E290D47540018604C = {
 			isa = PBXGroup;
 			children = (
@@ -50,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				9E92AA87290D47540018604C /* libellekit.a */,
+				9E92AAA9290D4E680018604C /* libellekit-mac.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,12 +103,34 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
+				9E48018C290FE5C3007E433F /* PAC */,
 				9E92AA8A290D47540018604C /* ellekit.swift */,
+				9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */,
+				9E92AA95290D4A040018604C /* Assembly.c */,
+				9E92AA9A290D4A040018604C /* Branches.swift */,
+				9E92AA97290D4A040018604C /* exec.swift */,
+				9E92AAA3290D4A1C0018604C /* Hook.swift */,
+				9E92AA99290D4A040018604C /* Math.swift */,
+				9E92AA96290D4A040018604C /* MobileSubstrate.swift */,
+				9E92AA98290D4A040018604C /* Register.swift */,
+				9E698575290DFB5000408E14 /* Libhooker.swift */,
+				9E698578290EC91700408E14 /* Sizing.swift */,
 			);
 			path = ellekit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9E92AAA5290D4E680018604C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E92AAB6290D4E7A0018604C /* ellekit-Bridging-Header.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		9E92AA86290D47540018604C /* ellekit */ = {
@@ -82,6 +150,23 @@
 			productReference = 9E92AA87290D47540018604C /* libellekit.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		9E92AAA8290D4E680018604C /* ellekit-mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E92AAAA290D4E680018604C /* Build configuration list for PBXNativeTarget "ellekit-mac" */;
+			buildPhases = (
+				9E92AAA5290D4E680018604C /* Headers */,
+				9E92AAA6290D4E680018604C /* Sources */,
+				9E92AAA7290D4E680018604C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ellekit-mac";
+			productName = "ellekit-mac";
+			productReference = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -93,6 +178,10 @@
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					9E92AA86290D47540018604C = {
+						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1410;
+					};
+					9E92AAA8290D4E680018604C = {
 						CreatedOnToolsVersion = 14.1;
 					};
 				};
@@ -111,6 +200,7 @@
 			projectRoot = "";
 			targets = (
 				9E92AA86290D47540018604C /* ellekit */,
+				9E92AAA8290D4E680018604C /* ellekit-mac */,
 			);
 		};
 /* End PBXProject section */
@@ -120,7 +210,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E92AAA0290D4A040018604C /* Register.swift in Sources */,
+				9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */,
+				9E92AAA1290D4A040018604C /* Math.swift in Sources */,
+				9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */,
+				9E92AA9F290D4A040018604C /* exec.swift in Sources */,
+				9E92AA9D290D4A040018604C /* Assembly.c in Sources */,
+				9E698576290DFB5000408E14 /* Libhooker.swift in Sources */,
 				9E92AA8B290D47540018604C /* ellekit.swift in Sources */,
+				9E92AAA2290D4A040018604C /* Branches.swift in Sources */,
+				9E698579290EC91700408E14 /* Sizing.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E92AAA6290D4E680018604C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
+				9E92AAB3290D4E7A0018604C /* exec.swift in Sources */,
+				9E92AAB4290D4E7A0018604C /* ellekit.swift in Sources */,
+				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
+				9E92AAAE290D4E7A0018604C /* Assembly.c in Sources */,
+				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
+				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
+				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
+				9E92AAB1290D4E7A0018604C /* Register.swift in Sources */,
+				9E69857A290ECAE500408E14 /* Sizing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,10 +360,23 @@
 		9E92AA8F290D47540018604C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -256,12 +385,64 @@
 		9E92AA90290D47540018604C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9E92AAAB290D4E680018604C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "";
+				STRIP_SWIFT_SYMBOLS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9E92AAAC290D4E680018604C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "";
+				STRIP_SWIFT_SYMBOLS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -282,6 +463,15 @@
 			buildConfigurations = (
 				9E92AA8F290D47540018604C /* Debug */,
 				9E92AA90290D47540018604C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E92AAAA290D4E680018604C /* Build configuration list for PBXNativeTarget "ellekit-mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E92AAAB290D4E680018604C /* Debug */,
+				9E92AAAC290D4E680018604C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
