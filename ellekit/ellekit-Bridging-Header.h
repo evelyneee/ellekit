@@ -7,6 +7,8 @@
 
 #import "API/libhooker.h"
 
+#import <mach-o/dyld.h>
+
 extern int hook(void* target, const unsigned char code[], mach_vm_size_t size);
 
 extern const void* assembly(const unsigned char code[], size_t);

@@ -12,6 +12,8 @@ let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLay
 
 public func registerEXCPort() {
     
+    _ = slide
+    
     var exceptionPort = mach_port_t()
         
     mach_port_allocate(mach_task_self_, MACH_PORT_RIGHT_RECEIVE, &exceptionPort)
@@ -40,7 +42,6 @@ public func registerEXCPort() {
                                              capacity: 0x4000) { $0.pointee }
             
             let thread_port = req.thread.name
-            let task_port = req.task.name
                         
             defer {
                 var reply = exception_raise_reply()
@@ -60,8 +61,8 @@ public func registerEXCPort() {
                                mach_port_name_t(MACH_PORT_NULL),
                                MACH_MSG_TIMEOUT_NONE,
                                mach_port_name_t(MACH_PORT_NULL))
-                mach_port_deallocate(mach_task_self_, thread_port)
-                mach_port_deallocate(mach_task_self_, task_port)
+                
+                print("[*] Sending reply")
                 
                 if ret != KERN_SUCCESS {
                     print("[-] error sending reply to exception: ", mach_error_string(ret) ?? "")
@@ -77,23 +78,28 @@ public func registerEXCPort() {
                 }
             }
             
-            let formerPtr = UnsafeMutableRawPointer(bitPattern: UInt(state.__pc))!
+            guard let formerPtr = UnsafeMutableRawPointer(bitPattern: UInt(state.__pc)) else {
+                print("[-] couldn't get ptr from pc reg")
+                return
+            }
                         
-            print(state)
-            
-            if let newPtr = hooks[formerPtr] {
+            if let newPtr = hooks[formerPtr] ?? hooks.first?.value {
                 print("[+] changed pc to", newPtr)
                 state.__pc = UInt64(UInt(bitPattern: newPtr))
-            }
-                                
-            ret = withUnsafeMutablePointer(to: &state, {
-                $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size, {
-                    thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
+                state.__x.16 = UInt64(UInt(bitPattern: newPtr))
+                
+                ret = withUnsafeMutablePointer(to: &state, {
+                    $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size, {
+                        return thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
+                    })
                 })
-            })
+                
+            } else {
+                fatalError("[-] ellekit: called exc handler with unknown function")
+            }
             
             thread_resume(thread_port)
-                        
+            
             guard ret == KERN_SUCCESS else {
                 print("[-] error getting thread state:", mach_error_string(ret) ?? "")
                 continue

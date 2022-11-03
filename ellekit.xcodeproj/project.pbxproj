@@ -16,10 +16,6 @@
 		9E48019D2910A076007E433F /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9E48019F2911EB20007E433F /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
 		9E4801A12911EB37007E433F /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
-		9E4801A42913C7E1007E433F /* Exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A32913C7E1007E433F /* Exception.c */; };
-		9E4801A52913CD1F007E433F /* Exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A32913C7E1007E433F /* Exception.c */; };
-		9E4801A72913D12D007E433F /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A62913D12D007E433F /* routines.s */; };
-		9E4801A82913D16D007E433F /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A62913D12D007E433F /* routines.s */; };
 		9E4801AA2913E0F7007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AD2913EB83007E433F /* Hooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Hooks.swift */; };
@@ -65,8 +61,6 @@
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
 		9E48019E2911EB20007E433F /* Orig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orig.swift; sourceTree = "<group>"; };
-		9E4801A32913C7E1007E433F /* Exception.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Exception.c; sourceTree = "<group>"; };
-		9E4801A62913D12D007E433F /* routines.s */ = {isa = PBXFileReference; explicitFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4801A92913E0F7007E433F /* Exception.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
 		9E4801AC2913EB83007E433F /* Hooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hooks.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
@@ -178,8 +172,6 @@
 				9E92AA97290D4A040018604C /* exec.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
-				9E4801A32913C7E1007E433F /* Exception.c */,
-				9E4801A62913D12D007E433F /* routines.s */,
 				9E4801A92913E0F7007E433F /* Exception.swift */,
 				9E4801AC2913EB83007E433F /* Hooks.swift */,
 			);
@@ -283,11 +275,9 @@
 				9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAA1290D4A040018604C /* Math.swift in Sources */,
 				9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */,
-				9E4801A72913D12D007E433F /* routines.s in Sources */,
 				9E92AA9F290D4A040018604C /* exec.swift in Sources */,
 				9E48019129108EF0007E433F /* PAC.swift in Sources */,
 				9E48019F2911EB20007E433F /* Orig.swift in Sources */,
-				9E4801A42913C7E1007E433F /* Exception.c in Sources */,
 				9E92AA9D290D4A040018604C /* VM.c in Sources */,
 				9E698576290DFB5000408E14 /* Libhooker.swift in Sources */,
 				9E92AA8B290D47540018604C /* General.swift in Sources */,
@@ -308,11 +298,9 @@
 				9E92AAB3290D4E7A0018604C /* exec.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
-				9E4801A82913D16D007E433F /* routines.s in Sources */,
 				9E92AAAE290D4E7A0018604C /* VM.c in Sources */,
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
-				9E4801A52913CD1F007E433F /* Exception.c in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
