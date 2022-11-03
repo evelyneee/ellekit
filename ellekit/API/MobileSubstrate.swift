@@ -1,9 +1,3 @@
-//
-//  MobileSubstrate.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-29.
-//
 
 import ObjectiveC
 
@@ -29,13 +23,17 @@ public func MSHookFunction(_ symbol: UnsafeMutableRawPointer, _ replace: UnsafeM
     }
 }
 
+@_cdecl("MSHookClassPair")
+public func MSHookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: AnyClass) {
+    hookClassPair(targetClass, hookClass, baseClass)
+}
+
 @_cdecl("MSHookMessageEx")
-public func MSHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutableRawPointer) {
-    print(cls, sel, imp)
+public func MSHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     messageHook(cls, sel, imp, result)
 }
 
 @_cdecl("MSHookMemory")
 public func MSHookMemory(_ target: UnsafeMutableRawPointer, _ code: UnsafePointer<UInt8>!, _ size: mach_vm_size_t) {
-    hook(target, code, size)
+    hook(target.makeReadable(), code, size)
 }

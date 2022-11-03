@@ -1,9 +1,3 @@
-//
-//  exec.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-16.
-//
 
 import Foundation
 import Darwin
@@ -23,7 +17,7 @@ func executeAssemblyBytes(_ code: [UInt8]) {
     }
 }
 
-func execaWithRelativePtr(@InstructionBuilder _ instructions: (mach_vm_address_t) -> [UInt8]) {
+func execWithRelativePtr(@InstructionBuilder _ instructions: (mach_vm_address_t) -> [UInt8]) {
     
     var addr: mach_vm_address_t = 0;
     mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
@@ -52,17 +46,6 @@ func executeRawByteArray(_ code: UnsafePointer<UInt8>, _ codesize: Int) -> AnyOb
     return fn();
 }
 
-func executeVoidByteArray(_ code: UnsafePointer<UInt8>, _ codesize: Int) {
-    var addr: mach_vm_address_t = 0;
-    mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE);
-    memcpy(&addr, code, codesize);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
-    //now cast the address to a function pointer and call it
-    let fn = unsafeBitCast(addr, to: (@convention (c) () -> Void).self)
-    return fn();
-}
-
 func byteArray<T: FixedWidthInteger>(from value: T) -> [UInt8] {
     Array(withUnsafeBytes(of: value.bigEndian, Array.init).dropFirst(4))
 }
@@ -88,6 +71,14 @@ func dumpInstructions(_ array: [Instruction]) {
 
 @resultBuilder
 struct InstructionBuilder {
+    static func buildEither(first component: Instruction) -> Instruction {
+        component
+    }
+    
+    static func buildEither(second component: Instruction) -> Instruction {
+        component
+    }
+    
     static func buildBlock(_ components: Instruction...) -> [UInt8] {
         #if DEBUG
         dumpInstructions(components)

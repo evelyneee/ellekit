@@ -1,9 +1,3 @@
-//
-//  Branches.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-28.
-//
 
 func disassembleBranchImm(_ opcode: UInt64) -> UInt64 {
     let imm = bits(UInt64(reverse(Int(opcode))), 0, 25);
@@ -15,12 +9,7 @@ func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: Uns
     let pcRel = disassembleBranchImm(isn)
 
     let originalTarget = Int(UInt(bitPattern: target)) + (Int(pcRel) * 4)
-    let newTarget = (Int(UInt(bitPattern: originalTarget)) - Int(UInt(bitPattern: ptr))) / 4
-    
-    print("Targeted:", target)
-    
-    print("Now targeting:", newTarget)
-    
+        
     let offset = calculateOffset(ptr, UnsafeMutableRawPointer(bitPattern: originalTarget)!)
     
     var code = [UInt8]()
@@ -43,6 +32,13 @@ func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: Uns
         code = codeBuilt
     }
     return code
+}
+
+// PAC: strip before calling this function
+func calculateOffset(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPointer) -> Int {
+    let sign = target > replacement ? -1 : 1
+    let offsetAbs = abs((Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target)))) / 4
+    return offsetAbs * sign
 }
 
 class b: Instruction {

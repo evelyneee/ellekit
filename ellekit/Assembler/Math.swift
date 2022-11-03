@@ -1,9 +1,3 @@
-//
-//  Math.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-17.
-//
 
 import Foundation
 

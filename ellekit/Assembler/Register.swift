@@ -1,9 +1,3 @@
-//
-//  Register.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-16.
-//
 
 import Foundation
 

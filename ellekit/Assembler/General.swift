@@ -1,9 +1,3 @@
-//
-//  Assembler.swift
-//  Assembler
-//
-//  Created by evelyn on 2022-10-16.
-//
 
 import Foundation
 
@@ -39,21 +33,6 @@ extension Instruction {
         let result = reverse(base)
         return result
     }
-}
-
-func reverse(_ base: Int) -> Int {
-    ((base>>24)&0xff) | ((base<<8)&0xff0000) | ((base>>8)&0xff00) | ((base<<24)&0xff000000)
-}
-
-func encodeOperand(_ val: Int) -> Int {
-    if !(val != val & 0xFFFFFFFF) {
-        for offset in 0..<32 {
-            if (ror(val, offset) <= 0xFF) {
-                return ror(val, offset) | (16 - offset / 2) % 16 << 8
-            }
-        }
-    }
-    return 0
 }
 
 class ret: Instruction {
@@ -141,6 +120,10 @@ class bytes: Instruction {
         self.byteValues = bytes
     }
     
+    init(_ bytes: [UInt8]) {
+        self.byteValues = bytes
+    }
+    
     func bytes() -> [UInt8] {
         self.byteValues
     }
@@ -194,11 +177,10 @@ class ldr: Instruction {
     
     let value: Int
     
+    #warning("TODO: Fix ldr")
     init(_ rt: Register, _ rn: Register, _ offset: Int = 0) {
         let div = (rt.w ? 32 : 64) / 8
-        print(div)
         let offset = Double(offset) / Double(div)
-        print(offset)
         let size = rt.w ? 0x2 : 0x3
         var base = Self.base
         base |= size << 30

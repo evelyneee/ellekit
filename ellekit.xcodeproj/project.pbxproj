@@ -7,12 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E48019129108EF0007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
+		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
+		9E4801952910979A007E433F /* libhooker.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E48019429109772007E433F /* libhooker.h */; };
+		9E48019929109B83007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
+		9E48019A29109B96007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
+		9E48019C2910A04E007E433F /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
+		9E48019D2910A076007E433F /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
+		9E48019F2911EB20007E433F /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
+		9E4801A12911EB37007E433F /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
+		9E4801A42913C7E1007E433F /* Exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A32913C7E1007E433F /* Exception.c */; };
+		9E4801A52913CD1F007E433F /* Exception.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A32913C7E1007E433F /* Exception.c */; };
+		9E4801A72913D12D007E433F /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A62913D12D007E433F /* routines.s */; };
+		9E4801A82913D16D007E433F /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A62913D12D007E433F /* routines.s */; };
+		9E4801AA2913E0F7007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
+		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
+		9E4801AD2913EB83007E433F /* Hooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Hooks.swift */; };
+		9E4801AE2913ED56007E433F /* Hooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Hooks.swift */; };
 		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
-		9E92AA8B290D47540018604C /* ellekit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* ellekit.swift */; };
-		9E92AA9D290D4A040018604C /* Assembly.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* Assembly.c */; };
+		9E92AA8B290D47540018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
+		9E92AA9D290D4A040018604C /* VM.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* VM.c */; };
 		9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
 		9E92AA9F290D4A040018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
 		9E92AAA0290D4A040018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
@@ -20,12 +37,12 @@
 		9E92AAA2290D4A040018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
 		9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
 		9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
-		9E92AAAE290D4E7A0018604C /* Assembly.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* Assembly.c */; };
+		9E92AAAE290D4E7A0018604C /* VM.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* VM.c */; };
 		9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
 		9E92AAB0290D4E7A0018604C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
 		9E92AAB1290D4E7A0018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
 		9E92AAB3290D4E7A0018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
-		9E92AAB4290D4E7A0018604C /* ellekit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* ellekit.swift */; };
+		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
 		9E92AAB6290D4E7A0018604C /* ellekit-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */; };
 /* End PBXBuildFile section */
@@ -43,11 +60,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
+		9E48019429109772007E433F /* libhooker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libhooker.h; sourceTree = "<group>"; };
+		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
+		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
+		9E48019E2911EB20007E433F /* Orig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orig.swift; sourceTree = "<group>"; };
+		9E4801A32913C7E1007E433F /* Exception.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Exception.c; sourceTree = "<group>"; };
+		9E4801A62913D12D007E433F /* routines.s */ = {isa = PBXFileReference; explicitFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
+		9E4801A92913E0F7007E433F /* Exception.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
+		9E4801AC2913EB83007E433F /* Hooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hooks.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E92AA8A290D47540018604C /* ellekit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ellekit.swift; sourceTree = "<group>"; };
-		9E92AA95290D4A040018604C /* Assembly.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Assembly.c; sourceTree = "<group>"; };
+		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
+		9E92AA95290D4A040018604C /* VM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = VM.c; sourceTree = "<group>"; };
 		9E92AA96290D4A040018604C /* MobileSubstrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileSubstrate.swift; sourceTree = "<group>"; };
 		9E92AA97290D4A040018604C /* exec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = exec.swift; sourceTree = "<group>"; };
 		9E92AA98290D4A040018604C /* Register.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
@@ -79,8 +105,47 @@
 		9E48018C290FE5C3007E433F /* PAC */ = {
 			isa = PBXGroup;
 			children = (
+				9E48019029108EF0007E433F /* PAC.swift */,
 			);
 			path = PAC;
+			sourceTree = "<group>";
+		};
+		9E48019329109739007E433F /* API */ = {
+			isa = PBXGroup;
+			children = (
+				9E92AA96290D4A040018604C /* MobileSubstrate.swift */,
+				9E698575290DFB5000408E14 /* Libhooker.swift */,
+				9E48019429109772007E433F /* libhooker.h */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		9E48019629109B61007E433F /* Assembler */ = {
+			isa = PBXGroup;
+			children = (
+				9E92AA8A290D47540018604C /* General.swift */,
+				9E92AA9A290D4A040018604C /* Branches.swift */,
+				9E92AA99290D4A040018604C /* Math.swift */,
+				9E92AA98290D4A040018604C /* Register.swift */,
+			);
+			path = Assembler;
+			sourceTree = "<group>";
+		};
+		9E48019729109B77007E433F /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				9E48019829109B83007E433F /* Bits.swift */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
+		9E4801A02911EB29007E433F /* C */ = {
+			isa = PBXGroup;
+			children = (
+				9E92AAA3290D4A1C0018604C /* Hook.swift */,
+				9E48019E2911EB20007E433F /* Orig.swift */,
+			);
+			path = C;
 			sourceTree = "<group>";
 		};
 		9E92AA7E290D47540018604C = {
@@ -103,18 +168,20 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
+				9E4801A02911EB29007E433F /* C */,
+				9E48019729109B77007E433F /* Misc */,
+				9E48019629109B61007E433F /* Assembler */,
+				9E48019329109739007E433F /* API */,
 				9E48018C290FE5C3007E433F /* PAC */,
-				9E92AA8A290D47540018604C /* ellekit.swift */,
 				9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */,
-				9E92AA95290D4A040018604C /* Assembly.c */,
-				9E92AA9A290D4A040018604C /* Branches.swift */,
+				9E92AA95290D4A040018604C /* VM.c */,
 				9E92AA97290D4A040018604C /* exec.swift */,
-				9E92AAA3290D4A1C0018604C /* Hook.swift */,
-				9E92AA99290D4A040018604C /* Math.swift */,
-				9E92AA96290D4A040018604C /* MobileSubstrate.swift */,
-				9E92AA98290D4A040018604C /* Register.swift */,
-				9E698575290DFB5000408E14 /* Libhooker.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
+				9E48019B2910A04E007E433F /* Objective-C.swift */,
+				9E4801A32913C7E1007E433F /* Exception.c */,
+				9E4801A62913D12D007E433F /* routines.s */,
+				9E4801A92913E0F7007E433F /* Exception.swift */,
+				9E4801AC2913EB83007E433F /* Hooks.swift */,
 			);
 			path = ellekit;
 			sourceTree = "<group>";
@@ -126,6 +193,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E4801952910979A007E433F /* libhooker.h in Headers */,
 				9E92AAB6290D4E7A0018604C /* ellekit-Bridging-Header.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,16 +278,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E4801AD2913EB83007E433F /* Hooks.swift in Sources */,
 				9E92AAA0290D4A040018604C /* Register.swift in Sources */,
 				9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAA1290D4A040018604C /* Math.swift in Sources */,
 				9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */,
+				9E4801A72913D12D007E433F /* routines.s in Sources */,
 				9E92AA9F290D4A040018604C /* exec.swift in Sources */,
-				9E92AA9D290D4A040018604C /* Assembly.c in Sources */,
+				9E48019129108EF0007E433F /* PAC.swift in Sources */,
+				9E48019F2911EB20007E433F /* Orig.swift in Sources */,
+				9E4801A42913C7E1007E433F /* Exception.c in Sources */,
+				9E92AA9D290D4A040018604C /* VM.c in Sources */,
 				9E698576290DFB5000408E14 /* Libhooker.swift in Sources */,
-				9E92AA8B290D47540018604C /* ellekit.swift in Sources */,
+				9E92AA8B290D47540018604C /* General.swift in Sources */,
 				9E92AAA2290D4A040018604C /* Branches.swift in Sources */,
+				9E4801AA2913E0F7007E433F /* Exception.swift in Sources */,
 				9E698579290EC91700408E14 /* Sizing.swift in Sources */,
+				9E48019C2910A04E007E433F /* Objective-C.swift in Sources */,
+				9E48019929109B83007E433F /* Bits.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,16 +303,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E4801AE2913ED56007E433F /* Hooks.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAB3290D4E7A0018604C /* exec.swift in Sources */,
-				9E92AAB4290D4E7A0018604C /* ellekit.swift in Sources */,
+				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
-				9E92AAAE290D4E7A0018604C /* Assembly.c in Sources */,
+				9E4801A82913D16D007E433F /* routines.s in Sources */,
+				9E92AAAE290D4E7A0018604C /* VM.c in Sources */,
+				9E480192291090A3007E433F /* PAC.swift in Sources */,
+				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
+				9E4801A52913CD1F007E433F /* Exception.c in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
 				9E92AAB1290D4E7A0018604C /* Register.swift in Sources */,
+				9E4801AB2913E2E9007E433F /* Exception.swift in Sources */,
 				9E69857A290ECAE500408E14 /* Sizing.swift in Sources */,
+				9E48019D2910A076007E433F /* Objective-C.swift in Sources */,
+				9E48019A29109B96007E433F /* Bits.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +377,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -347,7 +432,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -409,12 +495,16 @@
 		9E92AAAB290D4E680018604C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				KEEP_PRIVATE_EXTERNS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -429,12 +519,16 @@
 		9E92AAAC290D4E680018604C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				KEEP_PRIVATE_EXTERNS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
