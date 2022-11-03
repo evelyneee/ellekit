@@ -63,6 +63,7 @@
 		9E48019E2911EB20007E433F /* Orig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orig.swift; sourceTree = "<group>"; };
 		9E4801A92913E0F7007E433F /* Exception.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
 		9E4801AC2913EB83007E433F /* Hooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hooks.swift; sourceTree = "<group>"; };
+		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,6 +146,7 @@
 		9E92AA7E290D47540018604C = {
 			isa = PBXGroup;
 			children = (
+				9E4801B329144B7A007E433F /* README.md */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E92AA88290D47540018604C /* Products */,
 			);

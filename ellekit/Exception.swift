@@ -10,6 +10,8 @@ import Darwin
 
 let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
 
+var closeExceptionPort = false
+
 public func registerEXCPort() {
     
     _ = slide
@@ -21,8 +23,8 @@ public func registerEXCPort() {
     
     task_set_exception_ports(mach_task_self_, exception_mask_t(EXC_MASK_BREAKPOINT), exceptionPort, EXCEPTION_DEFAULT, ARM_THREAD_STATE64)
                 
-    DispatchQueue(label: "exceptionHandler", qos: .userInteractive).async {
-        while true {
+    DispatchQueue.global().async {
+        while !closeExceptionPort {
             let head = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: 0x4000)
             
             defer { head.deallocate() }
@@ -83,6 +85,7 @@ public func registerEXCPort() {
                 return
             }
                         
+            #warning("TODO: PAC handling for pc reg. See amfid bypass from tq pre jb")
             if let newPtr = hooks[formerPtr] ?? hooks.first?.value {
                 print("[+] changed pc to", newPtr)
                 state.__pc = UInt64(UInt(bitPattern: newPtr))
