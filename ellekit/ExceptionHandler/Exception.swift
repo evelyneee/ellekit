@@ -1,9 +1,3 @@
-//
-//  Exception.swift
-//  ellekit
-//
-//  Created by charlotte on 2022-11-03.
-//
 
 import Foundation
 import Darwin
@@ -37,9 +31,7 @@ final class ExceptionHandler {
     }
     
     static func portLoop(_ `self`: ExceptionHandler?) {
-                    
-        print("Looping")
-        
+                            
         guard let `self` else {
             return print("[-] ellekit: exception handler deallocated.")
         }
@@ -114,7 +106,6 @@ final class ExceptionHandler {
         }
         #endif
                                             
-        #warning("TODO: PAC handling for pc reg. See amfid bypass from tq pre jb")
         if let newPtr = hooks[formerPtr] ?? hooks.first?.value {
             
             #if _ptrauth(_arm64e)

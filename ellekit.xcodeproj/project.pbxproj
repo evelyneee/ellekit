@@ -24,10 +24,13 @@
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
+		9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */; };
+		9E78FBF62916BDD500B3B50B /* trampoline_x64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF32916BDD500B3B50B /* trampoline_x64.S */; };
 		9E92AA8B290D47540018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AA9D290D4A040018604C /* VM.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA95290D4A040018604C /* VM.c */; };
 		9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
-		9E92AA9F290D4A040018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
+		9E92AA9F290D4A040018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAA0290D4A040018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
 		9E92AAA1290D4A040018604C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
 		9E92AAA2290D4A040018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
@@ -37,13 +40,22 @@
 		9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
 		9E92AAB0290D4E7A0018604C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
 		9E92AAB1290D4E7A0018604C /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
-		9E92AAB3290D4E7A0018604C /* exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* exec.swift */; };
+		9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
 		9E92AAB6290D4E7A0018604C /* ellekit-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9E78FBE82916BDB900B3B50B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		9E92AA85290D47540018604C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -67,11 +79,15 @@
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E78FBD52916A01F00B3B50B /* PAC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PAC.h; sourceTree = "<group>"; };
+		9E78FBEA2916BDB900B3B50B /* trampoline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trampoline; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E78FBF12916BDD500B3B50B /* trampoline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
+		9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_arm64.S; sourceTree = "<group>"; };
+		9E78FBF32916BDD500B3B50B /* trampoline_x64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_x64.S; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		9E92AA95290D4A040018604C /* VM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = VM.c; sourceTree = "<group>"; };
 		9E92AA96290D4A040018604C /* MobileSubstrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileSubstrate.swift; sourceTree = "<group>"; };
-		9E92AA97290D4A040018604C /* exec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = exec.swift; sourceTree = "<group>"; };
+		9E92AA97290D4A040018604C /* Execute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Execute.swift; sourceTree = "<group>"; };
 		9E92AA98290D4A040018604C /* Register.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
 		9E92AA99290D4A040018604C /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
@@ -81,6 +97,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9E78FBE72916BDB900B3B50B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E92AA84290D47540018604C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -122,6 +145,7 @@
 			children = (
 				9E92AA8A290D47540018604C /* General.swift */,
 				9E92AA9A290D4A040018604C /* Branches.swift */,
+				9E92AA97290D4A040018604C /* Execute.swift */,
 				9E92AA99290D4A040018604C /* Math.swift */,
 				9E92AA98290D4A040018604C /* Register.swift */,
 			);
@@ -141,8 +165,36 @@
 			children = (
 				9E92AAA3290D4A1C0018604C /* Hook.swift */,
 				9E48019E2911EB20007E433F /* Orig.swift */,
+				9E698578290EC91700408E14 /* Sizing.swift */,
 			);
 			path = C;
+			sourceTree = "<group>";
+		};
+		9E78FBE42916BD2B00B3B50B /* ExceptionHandler */ = {
+			isa = PBXGroup;
+			children = (
+				9E4801A92913E0F7007E433F /* Exception.swift */,
+			);
+			path = ExceptionHandler;
+			sourceTree = "<group>";
+		};
+		9E78FBE52916BD3700B3B50B /* Languages */ = {
+			isa = PBXGroup;
+			children = (
+				9E48019B2910A04E007E433F /* Objective-C.swift */,
+				9E4801A02911EB29007E433F /* C */,
+			);
+			path = Languages;
+			sourceTree = "<group>";
+		};
+		9E78FBEB2916BDB900B3B50B /* trampoline */ = {
+			isa = PBXGroup;
+			children = (
+				9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */,
+				9E78FBF32916BDD500B3B50B /* trampoline_x64.S */,
+				9E78FBF12916BDD500B3B50B /* trampoline.c */,
+			);
+			path = trampoline;
 			sourceTree = "<group>";
 		};
 		9E92AA7E290D47540018604C = {
@@ -150,6 +202,7 @@
 			children = (
 				9E4801B329144B7A007E433F /* README.md */,
 				9E92AA89290D47540018604C /* ellekit */,
+				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E92AA88290D47540018604C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -159,6 +212,7 @@
 			children = (
 				9E92AA87290D47540018604C /* libellekit.a */,
 				9E92AAA9290D4E680018604C /* libellekit-mac.dylib */,
+				9E78FBEA2916BDB900B3B50B /* trampoline */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -166,18 +220,15 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
-				9E4801A02911EB29007E433F /* C */,
+				9E4801AC2913EB83007E433F /* Globals.swift */,
+				9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */,
+				9E92AA95290D4A040018604C /* VM.c */,
+				9E78FBE52916BD3700B3B50B /* Languages */,
+				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
 				9E48019729109B77007E433F /* Misc */,
 				9E48019629109B61007E433F /* Assembler */,
 				9E48019329109739007E433F /* API */,
 				9E48018C290FE5C3007E433F /* PAC */,
-				9E92AA9B290D4A040018604C /* ellekit-Bridging-Header.h */,
-				9E92AA95290D4A040018604C /* VM.c */,
-				9E92AA97290D4A040018604C /* exec.swift */,
-				9E698578290EC91700408E14 /* Sizing.swift */,
-				9E48019B2910A04E007E433F /* Objective-C.swift */,
-				9E4801A92913E0F7007E433F /* Exception.swift */,
-				9E4801AC2913EB83007E433F /* Globals.swift */,
 			);
 			path = ellekit;
 			sourceTree = "<group>";
@@ -197,6 +248,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		9E78FBE92916BDB900B3B50B /* trampoline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E78FBEE2916BDB900B3B50B /* Build configuration list for PBXNativeTarget "trampoline" */;
+			buildPhases = (
+				9E78FBE62916BDB900B3B50B /* Sources */,
+				9E78FBE72916BDB900B3B50B /* Frameworks */,
+				9E78FBE82916BDB900B3B50B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = trampoline;
+			productName = trampoline;
+			productReference = 9E78FBEA2916BDB900B3B50B /* trampoline */;
+			productType = "com.apple.product-type.tool";
+		};
 		9E92AA86290D47540018604C /* ellekit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E92AA8E290D47540018604C /* Build configuration list for PBXNativeTarget "ellekit" */;
@@ -241,6 +309,9 @@
 				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					9E78FBE92916BDB900B3B50B = {
+						CreatedOnToolsVersion = 14.1;
+					};
 					9E92AA86290D47540018604C = {
 						CreatedOnToolsVersion = 14.1;
 						LastSwiftMigration = 1410;
@@ -265,11 +336,22 @@
 			targets = (
 				9E92AA86290D47540018604C /* ellekit */,
 				9E92AAA8290D4E680018604C /* ellekit-mac */,
+				9E78FBE92916BDB900B3B50B /* trampoline */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9E78FBE62916BDB900B3B50B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */,
+				9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */,
+				9E78FBF62916BDD500B3B50B /* trampoline_x64.S in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E92AA83290D47540018604C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,7 +361,7 @@
 				9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAA1290D4A040018604C /* Math.swift in Sources */,
 				9E92AAA4290D4A1C0018604C /* Hook.swift in Sources */,
-				9E92AA9F290D4A040018604C /* exec.swift in Sources */,
+				9E92AA9F290D4A040018604C /* Execute.swift in Sources */,
 				9E48019129108EF0007E433F /* PAC.swift in Sources */,
 				9E48019F2911EB20007E433F /* Orig.swift in Sources */,
 				9E92AA9D290D4A040018604C /* VM.c in Sources */,
@@ -299,7 +381,7 @@
 			files = (
 				9E4801AE2913ED56007E433F /* Globals.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
-				9E92AAB3290D4E7A0018604C /* exec.swift in Sources */,
+				9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
 				9E92AAAE290D4E7A0018604C /* VM.c in Sources */,
@@ -319,6 +401,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		9E78FBEF2916BDB900B3B50B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9E78FBF02916BDB900B3B50B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		9E92AA8C290D47540018604C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -444,6 +558,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -453,6 +568,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRIP_STYLE = all;
 				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -469,6 +585,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -478,6 +595,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRIP_STYLE = all;
 				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -495,14 +613,15 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_NO_COMMON_BLOCKS = YES;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
-				STRIP_STYLE = "";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -520,14 +639,15 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_NO_COMMON_BLOCKS = YES;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
-				STRIP_STYLE = "";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "ellekit/ellekit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -537,6 +657,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9E78FBEE2916BDB900B3B50B /* Build configuration list for PBXNativeTarget "trampoline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E78FBEF2916BDB900B3B50B /* Debug */,
+				9E78FBF02916BDB900B3B50B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9E92AA82290D47540018604C /* Build configuration list for PBXProject "ellekit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

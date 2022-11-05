@@ -1,13 +1,7 @@
-//
-//  Misc.h
-//  ellekit
-//
-//  Created by charlotte on 2022-11-05.
-//
 
 #import <stdio.h>
 
-void* sign(void* ptr) {
+void* sign_pointer(void* ptr) {
 #if __arm64e__
     return ptrauth_sign_unauthenticated(ptrauth_strip(ptr, ptrauth_key_function_pointer), ptrauth_key_function_pointer, 0);
 #else
@@ -31,7 +25,7 @@ uint64_t getOpaquePC(arm_thread_state64_t state) {
 #endif
 }
 
-void* strip(void* ptr) {
+void* strip_pointer(void* ptr) {
 #if __arm64e__
     return ptrauth_strip(ptr, ptrauth_key_function_pointer);
 #else

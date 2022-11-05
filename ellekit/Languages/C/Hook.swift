@@ -23,9 +23,7 @@ func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMuta
     let replacement = stockReplacement.makeReadable()
     
     let targetSize = findFunctionSize(target) ?? 6
-    
-    print(target, replacement)
-    
+        
     print("[*] Size of target:", targetSize as Any)
     
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
@@ -81,9 +79,7 @@ func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMuta
 }
 
 func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
-    
-    print("cock")
-    
+        
     let target = originalTarget.makeReadable()
     let replacement = originalReplacement.makeReadable()
     

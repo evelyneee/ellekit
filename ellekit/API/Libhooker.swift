@@ -48,10 +48,10 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
         guard let target = hook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
                 
         let functionSize = findFunctionSize(target)
-        
+                
         let (orig, codesize) = getOriginal(
             target, functionSize, origPageAddress, totalSize,
-            usedBigBranch: abs(calculateOffset(hook.function!, hook.replacement!) / 1024 / 1024) > 128
+            usedBigBranch: false
         )
                 
         totalSize = (totalSize + codesize)

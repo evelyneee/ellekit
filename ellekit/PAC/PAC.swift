@@ -2,12 +2,15 @@
 import Foundation
 
 extension UnsafeMutableRawPointer {
+    
+    @inline(never)
     func makeCallable() -> Self {
-        sign(self)
+        sign_pointer(self)
     }
     
+    @inline(never)
     func makeReadable() -> Self {
-        strip(self)
+        strip_pointer(self)
     }
     
     func opaquePointer() -> OpaquePointer {
