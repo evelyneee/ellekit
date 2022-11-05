@@ -30,10 +30,7 @@ func LHStrError(_ err: LIBHOOKER_ERR) -> UnsafeRawPointer? {
 
 @_cdecl("LHHookFunctions")
 public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int) -> Int {
-    
-    registerEXCPort()
-//    testExceptionPort()
-    
+        
     let hooksArray = Array(UnsafeBufferPointer(start: hooks, count: count))
         
     var origPageAddress: mach_vm_address_t = 0;

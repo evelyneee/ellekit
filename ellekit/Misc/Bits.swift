@@ -14,7 +14,7 @@ func encodeOperand(_ val: Int) -> Int {
     return 0
 }
 
-// thanks @jsherman212 for the bitwise functions from armadillo
+// thanks @jsherman212 for tdhe bitwise functions from armadillo
 // i was very confused as to how to detect a branch instruction
 func bits(_ target: UInt64, _ start: UInt64, _ end: UInt64) -> UInt64 {
     let amount: UInt64 = (end - start) + 1;

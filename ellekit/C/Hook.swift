@@ -17,12 +17,15 @@ func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ in
     }
 }
 
-func hook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
+func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
     
-    let target = target.makeReadable()
-    let replacement = replacement.makeReadable()
+    let target = stockTarget.makeReadable()
+    let replacement = stockReplacement.makeReadable()
     
     let targetSize = findFunctionSize(target) ?? 6
+    
+    print(target, replacement)
+    
     print("[*] Size of target:", targetSize as Any)
     
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
@@ -52,9 +55,8 @@ func hook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPoin
      */
     
     if abs(branchOffset / 1024 / 1024) > 128 {
-        if !didRegisterEXCPort {
-            registerEXCPort()
-            didRegisterEXCPort = true
+        if exceptionHandler == nil {
+            exceptionHandler = .init()
         }
         code = [0x20, 0x00, 0x20, 0xD4]
     } else {
@@ -65,7 +67,7 @@ func hook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPoin
         }
         code = codeBuilder
     }
-            
+                
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
     
     let orig = getOriginal(target, targetSize, usedBigBranch: false) // abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
@@ -78,22 +80,23 @@ func hook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPoin
     return orig.0?.makeCallable()
 }
 
-func hook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPointer) {
+func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
     
-    let target = target.makeReadable()
-    let replacement = replacement.makeReadable()
+    print("cock")
+    
+    let target = originalTarget.makeReadable()
+    let replacement = originalReplacement.makeReadable()
     
     let targetSize = findFunctionSize(target) ?? 6
     print("[*] Size of target:", targetSize as Any)
-    
-    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
             
+    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
+    
     var code = [UInt8]()
     
     if abs(branchOffset / 1024 / 1024) > 128 {
-        if !didRegisterEXCPort {
-            registerEXCPort()
-            didRegisterEXCPort = true
+        if exceptionHandler == nil {
+            exceptionHandler = .init()
         }
         code = [0x20, 0x00, 0x20, 0xD4]
     } else {

@@ -18,8 +18,8 @@
 		9E4801A12911EB37007E433F /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
 		9E4801AA2913E0F7007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
-		9E4801AD2913EB83007E433F /* Hooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Hooks.swift */; };
-		9E4801AE2913ED56007E433F /* Hooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Hooks.swift */; };
+		9E4801AD2913EB83007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
+		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
@@ -62,10 +62,11 @@
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
 		9E48019E2911EB20007E433F /* Orig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orig.swift; sourceTree = "<group>"; };
 		9E4801A92913E0F7007E433F /* Exception.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
-		9E4801AC2913EB83007E433F /* Hooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hooks.swift; sourceTree = "<group>"; };
+		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
+		9E78FBD52916A01F00B3B50B /* PAC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PAC.h; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		9E92AA95290D4A040018604C /* VM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = VM.c; sourceTree = "<group>"; };
@@ -100,6 +101,7 @@
 		9E48018C290FE5C3007E433F /* PAC */ = {
 			isa = PBXGroup;
 			children = (
+				9E78FBD52916A01F00B3B50B /* PAC.h */,
 				9E48019029108EF0007E433F /* PAC.swift */,
 			);
 			path = PAC;
@@ -175,7 +177,7 @@
 				9E698578290EC91700408E14 /* Sizing.swift */,
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
 				9E4801A92913E0F7007E433F /* Exception.swift */,
-				9E4801AC2913EB83007E433F /* Hooks.swift */,
+				9E4801AC2913EB83007E433F /* Globals.swift */,
 			);
 			path = ellekit;
 			sourceTree = "<group>";
@@ -272,7 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E4801AD2913EB83007E433F /* Hooks.swift in Sources */,
+				9E4801AD2913EB83007E433F /* Globals.swift in Sources */,
 				9E92AAA0290D4A040018604C /* Register.swift in Sources */,
 				9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAA1290D4A040018604C /* Math.swift in Sources */,
@@ -295,7 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E4801AE2913ED56007E433F /* Hooks.swift in Sources */,
+				9E4801AE2913ED56007E433F /* Globals.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAB3290D4E7A0018604C /* exec.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
@@ -486,8 +488,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					arm64,
 					arm64e,
+					arm64,
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -495,6 +497,7 @@
 				EXECUTABLE_PREFIX = lib;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -510,8 +513,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					arm64,
 					arm64e,
+					arm64,
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -519,6 +522,7 @@
 				EXECUTABLE_PREFIX = lib;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;

@@ -1,5 +1,6 @@
 
 #include <mach/mach.h>
+#include <ptrauth.h>
 
 extern kern_return_t
 mach_vm_allocate(mach_port_name_t target, mach_vm_address_t *address, mach_vm_size_t size, int flags);
@@ -19,12 +20,12 @@ const void* assembly(const unsigned char code[], size_t codesize) {
 
 // PAC: strip target pointer before calling
 int hook(void* target, const unsigned char code[], mach_vm_size_t size) {
-    void *address = target;
+    void *address = (void*)target;
     vm_prot_t newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY;
     mach_vm_protect(mach_task_self(), (mach_vm_address_t)address, (mach_vm_size_t)size, FALSE, newPermissions);
-            
+    
     memcpy((void *)address, code, size);
-        
+    
     vm_prot_t originalPerms = VM_PROT_READ | VM_PROT_EXECUTE;
     kern_return_t err2 = mach_vm_protect(mach_task_self(),
                                         (mach_vm_address_t)address,
@@ -32,7 +33,7 @@ int hook(void* target, const unsigned char code[], mach_vm_size_t size) {
                                         FALSE, originalPerms);
     
     if (err2 != 0) return 1;
-        
+    
     return 0;
 }
 

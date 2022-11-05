@@ -1,8 +1,14 @@
 
-func disassembleBranchImm(_ opcode: UInt64) -> UInt64 {
+func disassembleBranchImm(_ opcode: UInt64) -> Int {
     let imm = bits(UInt64(reverse(Int(opcode))), 0, 25);
-        
-    return UInt64(sign_extend(Int(imm << 2), 28))
+    
+    if (imm << 2) > 1024 * 1024 * 128 {
+        print("negative branch")
+        let ret = ((0xfffffffff0000000 | imm << 2) & UInt64.max) ^ UInt64.max
+        return -Int(ret)
+    }
+    
+    return Int(imm << 2)
 }
 
 func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: UnsafeMutableRawPointer) -> [UInt8] {
