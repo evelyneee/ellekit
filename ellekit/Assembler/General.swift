@@ -177,20 +177,18 @@ class ldr: Instruction {
     
     let value: Int
     
-    #warning("TODO: Fix ldr")
     init(_ rt: Register, _ rn: Register, _ offset: Int = 0) {
-        let div = (rt.w ? 32 : 64) / 8
-        let offset = Double(offset) / Double(div)
-        let size = rt.w ? 0x2 : 0x3
+        let div = rt.w ? 4 : 8
+        let size = rt.w ? 0b10 : 0b11
         var base = Self.base
         base |= size << 30
-        base |= Int(offset.rounded(.down)) << 10
+        base |= offset << 12
         base |= rn.value << 5
         base |= rt.value
         self.value = reverse(base)
     }
     
-    static let base = 0b00_111_0_01_01_000000000000_00000_00000
+    static let base = 0b00_111_0_00_01_0_000000000_00_00000_00000
 }
 
 class nop: Instruction {

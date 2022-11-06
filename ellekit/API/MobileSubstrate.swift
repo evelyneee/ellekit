@@ -1,5 +1,6 @@
 
 import ObjectiveC
+import ElleKitC
 
 @_cdecl("MSGetImageByName")
 public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeMutableRawPointer {
@@ -35,5 +36,5 @@ public func MSHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ resu
 
 @_cdecl("MSHookMemory")
 public func MSHookMemory(_ target: UnsafeMutableRawPointer, _ code: UnsafePointer<UInt8>!, _ size: mach_vm_size_t) {
-    hook(target, code, size)
+    rawHook(address: target, code: code, size: size)
 }

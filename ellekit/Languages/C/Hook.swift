@@ -1,5 +1,6 @@
 
 import Foundation
+import ElleKitC
 
 func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
     
@@ -8,7 +9,7 @@ func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ in
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
     
     code.withUnsafeBufferPointer { buf in
-        let result = hook(function.makeReadable(), buf.baseAddress, size)
+        let result = rawHook(address: function.makeReadable(), code: buf.baseAddress, size: size)
         #if DEBUG
         print(result)
         #else
@@ -71,7 +72,7 @@ func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMuta
     let orig = getOriginal(target, targetSize, usedBigBranch: false) // abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
     
     code.withUnsafeBufferPointer { buf in
-        let result = hook(target, buf.baseAddress, size)
+        let result = rawHook(address: target, code: buf.baseAddress, size: size)
         assert(result == 0, "[-] Hook failure for \(target) to \(replacement)")
     }
     
@@ -109,7 +110,25 @@ func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: Unsa
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
         
     code.withUnsafeBufferPointer { buf in
-        let result = hook(target, buf.baseAddress, size)
+        let result = rawHook(address: target, code: buf.baseAddress, size: size)
         assert(result == 0, "[-] Hook failure for \(target) to \(replacement)")
     }
+}
+
+func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
+    let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY;
+    mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions);
+    
+    memcpy(address, code, Int(size));
+    
+    let originalPerms = VM_PROT_READ | VM_PROT_EXECUTE;
+    let err2 = mach_vm_protect(mach_task_self_,
+                               mach_vm_address_t(UInt(bitPattern: address)),
+                               mach_vm_size_t(size),
+                               0,
+                               originalPerms)
+    
+    guard err2 == 0 else { return 1 }
+    
+    return 0;
 }
