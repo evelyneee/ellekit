@@ -46,6 +46,7 @@ struct LHMemoryPatch {
 
 // MARK: - PAC
 
+__attribute__((noinline))
 void* sign_pointer(void* ptr) {
 #if __arm64e__
     return ptrauth_sign_unauthenticated(ptrauth_strip(ptr, ptrauth_key_function_pointer), ptrauth_key_function_pointer, 0);
@@ -54,6 +55,7 @@ void* sign_pointer(void* ptr) {
 #endif
 }
 
+__attribute__((noinline))
 void* sign_pc(void* ptr) {
 #if __arm64e__
     return ptrauth_sign_unauthenticated(ptr, ptrauth_key_process_independent_code, 0x7481);
@@ -62,6 +64,7 @@ void* sign_pc(void* ptr) {
 #endif
 }
 
+__attribute__((noinline))
 void* strip_pointer(void* ptr) {
 #if __arm64e__
     return ptrauth_strip(ptr, ptrauth_key_function_pointer);
