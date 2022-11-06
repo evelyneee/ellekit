@@ -25,6 +25,7 @@ final class ExceptionHandler {
     }
     
     func startPortLoop() {
+        print("[+] ellekit: starting exception handler")
         self.thread.async { [weak self] in
             Self.portLoop(self)
         }
@@ -77,9 +78,7 @@ final class ExceptionHandler {
                            mach_port_name_t(MACH_PORT_NULL),
                            MACH_MSG_TIMEOUT_NONE,
                            mach_port_name_t(MACH_PORT_NULL))
-            
-            print("[*] Sending reply")
-            
+                        
             if ret != KERN_SUCCESS {
                 print("[-] error sending reply to exception: ", mach_error_string(ret) ?? "")
             }

@@ -72,7 +72,7 @@ print_success:
     .asciz  "/Applications/Messages.app/Contents/MacOS/Messages_original"
 
 .failed_to_call:
-    .asciz  "[Trampoline] Failed to call, resign CrossOver_original"
+    .asciz  "[Trampoline] Failed to call, resign Messages_original"
 
 .success:
     .asciz  "[Trampoline] Called binary, goodbye"

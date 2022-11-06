@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define BIN_PATH "/Applications/CrossOver.app/Contents/MacOS/CrossOver_original"
-#define DYLIB_PATH "/Applications/CrossOver.app/Contents/MacOS/hook.dylib"
+#define BIN_PATH "/Applications/Messages.app/Contents/MacOS/Messages_original"
+#define DYLIB_PATH "/Applications/Messages.app/Contents/MacOS/hook.dylib"
 
 int main(void) {
   printf("[Trampoline] Hello world!\n");
@@ -17,7 +17,7 @@ int main(void) {
   char* arg[] = {BIN_PATH, NULL};
   int executed = execl(BIN_PATH, BIN_PATH);
   if (executed != 0) {
-    printf("[Trampoline] Failed to call, resign CrossOver_original\n");
+    printf("[Trampoline] Failed to call, resign Messages_original\n");
   }
   printf("[Trampoline] Called binary, goodbye\n");
   return 0;
