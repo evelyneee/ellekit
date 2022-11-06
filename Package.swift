@@ -5,20 +5,20 @@ import PackageDescription
 import Foundation
 
 let package = Package(
-    name: "ElleKit",
+    name: "ellekit",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "ElleKit",
-            targets: ["ElleKit"]),
+            name: "ellekit",
+            targets: ["ellekit"]),
     ],
     dependencies: [
-        .package(path: URL(fileURLWithPath: #file).deletingLastPathComponent().absoluteString+"/ellekitc"),
+        .package(path: NSURL.fileURL(withPath: #file).deletingLastPathComponent().absoluteString+"/ellekitc"),
     ],
     targets: [
         .target(
-            name: "ElleKit",
-            dependencies: [],
+            name: "ellekit",
+            dependencies: ["ellekitc"],
             path: "ellekit"
         )
     ]
