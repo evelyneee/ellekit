@@ -1,7 +1,6 @@
 
 import Foundation
 import Darwin
-import ellekitc
 
 func executeAssemblyBytes<T>(returnType: T.Type, _ code: [UInt8]) -> T {
     code.withUnsafeBufferPointer { buf in

@@ -1,6 +1,5 @@
 
 import Foundation
-import ellekitc
 
 // Libhooker API Implementation
 

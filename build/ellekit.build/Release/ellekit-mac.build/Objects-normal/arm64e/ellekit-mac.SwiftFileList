@@ -1,0 +1,15 @@
+/Users/charlotte/Developer/ellekit/ellekit/Globals.swift
+/Users/charlotte/Developer/ellekit/ellekit/API/MobileSubstrate.swift
+/Users/charlotte/Developer/ellekit/ellekit/Assembler/Execute.swift
+/Users/charlotte/Developer/ellekit/ellekit/Assembler/General.swift
+/Users/charlotte/Developer/ellekit/ellekit/Languages/C/Hook.swift
+/Users/charlotte/Developer/ellekit/ellekit/PAC/PAC.swift
+/Users/charlotte/Developer/ellekit/ellekit/Languages/C/Orig.swift
+/Users/charlotte/Developer/ellekit/ellekit/Assembler/Branches.swift
+/Users/charlotte/Developer/ellekit/ellekit/API/Libhooker.swift
+/Users/charlotte/Developer/ellekit/ellekit/Assembler/Math.swift
+/Users/charlotte/Developer/ellekit/ellekit/Assembler/Register.swift
+/Users/charlotte/Developer/ellekit/ellekit/ExceptionHandler/Exception.swift
+/Users/charlotte/Developer/ellekit/ellekit/Languages/C/Sizing.swift
+/Users/charlotte/Developer/ellekit/ellekit/Languages/Objective-C.swift
+/Users/charlotte/Developer/ellekit/ellekit/Misc/Bits.swift

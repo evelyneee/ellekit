@@ -13,12 +13,11 @@ let package = Package(
             targets: ["ellekit"]),
     ],
     dependencies: [
-        .package(path: NSURL.fileURL(withPath: #file).deletingLastPathComponent().absoluteString+"/ellekitc"),
     ],
     targets: [
         .target(
             name: "ellekit",
-            dependencies: ["ellekitc"],
+            dependencies: [],
             path: "ellekit"
         )
     ]

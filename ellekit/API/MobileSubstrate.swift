@@ -1,6 +1,5 @@
 
 import ObjectiveC
-import ellekitc
 
 @_cdecl("MSGetImageByName")
 public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeMutableRawPointer {

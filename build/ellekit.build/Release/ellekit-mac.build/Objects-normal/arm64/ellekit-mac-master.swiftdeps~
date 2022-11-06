@@ -1,0 +1,20 @@
+version: "Apple Swift version 5.7.1 (swiftlang-5.7.1.135.2 clang-1400.0.29.51)"
+options: "815ce6281e606cae3d85bdffc67d67c6fd03cdace0b8bc59b0d5a0eff3df4a88"
+build_start_time: [1667602231, 612622022]
+build_end_time: [1667602231, 631760120]
+inputs:
+  "/Users/charlotte/Developer/ellekit/ellekit/API/Libhooker.swift": !dirty [1667599818, 109431982]
+  "/Users/charlotte/Developer/ellekit/ellekit/API/MobileSubstrate.swift": !dirty [1667262585, 362987041]
+  "/Users/charlotte/Developer/ellekit/ellekit/Assembler/Branches.swift": !dirty [1667597869, 795789718]
+  "/Users/charlotte/Developer/ellekit/ellekit/Assembler/General.swift": !dirty [1667345825, 288291692]
+  "/Users/charlotte/Developer/ellekit/ellekit/Assembler/Math.swift": !dirty [1667261572, 822228193]
+  "/Users/charlotte/Developer/ellekit/ellekit/Assembler/Register.swift": !dirty [1667261572, 803418636]
+  "/Users/charlotte/Developer/ellekit/ellekit/C/Hook.swift": !dirty [1667502688, 533833980]
+  "/Users/charlotte/Developer/ellekit/ellekit/C/Orig.swift": !dirty [1667349542, 215454101]
+  "/Users/charlotte/Developer/ellekit/ellekit/Exception.swift": !dirty [1667599766, 438322067]
+  "/Users/charlotte/Developer/ellekit/ellekit/Hooks.swift": !dirty [1667502159, 634234905]
+  "/Users/charlotte/Developer/ellekit/ellekit/Misc/Bits.swift": !dirty [1667513177, 136065006]
+  "/Users/charlotte/Developer/ellekit/ellekit/Objective-C.swift": !dirty [1667338973, 794363498]
+  "/Users/charlotte/Developer/ellekit/ellekit/PAC/PAC.swift": !dirty [1667602174, 561867237]
+  "/Users/charlotte/Developer/ellekit/ellekit/Sizing.swift": !dirty [1667339298, 120486736]
+  "/Users/charlotte/Developer/ellekit/ellekit/exec.swift": !dirty [1667349445, 818890094]

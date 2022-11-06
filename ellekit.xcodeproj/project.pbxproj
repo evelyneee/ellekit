@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9E19B2332918082400F8C4C7 /* ellekitc in Frameworks */ = {isa = PBXBuildFile; productRef = 9E19B2322918082400F8C4C7 /* ellekitc */; };
-		9E19B2352918092900F8C4C7 /* ellekitc in Frameworks */ = {isa = PBXBuildFile; productRef = 9E19B2342918092900F8C4C7 /* ellekitc */; };
 		9E48019129108EF0007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019929109B83007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
@@ -71,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		9E19B2392918118300F8C4C7 /* ellekit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ellekit.h; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -99,7 +98,6 @@
 		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
 		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		9E92AAA9290D4E680018604C /* libellekit-mac.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libellekit-mac.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E995CB32917FD5800EFC223 /* ellekitc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ellekitc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +119,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E19B2352918092900F8C4C7 /* ellekitc in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +126,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E19B2332918082400F8C4C7 /* ellekitc in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,7 +230,6 @@
 			isa = PBXGroup;
 			children = (
 				9E19B22D2918011800F8C4C7 /* Package.swift */,
-				9E995CB22917FD5800EFC223 /* Packages */,
 				9E4801B329144B7A007E433F /* README.md */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E78FBEB2916BDB900B3B50B /* trampoline */,
@@ -257,6 +252,7 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
+				9E19B2392918118300F8C4C7 /* ellekit.h */,
 				9E4801AC2913EB83007E433F /* Globals.swift */,
 				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
@@ -266,14 +262,6 @@
 				9E48018C290FE5C3007E433F /* PAC */,
 			);
 			path = ellekit;
-			sourceTree = "<group>";
-		};
-		9E995CB22917FD5800EFC223 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				9E995CB32917FD5800EFC223 /* ellekitc */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,7 +325,6 @@
 			);
 			name = ellekit;
 			packageProductDependencies = (
-				9E19B2342918092900F8C4C7 /* ellekitc */,
 			);
 			productName = ellekit;
 			productReference = 9E92AA87290D47540018604C /* libellekit.a */;
@@ -357,7 +344,6 @@
 			);
 			name = "ellekit-mac";
 			packageProductDependencies = (
-				9E19B2322918082400F8C4C7 /* ellekitc */,
 			);
 			productName = "ellekit-mac";
 			productReference = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */;
@@ -720,7 +706,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = all;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -747,7 +733,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = all;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -774,7 +760,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -800,7 +786,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -854,17 +840,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		9E19B2322918082400F8C4C7 /* ellekitc */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ellekitc;
-		};
-		9E19B2342918092900F8C4C7 /* ellekitc */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ellekitc;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9E92AA7F290D47540018604C /* Project object */;
 }
