@@ -1,7 +1,7 @@
 
 import Foundation
 
-func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
+public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     guard let method = class_getInstanceMethod(cls, sel) ?? class_getClassMethod(cls, sel) else {
         return print("[-] ellekit: peacefully bailing out of message hook because the method cannot be found")
     }
@@ -24,7 +24,7 @@ func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeM
 
 // MSHookClassPair
 // thanks to tale/trampoline
-func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: AnyClass) {
+public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: AnyClass) {
     var method_count: UInt32 = 0;
     let method_list = class_copyMethodList(hookClass, &method_count);
     let methods = Array(UnsafeBufferPointer(start: method_list, count: Int(method_count)))
@@ -50,5 +50,4 @@ func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: 
             class_addMethod(targetClass, selector, hookedImp, method_encoding);
         }
     }
-    #warning("TODO: Orig for class pair hooks")
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E19B241291814CB00F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E48019129108EF0007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019929109B83007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
@@ -70,6 +72,7 @@
 /* Begin PBXFileReference section */
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		9E19B2392918118300F8C4C7 /* ellekit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ellekit.h; sourceTree = "<group>"; };
+		9E19B240291814CB00F8C4C7 /* ellekitc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ellekitc.c; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -132,6 +135,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E19B23A291812EA00F8C4C7 /* ellekitc */ = {
+			isa = PBXGroup;
+			children = (
+				9E19B240291814CB00F8C4C7 /* ellekitc.c */,
+				9E19B23C2918139300F8C4C7 /* include */,
+			);
+			path = ellekitc;
+			sourceTree = "<group>";
+		};
+		9E19B23C2918139300F8C4C7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				9E19B2392918118300F8C4C7 /* ellekit.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 		9E48018C290FE5C3007E433F /* PAC */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,6 +249,7 @@
 		9E92AA7E290D47540018604C = {
 			isa = PBXGroup;
 			children = (
+				9E19B23A291812EA00F8C4C7 /* ellekitc */,
 				9E19B22D2918011800F8C4C7 /* Package.swift */,
 				9E4801B329144B7A007E433F /* README.md */,
 				9E92AA89290D47540018604C /* ellekit */,
@@ -252,7 +273,6 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
-				9E19B2392918118300F8C4C7 /* ellekit.h */,
 				9E4801AC2913EB83007E433F /* Globals.swift */,
 				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
@@ -439,6 +459,7 @@
 				9E92AA9F290D4A040018604C /* Execute.swift in Sources */,
 				9E48019129108EF0007E433F /* PAC.swift in Sources */,
 				9E48019F2911EB20007E433F /* Orig.swift in Sources */,
+				9E19B241291814CB00F8C4C7 /* ellekitc.c in Sources */,
 				9E698576290DFB5000408E14 /* Libhooker.swift in Sources */,
 				9E92AA8B290D47540018604C /* General.swift in Sources */,
 				9E92AAA2290D4A040018604C /* Branches.swift in Sources */,
@@ -461,6 +482,7 @@
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
+				9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
 				9E92AAB1290D4E7A0018604C /* Register.swift in Sources */,
@@ -706,7 +728,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = all;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -733,7 +755,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = all;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -760,7 +782,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -786,7 +808,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
 				STRIP_SWIFT_SYMBOLS = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekit/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
