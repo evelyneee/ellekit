@@ -12,7 +12,7 @@ let package = Package(
             targets: ["ElleKit"]),
     ],
     dependencies: [
-        .package(path: FileManager.default.currentDirectoryPath+"/ellekitc"),
+        .package(path: URL(fileURLWithPath: #file).deletingLastPathComponent().absoluteString+"/ellekitc"),
     ],
     targets: [
         .target(
