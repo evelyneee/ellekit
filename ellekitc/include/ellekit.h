@@ -1,8 +1,4 @@
 
-#if __arm64e__
-#include <ptrauth.h>
-#endif
-
 #include <mach/mach.h>
 
 #import <mach-o/dyld.h>
@@ -46,32 +42,9 @@ struct LHMemoryPatch {
 
 // MARK: - PAC
 
-__attribute__((noinline))
-void* sign_pointer(void* ptr) {
-#if __arm64e__
-    return ptrauth_sign_unauthenticated(ptrauth_strip(ptr, ptrauth_key_function_pointer), ptrauth_key_function_pointer, 0);
-#else
-    return ptr;
-#endif
-}
-
-__attribute__((noinline))
-void* sign_pc(void* ptr) {
-#if __arm64e__
-    return ptrauth_sign_unauthenticated(ptr, ptrauth_key_process_independent_code, 0x7481);
-#else
-    return ptr;
-#endif
-}
-
-__attribute__((noinline))
-void* strip_pointer(void* ptr) {
-#if __arm64e__
-    return ptrauth_strip(ptr, ptrauth_key_function_pointer);
-#else
-    return ptr;
-#endif
-}
+extern void* sign_pointer(void* ptr);
+extern void* strip_pointer(void* ptr);
+extern void* sign_pc(void* ptr);
 
 // MARK: - The rest
 
