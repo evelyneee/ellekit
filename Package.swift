@@ -12,7 +12,7 @@ let package = Package(
             targets: ["ElleKit"]),
     ],
     dependencies: [
-        .package(path: "./ellekitc"),
+        .package(path: "ellekitc"),
     ],
     targets: [
         .target(
