@@ -1,6 +1,6 @@
 
 import Foundation
-import ElleKitC
+import ellekitc
 
 extension UnsafeMutableRawPointer {
     

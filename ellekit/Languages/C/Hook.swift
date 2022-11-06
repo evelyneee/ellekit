@@ -1,6 +1,6 @@
 
 import Foundation
-import ElleKitC
+import ellekitc
 
 func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
     
