@@ -10,14 +10,20 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "ellekit",
-            targets: ["ellekit"]),
+            targets: ["ellekit"]
+        ),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "ellekit",
+            name: "ellekitc",
             dependencies: [],
+            path: "ellekitc"
+        ),
+        .target(
+            name: "ellekit",
+            dependencies: ["ellekitc"],
             path: "ellekit"
         )
     ]
