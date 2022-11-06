@@ -1,6 +1,7 @@
 
 import Foundation
 import Darwin
+import ellekitc
 
 func executeAssemblyBytes<T>(returnType: T.Type, _ code: [UInt8]) -> T {
     code.withUnsafeBufferPointer { buf in
@@ -51,11 +52,11 @@ func byteArray<T: FixedWidthInteger>(from value: T) -> [UInt8] {
 }
 
 @discardableResult
-func asm<T>(@InstructionBuilder _ instructions: () -> [UInt8]) -> T {
+public func asm<T>(@InstructionBuilder _ instructions: () -> [UInt8]) -> T {
     return executeAssemblyBytes(returnType: T.self, instructions())
 }
 
-func asm(@InstructionBuilder _ instructions: () -> [UInt8]) {
+public func asm(@InstructionBuilder _ instructions: () -> [UInt8]) {
     executeAssemblyBytes(instructions())
 }
 

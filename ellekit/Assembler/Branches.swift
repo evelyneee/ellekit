@@ -47,7 +47,7 @@ func calculateOffset(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMut
     return offsetAbs * sign
 }
 
-class b: Instruction {
+public class b: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -67,7 +67,7 @@ class b: Instruction {
     static let base = 0b0_00101_00000000000000000000000000
 }
 
-class bl: Instruction {
+public class bl: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -87,7 +87,7 @@ class bl: Instruction {
     static let base = 0b1_00101_00000000000000000000000000
 }
 
-class blr: Instruction {
+public class blr: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -107,7 +107,7 @@ class blr: Instruction {
     static let base = 0b1101011_0_0_01_11111_0000_0_0_00000_00000
 }
 
-class br: Instruction {
+public class br: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }

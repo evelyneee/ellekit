@@ -10,7 +10,7 @@ public func LHHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ oldp
 }
 
 @_cdecl("LHStrError")
-func LHStrError(_ err: LIBHOOKER_ERR) -> UnsafeRawPointer? {
+public func LHStrError(_ err: LIBHOOKER_ERR) -> UnsafeRawPointer? {
     
     var error: String = ""
     
@@ -44,9 +44,9 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
     guard krt2 == KERN_SUCCESS else { return Int(LIBHOOKER_ERR_VM.rawValue) }
     
     var totalSize = 0
-    for hook in hooksArray {
+    for targetHook in hooksArray {
         
-        guard let target = hook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
+        guard let target = targetHook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
                 
         let functionSize = findFunctionSize(target)
                 
@@ -57,18 +57,14 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
                 
         totalSize = (totalSize + codesize)
         
-        if let orig, hook.oldptr != nil {
-            let setter = unsafeBitCast(hook.oldptr, to: UnsafeMutablePointer<UnsafeMutableRawPointer?>.self)
+        if let orig, targetHook.oldptr != nil {
+            let setter = unsafeBitCast(targetHook.oldptr, to: UnsafeMutablePointer<UnsafeMutableRawPointer?>.self)
             setter.pointee = orig.makeCallable()
         }
         
-        #if os(iOS)
-        let _: Void = ellekit.hook(hook.function, hook.replacement)
-        #else
-        let _: Void = ellekit_mac.hook(hook.function, hook.replacement)
-        #endif
+        let _: Void = hook(targetHook.function, targetHook.replacement)
         
-        if let orig = hook.oldptr {
+        if let orig = targetHook.oldptr {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with orig at \(String(describing: orig))")
         } else {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with no orig")

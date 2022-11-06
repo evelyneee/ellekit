@@ -1,7 +1,7 @@
 
 import Foundation
 
-enum Register {
+public enum Register {
     case w(Int)
     case x(Int)
     case sp
@@ -87,7 +87,7 @@ enum Register {
     static let w30 = Self.w(30)
 }
 
-struct Cond {
+public struct Cond {
     
     init(_ rawValue: Int) {
         self.rawValue = rawValue

@@ -35,7 +35,7 @@ extension Instruction {
     }
 }
 
-class ret: Instruction {
+public class ret: Instruction {
     required init(encoded: Int) {
         fatalError()
     }
@@ -49,7 +49,7 @@ class ret: Instruction {
     let ret: [UInt8] = [0xc0, 0x03, 0x5f, 0xd6]
 }
 
-class movz: Instruction {
+public class movz: Instruction {
     let value: Int
     
     init(_ rd: Register, _ value: Int) {
@@ -67,7 +67,7 @@ class movz: Instruction {
     static let base = 0b0_10_100101_00_0000000000000000_00000
 }
 
-class movk: Instruction {
+public class movk: Instruction {
     let value: Int
     
     init(_ rd: Register, _ value: Int, lsl: Int = 0) {
@@ -91,7 +91,7 @@ class movk: Instruction {
     static let base = 0b0_11_100101_00_0000000000000000_00000
 }
 
-class csel: Instruction {
+public class csel: Instruction {
     let value: Int
     
     init(_ rd: Register, _ rm: Register, _ rn: Register, _ value: Cond) {
@@ -109,7 +109,7 @@ class csel: Instruction {
     static let base = 0b0_0_0_11010100_00000_0000_0_0_00000_00000
 }
 
-class bytes: Instruction {
+public class bytes: Instruction {
     let byteValues: [UInt8]
     
     required init(encoded: Int) {
@@ -129,7 +129,7 @@ class bytes: Instruction {
     }
 }
 
-class svc: Instruction {
+public class svc: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -145,7 +145,7 @@ class svc: Instruction {
     }
 }
 
-class str: Instruction {
+public class str: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -166,7 +166,7 @@ class str: Instruction {
     }
 }
 
-class ldr: Instruction {
+public class ldr: Instruction {
     required init(encoded: Int) {
         self.value = encoded
     }
@@ -178,7 +178,6 @@ class ldr: Instruction {
     let value: Int
     
     init(_ rt: Register, _ rn: Register, _ offset: Int = 0) {
-        let div = rt.w ? 4 : 8
         let size = rt.w ? 0b10 : 0b11
         var base = Self.base
         base |= size << 30
@@ -191,7 +190,7 @@ class ldr: Instruction {
     static let base = 0b00_111_0_00_01_0_000000000_00_00000_00000
 }
 
-class nop: Instruction {
+public class nop: Instruction {
     
     required init(encoded: Int) {
     }

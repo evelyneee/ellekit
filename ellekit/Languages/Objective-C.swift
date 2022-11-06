@@ -1,7 +1,6 @@
 
 import Foundation
 
-#warning("TODO: Make swizzle undetectable") // https://gist.github.com/saagarjha/ed701e3369639410b5d5303612964557
 func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     guard let method = class_getInstanceMethod(cls, sel) ?? class_getClassMethod(cls, sel) else {
         return print("[-] ellekit: peacefully bailing out of message hook because the method cannot be found")

@@ -12,7 +12,7 @@ fileprivate func encodeImm(_ base: Int, _ rd: Register, _ rn: Register, _ imm: I
     return result
 }
 
-class sub: Instruction {
+public class sub: Instruction {
     let value: Int
     required init(encoded: Int) {
         self.value = encoded
@@ -29,7 +29,7 @@ class sub: Instruction {
     static let base = 0b0_1_1_100010_0_000000000000_00000_00000
 }
 
-class add: Instruction {
+public class add: Instruction {
     let value: Int
     required init(encoded: Int) {
         self.value = encoded

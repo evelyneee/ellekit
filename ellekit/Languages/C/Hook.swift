@@ -2,7 +2,7 @@
 import Foundation
 import ellekitc
 
-func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
+public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
     
     let code = instructions()
         
@@ -18,7 +18,7 @@ func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ in
     }
 }
 
-func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
+public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
     
     let target = stockTarget.makeReadable()
     let replacement = stockReplacement.makeReadable()
@@ -79,7 +79,7 @@ func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMuta
     return orig.0?.makeCallable()
 }
 
-func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
+public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
         
     let target = originalTarget.makeReadable()
     let replacement = originalReplacement.makeReadable()
@@ -115,6 +115,7 @@ func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: Unsa
     }
 }
 
+@discardableResult
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
     let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY;
     mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions);

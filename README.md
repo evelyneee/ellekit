@@ -24,7 +24,8 @@ You can also use the Swift functions directly
 
 ### Building
 
-Use Xcode 14. Just run `xcodebuild`
+To build a dynamic library, use Xcode 14. To build the library, run `xcodebuild -target ellekit-mac` for a Mac library or `xcodebuild -target ellekit` for an iOS library.
+You can also use this as a Swift package.
 
 ### Status
 
