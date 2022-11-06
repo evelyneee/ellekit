@@ -43,24 +43,28 @@ final class ExceptionHandler {
         
         defer { Self.portLoop(self) }
         
-        let head = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: 0x4000)
+        let msg_header = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: Int(vm_page_size))
         
-        defer { head.deallocate() }
+        defer { msg_header.deallocate() }
         
-        var ret = mach_msg(head,
-                           MACH_RCV_MSG | MACH_RCV_LARGE | Int32(MACH_MSG_TIMEOUT_NONE),
-                           0,
-                           0x4000,
-                           self.port,
-                           0, 0)
+        let krt1 = mach_msg(
+            msg_header,
+            MACH_RCV_MSG | MACH_RCV_LARGE,
+            0,
+            mach_msg_size_t(vm_page_size),
+            self.port,
+            0,
+            0
+        )
         
-        guard ret == KERN_SUCCESS else {
-            print("[-] error receiving from port:", mach_error_string(ret) ?? "")
+        guard krt1 == KERN_SUCCESS else {
+            print("[-] couldn't receiving from port:", mach_error_string(krt1) ?? "")
             return
         }
                     
-        let req = UnsafeMutableRawPointer(head).makeReadable().withMemoryRebound(to: exception_raise_request.self,
-                                         capacity: 0x4000) { $0.pointee }
+        let req = UnsafeMutableRawPointer(msg_header)
+            .makeReadable()
+            .withMemoryRebound(to: exception_raise_request.self, capacity: Int(vm_page_size)) { $0.pointee }
         
         let thread_port = req.thread.name
         
@@ -75,23 +79,25 @@ final class ExceptionHandler {
             reply.NDR = req.NDR
             reply.RetCode = KERN_SUCCESS
             
-            ret = mach_msg(&reply.Head,
-                           1,
-                           reply.Head.msgh_size,
-                           0,
-                           mach_port_name_t(MACH_PORT_NULL),
-                           MACH_MSG_TIMEOUT_NONE,
-                           mach_port_name_t(MACH_PORT_NULL))
+            let krt = mach_msg(
+                &reply.Head,
+                1,
+                reply.Head.msgh_size,
+                0,
+                mach_port_name_t(MACH_PORT_NULL),
+                MACH_MSG_TIMEOUT_NONE,
+                mach_port_name_t(MACH_PORT_NULL)
+            )
                         
-            if ret != KERN_SUCCESS {
-                print("[-] error sending reply to exception: ", mach_error_string(ret) ?? "")
+            if krt != KERN_SUCCESS {
+                print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
             }
         }
         
         var state = arm_thread_state64()
         var stateCnt = mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT)
         
-        ret = withUnsafeMutablePointer(to: &state) {
+        let krt2 = withUnsafeMutablePointer(to: &state) {
             $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size) {
                 thread_get_state(thread_port, ARM_THREAD_STATE64, $0, &stateCnt)
             }
@@ -119,9 +125,9 @@ final class ExceptionHandler {
             state.__x.16 = UInt64(UInt(bitPattern: newPtr))
             #endif
             
-            ret = withUnsafeMutablePointer(to: &state, {
+            _ = withUnsafeMutablePointer(to: &state, {
                 $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size, {
-                    return thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
+                    thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
                 })
             })
             
@@ -130,11 +136,5 @@ final class ExceptionHandler {
         }
         
         thread_resume(thread_port)
-        
-        guard ret == KERN_SUCCESS else {
-            print("[-] error getting thread state:", mach_error_string(ret) ?? "")
-            return
-        }
     }
-
 }
