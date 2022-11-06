@@ -2,6 +2,7 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import Foundation
 
 let package = Package(
     name: "ellekitc",
@@ -9,7 +10,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "ellekitc",
-            targets: ["ellekitc"]),
+            targets: ["ellekitc"]
+        )
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
