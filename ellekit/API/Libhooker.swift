@@ -1,6 +1,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 // Libhooker API Implementation
 
 @_cdecl("LHHookMessageEx")

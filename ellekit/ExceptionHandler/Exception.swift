@@ -2,6 +2,10 @@
 import Foundation
 import Darwin
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
 
 var closeExceptionPort = false

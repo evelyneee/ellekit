@@ -1,6 +1,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 extension UnsafeMutableRawPointer {
     
     @inline(never)

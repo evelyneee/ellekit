@@ -1,6 +1,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
     
     let code = instructions()
