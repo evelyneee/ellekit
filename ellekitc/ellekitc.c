@@ -1,9 +1,3 @@
-//
-//  ellekitc.c
-//  ellekit
-//
-//  Created by charlotte on 2022-11-06.
-//
 
 #if __arm64e__
 #include <ptrauth.h>

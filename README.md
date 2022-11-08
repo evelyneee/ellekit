@@ -48,9 +48,11 @@ You can also use this as a Swift package.
 
 ### The C hooking technique
 
-ElleKit will only ever patch the functions you give it. If you hook a function within 128mb of address space, it will make a simple branch instruction and patch the function with it. If you hook beyond 128mb of address space, it'll set up an exception port to catch all breakpoint exceptions and handle them. ElleKit saves the hooks' target and replacement function and when the exception handler is called, it changes the thread state to redirect execution to the target. 
+ElleKit will only ever patch the functions you give it. If you hook a function within 128mb of address space, it will make a simple branch instruction and patch the function with it. 
 
-### The original function technique
+If you hook beyond 128mb of address space, it'll set up an exception port to catch all breakpoint exceptions and handle them. Then, it'll patch the target with a `brk #1` instruction. ElleKit saves the hooks' target and replacement function and when the exception handler is called, it changes the thread state to redirect execution to the target, then resume execution. This might sound extremely inefficient but it's not too bad.
+
+### The original function
 
 ElleKit writes the original function implementation to a new memory page and then provides a pointer to it. If you use `LHHookFunctions`, it will use one page for the orig functions, which will be faster than allocating a new one for each hook. Orig functions are assembled like so: 
 

@@ -44,7 +44,13 @@ public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ base
             let method_encoding = method_getTypeEncoding(target_method);
             method_setImplementation(target_method, hookedImp);
             let hookedClassName: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?> = .allocate(capacity: 50)
-            class_addMethod(NSClassFromString(String(cString: hookedClassName.pointee!)), selector, target_implementation, method_encoding);
+            
+            class_addMethod(
+                NSClassFromString(String(cString: hookedClassName.pointee!)),
+                selector,
+                target_implementation,
+                method_encoding
+            )
         } else {
             let method_encoding = method_getTypeEncoding(methods[iter]);
             class_addMethod(targetClass, selector, hookedImp, method_encoding);

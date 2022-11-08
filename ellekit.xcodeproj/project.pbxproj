@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9E19B241291814CB00F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9E19B24929188EDA00F8C4C7 /* Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B24829188EDA00F8C4C7 /* Method.swift */; };
 		9E48019129108EF0007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019929109B83007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
@@ -73,6 +74,8 @@
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		9E19B2392918118300F8C4C7 /* ellekit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ellekit.h; sourceTree = "<group>"; };
 		9E19B240291814CB00F8C4C7 /* ellekitc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ellekitc.c; sourceTree = "<group>"; };
+		9E19B24829188EDA00F8C4C7 /* Method.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Method.swift; sourceTree = "<group>"; };
+		9E19B24C2919D82900F8C4C7 /* Usage.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Usage.md; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -152,6 +155,14 @@
 			path = include;
 			sourceTree = "<group>";
 		};
+		9E19B24729188EC000F8C4C7 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				9E19B24829188EDA00F8C4C7 /* Method.swift */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
 		9E48018C290FE5C3007E433F /* PAC */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
+				9E19B24729188EC000F8C4C7 /* Swift */,
 				9E4801A02911EB29007E433F /* C */,
 			);
 			path = Languages;
@@ -249,12 +261,13 @@
 		9E92AA7E290D47540018604C = {
 			isa = PBXGroup;
 			children = (
-				9E19B23A291812EA00F8C4C7 /* ellekitc */,
 				9E19B22D2918011800F8C4C7 /* Package.swift */,
 				9E4801B329144B7A007E433F /* README.md */,
+				9E19B24C2919D82900F8C4C7 /* Usage.md */,
 				9E92AA89290D47540018604C /* ellekit */,
-				9E78FBEB2916BDB900B3B50B /* trampoline */,
+				9E19B23A291812EA00F8C4C7 /* ellekitc */,
 				9E78FBFE29172D5600B3B50B /* launcher */,
+				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E92AA88290D47540018604C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -465,6 +478,7 @@
 				9E92AAA2290D4A040018604C /* Branches.swift in Sources */,
 				9E4801AA2913E0F7007E433F /* Exception.swift in Sources */,
 				9E698579290EC91700408E14 /* Sizing.swift in Sources */,
+				9E19B24929188EDA00F8C4C7 /* Method.swift in Sources */,
 				9E48019C2910A04E007E433F /* Objective-C.swift in Sources */,
 				9E48019929109B83007E433F /* Bits.swift in Sources */,
 			);

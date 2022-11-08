@@ -6,7 +6,6 @@ import ellekitc
 #endif
 
 // Libhooker API Implementation
-
 @_cdecl("LHHookMessageEx")
 public func LHHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ oldptr: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     messageHook(cls, sel, imp, oldptr)
@@ -76,6 +75,6 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
     
     let krt3 = mach_vm_protect(mach_task_self_, origPageAddress, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
     guard krt3 == KERN_SUCCESS else { return Int(LIBHOOKER_ERR_VM.rawValue) }
-    
+        
     return Int(LIBHOOKER_OK.rawValue);
 }

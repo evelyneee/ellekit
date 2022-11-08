@@ -21,7 +21,13 @@ final class ExceptionHandler {
         mach_port_allocate(mach_task_self_, MACH_PORT_RIGHT_RECEIVE, &targetPort)
         mach_port_insert_right(mach_task_self_, targetPort, targetPort, mach_msg_type_name_t(MACH_MSG_TYPE_MAKE_SEND))
         
-        task_set_exception_ports(mach_task_self_, exception_mask_t(EXC_MASK_BREAKPOINT), targetPort, EXCEPTION_DEFAULT, ARM_THREAD_STATE64)
+        task_set_exception_ports(
+            mach_task_self_,
+            exception_mask_t(EXC_MASK_BREAKPOINT),
+            targetPort,
+            EXCEPTION_DEFAULT,
+            ARM_THREAD_STATE64
+        )
         
         self.port = targetPort
         

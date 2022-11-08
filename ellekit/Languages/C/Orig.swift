@@ -12,7 +12,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         
     if size == 1 {
         
-        print("[*] Small function")
+        print("[*] ellekit: Small function")
         
         let isn = (UInt64(unpatched[3]) | UInt64(unpatched[2]) << 8 | UInt64(unpatched[1]) << 16 | UInt64(unpatched[0]) << 24)
         
@@ -33,7 +33,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         
         var code: [UInt8] = []
         if checkBranch(isn) {
-            print("[*] Redirecting branch")
+            print("[*] ellekit: Redirecting branch")
             code = redirectBranch(target, isn, ptr)
         } else {
             @InstructionBuilder
@@ -46,13 +46,13 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         if let totalSize, let ptr = UnsafeMutableRawPointer(bitPattern: UInt(addr))?.advanced(by: totalSize) {
             memcpy(ptr, code, codesize * code.count);
             #if DEBUG
-            print("[+] Orig written to:", ptr, "for function", totalSize)
+            print("[+] ellekit: Orig written to:", ptr, "for function", totalSize)
             #endif
         } else {
             memcpy(ptr, code, codesize * code.count);
             mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
             #if DEBUG
-            print("[+] Orig written to:", ptr)
+            print("[+] ellekit: Orig written to:", ptr)
             #endif
         }
 
@@ -64,7 +64,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
     var address: mach_vm_address_t = addr ?? 0;
     
     if let addr, let totalSize {
-        print("[*] Reusing page")
+        print("[*] ellekit: Reusing page")
         ptr = UnsafeMutableRawPointer(bitPattern: UInt(addr))?.advanced(by: totalSize)
     } else {
         mach_vm_allocate(mach_task_self_, &address, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
@@ -77,7 +77,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
     let isn = (UInt64(unpatched[3]) | UInt64(unpatched[2]) << 8 | UInt64(unpatched[1]) << 16 | UInt64(unpatched[0]) << 24)
     
     if checkBranch(UInt64(reverse(Int(isn)))) {
-        print("[*] Redirecting branch")
+        print("[*] ellekit: Redirecting branch")
         unpatched = redirectBranch(target, isn, ptr)
     }
     
@@ -98,11 +98,11 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
 
     if let totalSize {
         memcpy(ptr, code, codesize);
-        print("[+] Orig written to:", ptr, "for function", totalSize)
+        print("[+] ellekit: Orig written to:", ptr, "for function", totalSize)
     } else {
         memcpy(ptr, code, codesize);
         mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
-        print("[+] Orig written to:", ptr)
+        print("[+] ellekit: Orig written to:", ptr)
     }
     return (ptr, codesize)
 }

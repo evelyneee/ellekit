@@ -28,7 +28,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     
     let targetSize = findFunctionSize(target) ?? 6
         
-    print("[*] Size of target:", targetSize as Any)
+    print("[*] ellekit: Size of target:", targetSize as Any)
     
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
     
@@ -62,7 +62,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         }
         code = [0x20, 0x00, 0x20, 0xD4]
     } else {
-        print("[*] Small branch")
+        print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
             b(branchOffset)
@@ -76,7 +76,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
-        assert(result == 0, "[-] Hook failure for \(target) to \(replacement)")
+        assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
     }
     
     return orig.0?.makeCallable()
@@ -88,7 +88,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     let replacement = originalReplacement.makeReadable()
     
     let targetSize = findFunctionSize(target) ?? 6
-    print("[*] Size of target:", targetSize as Any)
+    print("[*] ellekit: Size of target:", targetSize as Any)
             
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
     
@@ -98,9 +98,9 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }
-        code = [0x20, 0x00, 0x20, 0xD4]
+        code = [0x20, 0x00, 0x20, 0xD4] // process crash!
     } else {
-        print("[*] Small branch")
+        print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
             b(branchOffset)
@@ -114,7 +114,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
-        assert(result == 0, "[-] Hook failure for \(target) to \(replacement)")
+        assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
     }
 }
 
@@ -131,6 +131,9 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
                                mach_vm_size_t(size),
                                0,
                                originalPerms)
+    
+    // flush page cache so we don't hit cached unpatched functions
+    sys_icache_invalidate(address, Int(vm_page_size))
     
     guard err2 == 0 else { return 1 }
     
