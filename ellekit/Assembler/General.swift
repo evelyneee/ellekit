@@ -1,7 +1,7 @@
 
 import Foundation
 
-protocol Instruction {
+public protocol Instruction {
         
     init(encoded: Int)
     
@@ -36,13 +36,13 @@ extension Instruction {
 }
 
 public class ret: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         fatalError()
     }
     
-    init() {}
+    public init() {}
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         self.ret
     }
     
@@ -52,15 +52,15 @@ public class ret: Instruction {
 public class movz: Instruction {
     let value: Int
     
-    init(_ rd: Register, _ value: Int) {
+    public init(_ rd: Register, _ value: Int) {
         self.value = Self.encodeRegisterInt(Self.base, rd, value)
     }
     
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
     
@@ -70,7 +70,7 @@ public class movz: Instruction {
 public class movk: Instruction {
     let value: Int
     
-    init(_ rd: Register, _ value: Int, lsl: Int = 0) {
+    public init(_ rd: Register, _ value: Int, lsl: Int = 0) {
         var base = Self.base
         base |= (rd.w ? 0 : 1) << 31
         base |= (lsl / 16) << 21
@@ -80,11 +80,11 @@ public class movk: Instruction {
         self.value = base
     }
     
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
     
@@ -94,15 +94,15 @@ public class movk: Instruction {
 public class csel: Instruction {
     let value: Int
     
-    init(_ rd: Register, _ rm: Register, _ rn: Register, _ value: Cond) {
+    public init(_ rd: Register, _ rm: Register, _ rn: Register, _ value: Cond) {
         self.value = Self.encodeRegRegRegCond(Self.base, rd, rm, rn, value.rawValue)
     }
     
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
     
@@ -110,53 +110,53 @@ public class csel: Instruction {
 }
 
 public class bytes: Instruction {
-    let byteValues: [UInt8]
+    public let byteValues: [UInt8]
     
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.byteValues = byteArray(from: encoded)
     }
     
-    init(_ bytes: UInt8...) {
+    public init(_ bytes: UInt8...) {
         self.byteValues = bytes
     }
     
-    init(_ bytes: [UInt8]) {
+    public init(_ bytes: [UInt8]) {
         self.byteValues = bytes
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         self.byteValues
     }
 }
 
 public class svc: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ sv: Int) {
+    public init(_ sv: Int) {
         self.value = 0x010000D4 | sv << 13
     }
 }
 
 public class str: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ rd: Register, _ dest: Register, _ offset: Int = 0) {
+    public init(_ rd: Register, _ dest: Register, _ offset: Int = 0) {
         let destOffset = Int((Double(dest.value) / 10).rounded(.down))
         var value = 0x000000F9 | dest.value << 29 | rd.value << 24 | offset << 20 | destOffset << 16
         if offset > 0 {
@@ -167,17 +167,17 @@ public class str: Instruction {
 }
 
 public class ldr: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ rt: Register, _ rn: Register, _ offset: Int = 0) {
+    public init(_ rt: Register, _ rn: Register, _ offset: Int = 0) {
         let size = rt.w ? 0b10 : 0b11
         var base = Self.base
         base |= size << 30
@@ -192,14 +192,14 @@ public class ldr: Instruction {
 
 public class nop: Instruction {
     
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
     }
     
-    init() {}
+    public init() {}
     
     let value = 0x1F2003D5
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
 }

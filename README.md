@@ -16,6 +16,8 @@
 
 - macOS Ventura (arm64)
 - macOS Ventura (arm64e)
+- iOS 16.1 (arm64)
+- iOS 16.1 (arm64e)
 
 ### Usage
 

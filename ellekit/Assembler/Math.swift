@@ -14,15 +14,15 @@ fileprivate func encodeImm(_ base: Int, _ rd: Register, _ rn: Register, _ imm: I
 
 public class sub: Instruction {
     let value: Int
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    init(_ rd: Register, _ rn: Register, _ imm: Int) {
+    public init(_ rd: Register, _ rn: Register, _ imm: Int) {
         self.value = encodeImm(Self.base, rd, rn, imm, 16)
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
     
@@ -31,15 +31,15 @@ public class sub: Instruction {
 
 public class add: Instruction {
     let value: Int
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    init(_ rd: Register, _ rn: Register, _ imm: Int) {
+    public init(_ rd: Register, _ rn: Register, _ imm: Int) {
         self.value = encodeImm(Self.base, rd, rn, imm, 0)
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: self.value)
     }
     

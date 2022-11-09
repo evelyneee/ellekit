@@ -48,17 +48,17 @@ func calculateOffset(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMut
 }
 
 public class b: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ addr: Int) {
+    public init(_ addr: Int) {
         var base = Self.base
         base |= (addr & 0x3ffffff)
         self.value = reverse(base)
@@ -68,17 +68,17 @@ public class b: Instruction {
 }
 
 public class bl: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ addr: Int) {
+    public init(_ addr: Int) {
         var base = Self.base
         base |= addr
         self.value = reverse(base)
@@ -88,17 +88,17 @@ public class bl: Instruction {
 }
 
 public class blr: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ register: Register) {
+    public init(_ register: Register) {
         var base = Self.base
         base |= (register.value << 5)
         self.value = reverse(base)
@@ -108,17 +108,17 @@ public class blr: Instruction {
 }
 
 public class br: Instruction {
-    required init(encoded: Int) {
+    required public init(encoded: Int) {
         self.value = encoded
     }
     
-    func bytes() -> [UInt8] {
+    public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
     
     let value: Int
     
-    init(_ register: Register) {
+    public init(_ register: Register) {
         var base = Self.base
         base |= register.value << 5
         self.value = reverse(base)

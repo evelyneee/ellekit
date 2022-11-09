@@ -2,6 +2,10 @@
 import Foundation
 import Darwin
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 func executeAssemblyBytes<T>(returnType: T.Type, _ code: [UInt8]) -> T {
     code.withUnsafeBufferPointer { buf in
         let size = MemoryLayout.size(ofValue: code) * code.count
@@ -70,19 +74,16 @@ func dumpInstructions(_ array: [Instruction]) {
 }
 
 @resultBuilder
-struct InstructionBuilder {
-    static func buildEither(first component: Instruction) -> Instruction {
+public struct InstructionBuilder {
+    static public func buildEither(first component: Instruction) -> Instruction {
         component
     }
     
-    static func buildEither(second component: Instruction) -> Instruction {
+    static public func buildEither(second component: Instruction) -> Instruction {
         component
     }
     
-    static func buildBlock(_ components: Instruction...) -> [UInt8] {
-        #if DEBUG
-        dumpInstructions(components)
-        #endif
+    static public func buildBlock(_ components: Instruction...) -> [UInt8] {
         return Array(
             components.map { $0.bytes() }.joined()
         )

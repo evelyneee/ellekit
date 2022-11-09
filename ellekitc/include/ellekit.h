@@ -5,6 +5,10 @@
 
 #import <stdio.h>
 
+// MARK: - CPU
+
+extern void sys_icache_invalidate(void *start, size_t length);
+
 // MARK: - Libhooker
 
 struct LHFunctionHook {

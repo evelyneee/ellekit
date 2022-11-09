@@ -1,6 +1,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 // PAC: strip before calling this function and sign the result afterwards
 func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: mach_vm_address_t? = nil, _ totalSize: Int? = nil, usedBigBranch: Bool = false) -> (UnsafeMutableRawPointer?, Int) {
         
