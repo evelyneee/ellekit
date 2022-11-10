@@ -1,6 +1,6 @@
 
 func disassembleBranchImm(_ opcode: UInt64) -> Int {
-    let imm = bits(UInt64(reverse(Int(opcode))), 0, 25);
+    let imm = reverse(opcode).bits(0...25);
     
     if (imm << 2) > 1024 * 1024 * 128 {
         print("negative branch")

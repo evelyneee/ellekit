@@ -47,6 +47,8 @@
 		9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9EA0D1C0291C5D6D0061B187 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1BF291C5D6D0061B187 /* load.s */; };
+		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,6 +106,9 @@
 		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
 		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		9E92AAA9290D4E680018604C /* libellekit-mac.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libellekit-mac.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EA0D1BF291C5D6D0061B187 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
+		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +134,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9E92AAA7290D4E680018604C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EA0D1B8291C5D500061B187 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,6 +278,7 @@
 				9E19B24C2919D82900F8C4C7 /* Usage.md */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E19B23A291812EA00F8C4C7 /* ellekitc */,
+				9EA0D1BE291C5D5B0061B187 /* injector */,
 				9E78FBFE29172D5600B3B50B /* launcher */,
 				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E92AA88290D47540018604C /* Products */,
@@ -279,6 +292,7 @@
 				9E92AAA9290D4E680018604C /* libellekit-mac.dylib */,
 				9E78FBEA2916BDB900B3B50B /* trampoline */,
 				9E78FBFD29172D5600B3B50B /* launcher.app */,
+				9EA0D1BA291C5D500061B187 /* libinjector.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -297,10 +311,26 @@
 			path = ellekit;
 			sourceTree = "<group>";
 		};
+		9EA0D1BE291C5D5B0061B187 /* injector */ = {
+			isa = PBXGroup;
+			children = (
+				9EA0D1BF291C5D6D0061B187 /* load.s */,
+				9EA0D1C1291C5D7F0061B187 /* injector.swift */,
+			);
+			path = injector;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
 		9E92AAA5290D4E680018604C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EA0D1B6291C5D500061B187 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -382,6 +412,23 @@
 			productReference = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9EA0D1B9291C5D500061B187 /* injector */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EA0D1BD291C5D500061B187 /* Build configuration list for PBXNativeTarget "injector" */;
+			buildPhases = (
+				9EA0D1B6291C5D500061B187 /* Headers */,
+				9EA0D1B7291C5D500061B187 /* Sources */,
+				9EA0D1B8291C5D500061B187 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = injector;
+			productName = injector;
+			productReference = 9EA0D1BA291C5D500061B187 /* libinjector.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -405,6 +452,9 @@
 					9E92AAA8290D4E680018604C = {
 						CreatedOnToolsVersion = 14.1;
 					};
+					9EA0D1B9291C5D500061B187 = {
+						CreatedOnToolsVersion = 14.1;
+					};
 				};
 			};
 			buildConfigurationList = 9E92AA82290D47540018604C /* Build configuration list for PBXProject "ellekit" */;
@@ -424,6 +474,7 @@
 				9E92AAA8290D4E680018604C /* ellekit-mac */,
 				9E78FBE92916BDB900B3B50B /* trampoline */,
 				9E78FBFC29172D5600B3B50B /* launcher */,
+				9EA0D1B9291C5D500061B187 /* injector */,
 			);
 		};
 /* End PBXProject section */
@@ -504,6 +555,15 @@
 				9E69857A290ECAE500408E14 /* Sizing.swift in Sources */,
 				9E48019D2910A076007E433F /* Objective-C.swift in Sources */,
 				9E48019A29109B96007E433F /* Bits.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EA0D1B7291C5D500061B187 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EA0D1C0291C5D6D0061B187 /* load.s in Sources */,
+				9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -827,6 +887,38 @@
 			};
 			name = Release;
 		};
+		9EA0D1BB291C5D500061B187 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9EA0D1BC291C5D500061B187 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -871,6 +963,15 @@
 			buildConfigurations = (
 				9E92AAAB290D4E680018604C /* Debug */,
 				9E92AAAC290D4E680018604C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9EA0D1BD291C5D500061B187 /* Build configuration list for PBXNativeTarget "injector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EA0D1BB291C5D500061B187 /* Debug */,
+				9EA0D1BC291C5D500061B187 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

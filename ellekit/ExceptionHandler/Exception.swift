@@ -10,12 +10,12 @@ let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLay
 
 var closeExceptionPort = false
 
-final class ExceptionHandler {
+public final class ExceptionHandler {
     
     let port: mach_port_t
     let thread = DispatchQueue(label: "ellekit_exc_port", attributes: .concurrent)
     
-    init() {
+    public init() {
         var targetPort = mach_port_t()
             
         mach_port_allocate(mach_task_self_, MACH_PORT_RIGHT_RECEIVE, &targetPort)
@@ -34,7 +34,7 @@ final class ExceptionHandler {
         startPortLoop()
     }
     
-    func startPortLoop() {
+    public func startPortLoop() {
         print("[+] ellekit: starting exception handler")
         self.thread.async { [weak self] in
             Self.portLoop(self)
@@ -138,7 +138,9 @@ final class ExceptionHandler {
             })
             
         } else {
-            fatalError("[-] ellekit: called exc handler with unknown function")
+            thread_suspend(thread_port)
+            mach_port_deallocate(mach_task_self_, thread_port)
+            return Self.portLoop(self)
         }
         
         thread_resume(thread_port)

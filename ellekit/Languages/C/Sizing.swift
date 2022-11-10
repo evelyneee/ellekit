@@ -3,8 +3,8 @@ import Foundation
 
 func checkBranch(_ opcode: UInt64) -> Bool {
             
-    let opcode = UInt64(reverse(Int(opcode)))
-    let bits = bits(opcode, 25, 28)
+    let opcode = reverse(opcode)
+    let bits = opcode.bits(25...28)
         
     if (bits >> 1) == 5 {
         return true

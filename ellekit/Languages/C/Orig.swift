@@ -80,7 +80,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         
     let isn = (UInt64(unpatched[3]) | UInt64(unpatched[2]) << 8 | UInt64(unpatched[1]) << 16 | UInt64(unpatched[0]) << 24)
     
-    if checkBranch(UInt64(reverse(Int(isn)))) {
+    if checkBranch(reverse(isn)) {
         print("[*] ellekit: Redirecting branch")
         unpatched = redirectBranch(target, isn, ptr)
     }
