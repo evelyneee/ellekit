@@ -1,6 +1,9 @@
 
 import Foundation
 import os.log
+import AppKit
+
+#warning("TODO: C rewrite")
 
 #if os(iOS)
 let path = "/Library/MobileSubstrate/DynamicLibraries"
@@ -8,13 +11,17 @@ let path = "/Library/MobileSubstrate/DynamicLibraries"
 let path = (("~/.tweaks/" as NSString).expandingTildeInPath as String)
 #endif
 
+let logger = Logger(subsystem: "red.charlotte.ellekit", category: "injector")
+
 // big wip don't complain!
 @_cdecl("injector_entry")
-func entry() {
+public func entry() {
+    logger.notice("[ellekit] injector: out here")
     do {
         try FileManager.default.contentsOfDirectory(atPath: path)
+            .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }
             .compactMap {
-                $0.components(separatedBy: ".").dropLast().joined(separator: ".") // remove extension
+                path+"/"+$0.components(separatedBy: ".").dropLast().joined(separator: ".") // remove extension
             }
             .removeDuplicates()
             .sorted { $0 < $1 }
@@ -35,22 +42,20 @@ class Filter: Codable {
 func openTweak(_ tweak: String) throws {
     
     let filterData = try Data(contentsOf: NSURL.fileURL(withPath: tweak+".plist"))
-    let filter = try PropertyListDecoder().decode(Filter.self, from: filterData).Filter.Bundles
-    
+    let filter = try PropertyListDecoder().decode(Filter.self, from: filterData)
+        .Filter
+        .Bundles
+        .map { $0.lowercased() }
+        
     if let bundleID = Bundle.main.bundleIdentifier {
-        if filter.contains(bundleID) {
+        if filter.contains(bundleID.lowercased()) {
+            logger.notice("[ellekit] injector: \(tweak+".dylib")")
             let handle = dlopen(tweak + ".dylib", RTLD_NOW)
             if handle == nil {
-                print("Failed to open tweak:", String(cString: dlerror()))
+                logger.notice("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
             }
             return
         }
-    } else {
-        let handle = dlopen(tweak + ".dylib", RTLD_NOW)
-        if handle == nil {
-            print("Failed to open tweak:", String(cString: dlerror()))
-        }
-        return
     }
 }
 

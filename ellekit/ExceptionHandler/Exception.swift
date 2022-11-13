@@ -6,7 +6,11 @@ import Darwin
 import ellekitc
 #endif
 
+#if arch(x86_64)
+let ARM_THREAD_STATE64_COUNT = 0
+#else
 let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
+#endif
 
 var closeExceptionPort = false
 
@@ -21,6 +25,7 @@ public final class ExceptionHandler {
         mach_port_allocate(mach_task_self_, MACH_PORT_RIGHT_RECEIVE, &targetPort)
         mach_port_insert_right(mach_task_self_, targetPort, targetPort, mach_msg_type_name_t(MACH_MSG_TYPE_MAKE_SEND))
         
+        #if arch(arm64) || _ptrauth(_arm64e)
         task_set_exception_ports(
             mach_task_self_,
             exception_mask_t(EXC_MASK_BREAKPOINT),
@@ -28,6 +33,7 @@ public final class ExceptionHandler {
             EXCEPTION_DEFAULT,
             ARM_THREAD_STATE64
         )
+        #endif
         
         self.port = targetPort
         
@@ -100,6 +106,10 @@ public final class ExceptionHandler {
             }
         }
         
+        #if arch(x86_64)
+        return
+        #else
+        
         var state = arm_thread_state64()
         var stateCnt = mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT)
         
@@ -142,6 +152,7 @@ public final class ExceptionHandler {
             mach_port_deallocate(mach_task_self_, thread_port)
             return Self.portLoop(self)
         }
+        #endif
         
         thread_resume(thread_port)
     }

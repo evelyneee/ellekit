@@ -234,7 +234,7 @@ using UInt = size_t;
 @import ObjectiveC;
 #endif
 
-#import "/Users/charlotte/Developer/ellekit/ellekit/ellekit-Bridging-Header.h"
+#import "/Users/charlotte/Developer/ellekit/ellekitc/include/ellekit.h"
 
 #endif
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
@@ -525,7 +525,7 @@ using UInt = size_t;
 @import ObjectiveC;
 #endif
 
-#import "/Users/charlotte/Developer/ellekit/ellekit/ellekit-Bridging-Header.h"
+#import "/Users/charlotte/Developer/ellekit/ellekitc/include/ellekit.h"
 
 #endif
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"

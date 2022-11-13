@@ -1,8 +1,8 @@
 "/Users/charlotte/Developer/ellekit/ellekit/Globals.swift":
-  dependencies: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit-mac-master.d"
-  swiftsourceinfo: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftsourceinfo"
+  swiftmodule: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftmodule"
+  abi-baseline-json: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.abi.json"
+  objc-header: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac-Swift.h"
   diagnostics: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit-mac-master.dia"
   swiftdoc: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftdoc"
-  abi-baseline-json: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.abi.json"
-  swiftmodule: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftmodule"
-  objc-header: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac-Swift.h"
+  dependencies: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit-mac-master.d"
+  swiftsourceinfo: "/Users/charlotte/Developer/ellekit/build/ellekit.build/Release/ellekit-mac.build/Objects-normal/arm64/ellekit_mac.swiftsourceinfo"
