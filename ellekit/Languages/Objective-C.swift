@@ -23,7 +23,7 @@ public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: 
 }
 
 // MSHookClassPair
-// thanks to tale/trampoline
+// thanks to faptain kink
 public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: AnyClass) {
     var method_count: UInt32 = 0;
     let method_list = class_copyMethodList(hookClass, &method_count);
@@ -32,7 +32,7 @@ public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ base
     for iter in 0..<Int(method_count) {
         let selector = method_getName(methods[iter]);
         NSLog("[*] ellekit: hooked method is", sel_getName(selector));
-        
+
         let hookedImp = method_getImplementation(methods[iter])
         
         // If this is true we need to override the method
