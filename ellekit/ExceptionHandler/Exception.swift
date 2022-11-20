@@ -50,6 +50,9 @@ public final class ExceptionHandler {
     static func portLoop(_ `self`: ExceptionHandler?) {
                             
         guard let `self` else {
+            if #available(macOS 11.0, *) {
+                logger.error("ellekit: exception handler deallocated.")
+            }
             return print("[-] ellekit: exception handler deallocated.")
         }
         
@@ -70,7 +73,10 @@ public final class ExceptionHandler {
         )
         
         guard krt1 == KERN_SUCCESS else {
-            print("[-] couldn't receiving from port:", mach_error_string(krt1) ?? "")
+            if #available(macOS 11.0, *) {
+                logger.error("ellekit: couldn't receive from port")
+            }
+            print("[-] couldn't receive from port:", mach_error_string(krt1) ?? "")
             return
         }
                     
@@ -79,7 +85,7 @@ public final class ExceptionHandler {
             .withMemoryRebound(to: exception_raise_request.self, capacity: Int(vm_page_size)) { $0.pointee }
         
         let thread_port = req.thread.name
-        
+                
         defer {
             var reply = exception_raise_reply()
             reply.Head.msgh_bits = req.Head.msgh_bits & UInt32(MACH_MSGH_BITS_REMOTE_MASK)
@@ -102,6 +108,9 @@ public final class ExceptionHandler {
             )
                         
             if krt != KERN_SUCCESS {
+                if #available(macOS 11.0, *) {
+                    logger.error("error sending reply to exception")
+                }
                 print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
             }
         }
@@ -121,11 +130,17 @@ public final class ExceptionHandler {
                     
         #if _ptrauth(_arm64e)
         guard let formerPtr = state.__opaque_pc?.makeReadable() else {
+            if #available(macOS 11.0, *) {
+                logger.error("couldn't get ptr from pc reg")
+            }
             print("[-] couldn't get ptr from pc reg")
             return
         }
         #else
         guard let formerPtr = UnsafeMutableRawPointer(bitPattern: UInt(state.__pc)) else {
+            if #available(macOS 11.0, *) {
+                logger.error("couldn't get ptr from pc reg")
+            }
             print("[-] couldn't get ptr from pc reg")
             return
         }
@@ -140,7 +155,7 @@ public final class ExceptionHandler {
             state.__pc = UInt64(UInt(bitPattern: newPtr))
             state.__x.16 = UInt64(UInt(bitPattern: newPtr))
             #endif
-            
+                        
             _ = withUnsafeMutablePointer(to: &state, {
                 $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size, {
                     thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
@@ -148,8 +163,6 @@ public final class ExceptionHandler {
             })
             
         } else {
-            thread_suspend(thread_port)
-            mach_port_deallocate(mach_task_self_, thread_port)
             return Self.portLoop(self)
         }
         #endif

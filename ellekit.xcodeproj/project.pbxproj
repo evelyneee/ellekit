@@ -22,6 +22,8 @@
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AD2913EB83007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
+		9E489EBF292978E400F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
+		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
 		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
@@ -32,7 +34,6 @@
 		9E78FC0029172D5600B3B50B /* launcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBFF29172D5600B3B50B /* launcherApp.swift */; };
 		9E78FC0229172D5600B3B50B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FC0129172D5600B3B50B /* ContentView.swift */; };
 		9E78FC0429172D5600B3B50B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E78FC0329172D5600B3B50B /* Assets.xcassets */; };
-		9E78FC0729172D5600B3B50B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E78FC0629172D5600B3B50B /* Preview Assets.xcassets */; };
 		9E92AA8B290D47540018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
 		9E92AA9F290D4A040018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
@@ -85,6 +86,7 @@
 		9E4801A92913E0F7007E433F /* Exception.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E78FBEA2916BDB900B3B50B /* trampoline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trampoline; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +97,6 @@
 		9E78FBFF29172D5600B3B50B /* launcherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launcherApp.swift; sourceTree = "<group>"; };
 		9E78FC0129172D5600B3B50B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9E78FC0329172D5600B3B50B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9E78FC0629172D5600B3B50B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9E78FC0829172D5600B3B50B /* launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = launcher.entitlements; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
@@ -218,6 +219,7 @@
 				9E92AAA3290D4A1C0018604C /* Hook.swift */,
 				9E48019E2911EB20007E433F /* Orig.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
+				9E489EBE292978E400F81BBD /* Slide.swift */,
 			);
 			path = C;
 			sourceTree = "<group>";
@@ -257,17 +259,8 @@
 				9E78FC0129172D5600B3B50B /* ContentView.swift */,
 				9E78FC0329172D5600B3B50B /* Assets.xcassets */,
 				9E78FC0829172D5600B3B50B /* launcher.entitlements */,
-				9E78FC0529172D5600B3B50B /* Preview Content */,
 			);
 			path = launcher;
-			sourceTree = "<group>";
-		};
-		9E78FC0529172D5600B3B50B /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				9E78FC0629172D5600B3B50B /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		9E92AA7E290D47540018604C = {
@@ -419,6 +412,7 @@
 				9EA0D1B6291C5D500061B187 /* Headers */,
 				9EA0D1B7291C5D500061B187 /* Sources */,
 				9EA0D1B8291C5D500061B187 /* Frameworks */,
+				9E489EBD292930F400F81BBD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -485,12 +479,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E78FC0729172D5600B3B50B /* Preview Assets.xcassets in Resources */,
 				9E78FC0429172D5600B3B50B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9E489EBD292930F400F81BBD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "scp -P 2222 $(BUILT_PRODUCTS_DIR) root@localhost:/usr/lib\nssh -t root@localhost \"cp /usr/lib/libinjector.dylib /usr/lib/substitute-loader.dylib && sbreload\" -p 2222\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9E78FBE62916BDB900B3B50B /* Sources */ = {
@@ -531,6 +544,7 @@
 				9E4801AA2913E0F7007E433F /* Exception.swift in Sources */,
 				9E698579290EC91700408E14 /* Sizing.swift in Sources */,
 				9E19B24929188EDA00F8C4C7 /* Method.swift in Sources */,
+				9E489EBF292978E400F81BBD /* Slide.swift in Sources */,
 				9E48019C2910A04E007E433F /* Objective-C.swift in Sources */,
 				9E48019929109B83007E433F /* Bits.swift in Sources */,
 			);
@@ -548,6 +562,7 @@
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
+				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,
 				9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
@@ -792,6 +807,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
 				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -807,6 +823,8 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
 			};
 			name = Debug;
 		};
@@ -819,6 +837,7 @@
 				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
 				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -833,6 +852,8 @@
 				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
 			};
 			name = Release;
 		};
@@ -900,7 +921,6 @@
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = (
 					arm64,
-					x86_64,
 					arm64e,
 				);
 				CLANG_ENABLE_MODULES = YES;
@@ -911,6 +931,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -920,9 +941,9 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -935,7 +956,6 @@
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = (
 					arm64,
-					x86_64,
 					arm64e,
 				);
 				CLANG_ENABLE_MODULES = YES;
@@ -946,6 +966,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -954,9 +975,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};

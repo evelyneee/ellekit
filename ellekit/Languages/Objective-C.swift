@@ -1,9 +1,14 @@
 
 import Foundation
 
+@inlinable
 public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
+    
     guard let method = class_getInstanceMethod(cls, sel) ?? class_getClassMethod(cls, sel) else {
-        return print("[-] ellekit: peacefully bailing out of message hook because the method cannot be found")
+        if #available(macOS 11.0, *) {
+            logger.error("ellekit: peacefully bailing out of message hook because the method cannot be found")
+        }
+        return
     }
     
     let old = class_replaceMethod(cls, sel, imp, method_getTypeEncoding(method))
@@ -22,8 +27,19 @@ public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: 
     }
 }
 
+@inlinable
+func hookIvar<T>(_ class: AnyClass, _ name: String) -> UnsafeMutablePointer<T>? {
+    let ivar = class_getInstanceVariable(object_getClass(`class`), name)
+    if let ivar {
+        let ptr = unsafeBitCast(`class`, to: UnsafeMutableRawPointer.self).advanced(by: ivar_getOffset(ivar))
+        return ptr.assumingMemoryBound(to: T.self)
+    }
+    return nil
+}
+
 // MSHookClassPair
 // thanks to faptain kink
+@inlinable
 public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ baseClass: AnyClass) {
     var method_count: UInt32 = 0;
     let method_list = class_copyMethodList(hookClass, &method_count);

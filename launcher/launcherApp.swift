@@ -1,9 +1,3 @@
-//
-//  launcherApp.swift
-//  launcher
-//
-//  Created by charlotte on 2022-11-05.
-//
 
 import SwiftUI
 

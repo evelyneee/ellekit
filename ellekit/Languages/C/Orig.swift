@@ -36,7 +36,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         let addr: mach_vm_address_t = addr ?? 0;
         
         var code: [UInt8] = []
-        if checkBranch(isn) {
+        if checkBranch(reverse(isn)) {
             print("[*] ellekit: Redirecting branch")
             code = redirectBranch(target, isn, ptr)
         } else {

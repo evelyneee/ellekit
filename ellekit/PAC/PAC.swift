@@ -8,16 +8,16 @@ import ellekitc
 extension UnsafeMutableRawPointer {
     
     @inline(never)
-    func makeCallable() -> Self {
+    public func makeCallable() -> Self {
         sign_pointer(self)
     }
     
     @inline(never)
-    func makeReadable() -> Self {
+    public func makeReadable() -> Self {
         strip_pointer(self)
     }
     
-    func opaquePointer() -> OpaquePointer {
+    public func opaquePointer() -> OpaquePointer {
         OpaquePointer(self)
     }
 }

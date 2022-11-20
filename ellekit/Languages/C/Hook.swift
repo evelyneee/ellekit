@@ -36,6 +36,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
     var code = [UInt8]()
     
+    /// Big branch code, unused atm because there are issues
     /*
      if abs(branchOffset / 1024 / 1024) > 128 {
          guard targetSize >= 5 else { fatalError("[-] ellekit: this hook is impossible (big branch, but function does not have enough space)")}
@@ -76,7 +77,15 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
+        #if DEBUG
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
+        #else
+        if result != 0 {
+            if #available(macOS 11.0, *) {
+                logger.error("ellekit: Hook failure for \(target) to \(replacement)")
+            }
+        }
+        #endif
     }
     
     return orig.0?.makeCallable()
@@ -114,7 +123,15 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
+        #if DEBUG
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
+        #else
+        if result != 0 {
+            if #available(macOS 11.0, *) {
+                logger.error("ellekit: Hook failure for \(target) to \(replacement)")
+            }
+        }
+        #endif
     }
 }
 
@@ -133,9 +150,9 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
                                originalPerms)
     
     // flush page cache so we don't hit cached unpatched functions
-    sys_icache_invalidate(address, Int(vm_page_size))
+    sys_icache_invalidate(address, Int(size))
     
-    guard err2 == 0 else { return 1 }
+    guard err2 == 0 else { return Int(err2) }
     
     return 0;
 }

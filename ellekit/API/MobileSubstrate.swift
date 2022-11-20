@@ -37,3 +37,16 @@ public func MSHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ resu
 public func MSHookMemory(_ target: UnsafeMutableRawPointer, _ code: UnsafePointer<UInt8>!, _ size: mach_vm_size_t) {
     rawHook(address: target, code: code, size: size)
 }
+
+@_cdecl("MSHookIvar")
+public func MSHookIvar(_ class: AnyClass, _ name: String) -> UnsafeMutableRawPointer? {
+    let ptr: UnsafeMutablePointer<Any>? = hookIvar(`class`, name)
+    if let ptr {
+        return .init(ptr)
+    } else {
+        if #available(macOS 11.0, *) {
+            logger.error("ellekit: Couldn't get ivar so bailing out.")
+        }
+        return nil
+    }
+}
