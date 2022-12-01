@@ -6,8 +6,8 @@ import ellekitc
 #endif
 
 // Libhooker API Implementation
-@_cdecl("LHHookMessageEx")
-public func LHHookMessageEx(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ oldptr: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
+@_cdecl("LBHookMessage")
+public func LBHookMessage(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ oldptr: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     messageHook(cls, sel, imp, oldptr)
 }
 
@@ -29,7 +29,50 @@ public func LHStrError(_ err: LIBHOOKER_ERR) -> UnsafeRawPointer? {
     return UnsafeRawPointer((error as NSString).utf8String)
 }
 
-#warning("TODO: LHHookMemory")
+@_cdecl("LHPatchMemory")
+public func LHPatchMemory(_ hooks: UnsafePointer<LHMemoryPatch>, _ count: Int) -> Int {
+    for hook in Array(UnsafeBufferPointer(start: hooks, count: count)) {
+        if let dest = hook.destination,
+           let code = hook.data?.assumingMemoryBound(to: UInt8.self) {
+            rawHook(address: dest, code: code, size: mach_vm_size_t(hook.size))
+        } else {
+            return 1
+        }
+    }
+    return 0
+}
+
+@_cdecl("LHExecMemory")
+public func LHExecMemory(_ page: UnsafeMutablePointer<UnsafeMutableRawPointer?>, _ data: UnsafeMutableRawPointer, _ size: size_t) -> Int {
+    var addr: mach_vm_address_t = 0;
+    let krt1 = mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
+    guard krt1 == KERN_SUCCESS else {
+        if #available(macOS 11.0, *) {
+            logger.error("ellekit: couldn't allocate base memory")
+        }
+        print("[-] couldn't allocate base memory:", mach_error_string(krt1) ?? "")
+        return 0
+    }
+    let krt2 = mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE);
+    guard krt2 == KERN_SUCCESS else {
+        if #available(macOS 11.0, *) {
+            logger.error("ellekit: couldn't set memory to rw*")
+        }
+        print("[-] couldn't set memory to rw*:", mach_error_string(krt1) ?? "")
+        return 0
+    }
+    memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), data, size);
+    let krt3 = mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
+    guard krt3 == KERN_SUCCESS else {
+        if #available(macOS 11.0, *) {
+            logger.error("ellekit: couldn't set memory to r*x")
+        }
+        print("[-] couldn't set memory to r*x:", mach_error_string(krt1) ?? "")
+        return 0
+    }
+    page.pointee = UnsafeMutableRawPointer(bitPattern: UInt(addr))
+    return 1;
+}
 
 @_cdecl("LHHookFunctions")
 public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int) -> Int {

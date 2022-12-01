@@ -34,7 +34,7 @@ public final class ExceptionHandler {
             ARM_THREAD_STATE64
         )
         #endif
-        
+                
         self.port = targetPort
         
         startPortLoop()
@@ -115,7 +115,7 @@ public final class ExceptionHandler {
             }
         }
         
-        #if arch(x86_64)
+        #if !arch(arm64)
         return
         #else
         
@@ -126,6 +126,14 @@ public final class ExceptionHandler {
             $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size) {
                 thread_get_state(thread_port, ARM_THREAD_STATE64, $0, &stateCnt)
             }
+        }
+        
+        guard krt2 == KERN_SUCCESS else {
+            if #available(macOS 11.0, *) {
+                logger.error("ellekit: couldn't set state for thread")
+            }
+            print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
+            return
         }
                     
         #if _ptrauth(_arm64e)
