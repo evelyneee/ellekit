@@ -203,3 +203,105 @@ public class nop: Instruction {
         byteArray(from: self.value)
     }
 }
+
+class adrp: Instruction {
+    required public init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    public func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    public init(_ rt: Register, _ label: Int = 0) {
+        var base = Self.base
+        let immlow = label / 4096
+        let immhigh = label >> 2 & 0x7ffff
+        base |= immlow << 29
+        base |= immhigh << 5
+        base |= rt.value
+        self.value = reverse(base)
+    }
+    
+    public convenience init?(isn: UInt32, formerPC: UInt64, newPC: UInt64) {
+        guard let target = Self.destination(isn, formerPC) else {
+            return nil
+        }
+        let rt = isn.bits(0...4)
+        self.init(.x(Int(rt)), Int(target - newPC))
+    }
+    
+    static let base = 0b1_00_10000_0000000000000000000_00000
+    
+    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
+        // Check that this is an adrp instruction
+        if ((instruction & 0x9F000000) != 0x90000000) {
+            return nil;
+        }
+        
+        // Calculate imm from hi and lo
+        var imm_hi_lo = (instruction & 0xFFFFE0) >> 3;
+        imm_hi_lo |= (instruction & 0x60000000) >> 29;
+        if (instruction & 0x800000) == 1 {
+            // Sign extend
+            imm_hi_lo |= 0xFFE00000;
+        }
+        
+        // Build real imm
+        let imm = (imm_hi_lo << 12);
+        
+        // Emulate
+        return (pc & 0xFFFFFFFFFFFFF000) + UInt64(imm);
+    }
+
+}
+
+class adr: Instruction {
+    required public init(encoded: Int) {
+        self.value = encoded
+    }
+    
+    public func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+    
+    let value: Int
+    
+    public init(_ rt: Register, _ label: Int = 0) {
+        var base = Self.base
+        let immlow = label & 0x3
+        let immhigh = label >> 2 & 0x7ffff
+        base |= immlow << 29
+        base |= immhigh << 5
+        base |= rt.value
+        self.value = reverse(base)
+    }
+    
+    public convenience init?(isn: UInt32, formerPC: UInt64, newPC: UInt64) {
+        guard let target = Self.destination(isn, formerPC) else {
+            return nil
+        }
+        let rt = isn.bits(0...4)
+        self.init(.x(Int(rt)), Int(target - newPC))
+    }
+    
+    static let base = 0b0_00_10000_0000000000000000000_00000
+    
+    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
+        // Check that this is an adr instruction
+        if ((instruction & 0x9F000000) != 0x10000000) {
+            return nil
+        }
+        
+        var imm = (instruction & 0xFFFFE0) >> 3
+        imm |= (instruction & 0x60000000) >> 29
+        if (instruction & 0x800000) == 1 {
+            // Sign extend
+            imm |= 0xFFE00000
+        }
+        
+        return pc + UInt64(imm)
+    }
+}

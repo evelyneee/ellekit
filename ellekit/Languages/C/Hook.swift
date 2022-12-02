@@ -36,10 +36,9 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
     var code = [UInt8]()
     
+    #warning("TODO: Write some PC-relative instruction redirection code")
     /// Big branch code, unused atm because there are issues
-    /*
-     if abs(branchOffset / 1024 / 1024) > 128 {
-         guard targetSize >= 5 else { fatalError("[-] ellekit: this hook is impossible (big branch, but function does not have enough space)")}
+     if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
 
          let target_addr = Int(UInt(bitPattern: replacement))
@@ -52,12 +51,9 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
              movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
              br(.x16)
          }
-
+         
          code = codeBuilder
-     } else
-     */
-    
-    if abs(branchOffset / 1024 / 1024) > 128 {
+     } else if abs(branchOffset / 1024 / 1024) > 128 {
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }
@@ -73,7 +69,11 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
                 
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
     
-    let orig = getOriginal(target, targetSize, usedBigBranch: false) // abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
+    let orig = getOriginal(
+        target,
+        targetSize,
+        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
+    )
     
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
@@ -103,7 +103,22 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     
     var code = [UInt8]()
     
-    if abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
+        print("[*] Big branch")
+
+        let target_addr = Int(UInt(bitPattern: replacement))
+
+        @InstructionBuilder
+        var codeBuilder: [UInt8] {
+            movk(.x16, target_addr % 65536)
+            movk(.x16, (target_addr / 65536) % 65536, lsl: 16)
+            movk(.x16, ((target_addr / 65536) / 65536) % 65536, lsl: 32)
+            movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
+            br(.x16)
+        }
+        
+        code = codeBuilder
+    } else if abs(branchOffset / 1024 / 1024) > 128 {
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }
