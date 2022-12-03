@@ -53,6 +53,8 @@
 		9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9EA0CC7D293AE89A0000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
+		9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 /* End PBXBuildFile section */
@@ -145,6 +147,7 @@
 		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
 		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		9E92AAA9290D4E680018604C /* libellekit-mac.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libellekit-mac.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
@@ -359,14 +362,23 @@
 			isa = PBXGroup;
 			children = (
 				9E4801AC2913EB83007E433F /* Globals.swift */,
-				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
+				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E48019729109B77007E433F /* Misc */,
+				9EA0CC7B293AE8880000E9AA /* Threading */,
 				9E48019629109B61007E433F /* Assembler */,
 				9E48019329109739007E433F /* API */,
 				9E48018C290FE5C3007E433F /* PAC */,
 			);
 			path = ellekit;
+			sourceTree = "<group>";
+		};
+		9EA0CC7B293AE8880000E9AA /* Threading */ = {
+			isa = PBXGroup;
+			children = (
+				9EA0CC7C293AE89A0000E9AA /* Global.swift */,
+			);
+			path = Threading;
 			sourceTree = "<group>";
 		};
 		9EA0D1BE291C5D5B0061B187 /* injector */ = {
@@ -633,6 +645,7 @@
 				9E92AA9F290D4A040018604C /* Execute.swift in Sources */,
 				9E48019129108EF0007E433F /* PAC.swift in Sources */,
 				9E48019F2911EB20007E433F /* Orig.swift in Sources */,
+				9EA0CC7D293AE89A0000E9AA /* Global.swift in Sources */,
 				9E19B241291814CB00F8C4C7 /* ellekitc.c in Sources */,
 				9E698576290DFB5000408E14 /* Libhooker.swift in Sources */,
 				9E92AA8B290D47540018604C /* General.swift in Sources */,
@@ -655,6 +668,7 @@
 				9E4801AE2913ED56007E433F /* Globals.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */,
+				9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
 				9E480192291090A3007E433F /* PAC.swift in Sources */,

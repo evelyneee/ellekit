@@ -4,6 +4,8 @@
 import Foundation
 import ellekit_mac
 
+enforceThreadSafety = true
+
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
 
 @_cdecl("rep")
@@ -14,6 +16,16 @@ public func rep() -> Int {
 let repcl: @convention(c) () -> Int = rep
 
 let repptr = unsafeBitCast(repcl, to: UnsafeMutableRawPointer.self)
+
+DispatchQueue.global().async {
+    while true {
+        let two = atoi("3")
+        if two == 2 {
+            break
+        }
+    }
+    print("hooked fine")
+}
 
 let test: UnsafeMutableRawPointer? = hook(atoiptr, repptr)!
 

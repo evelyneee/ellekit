@@ -134,6 +134,10 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 @discardableResult
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
     let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY;
+    let enforceThreadSafety = enforceThreadSafety
+    if enforceThreadSafety {
+        stopAllThreads()
+    }
     mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions);
     
     memcpy(address, code, Int(size));
@@ -149,6 +153,9 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     sys_icache_invalidate(address, Int(vm_page_size))
     
     guard err2 == 0 else { return Int(err2) }
+    if enforceThreadSafety {
+        resumeAllThreads()
+    }
     
     return 0;
 }
