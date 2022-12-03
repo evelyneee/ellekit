@@ -1,42 +1,20 @@
 
 func disassembleBranchImm(_ opcode: UInt64) -> Int {
-    let imm = reverse(opcode).bits(0...25);
-    
-    if (imm << 2) > 1024 * 1024 * 128 {
-        print("negative branch")
-        let ret = ((0xfffffffff0000000 | imm << 2) & UInt64.max) ^ UInt64.max
-        return -Int(ret)
+    var imm = (opcode & 0x3FFFFFF) << 2;
+    if (opcode & 0x2000000) == 1 {
+        // Sign extend
+        imm |= 0xFC000000
     }
-    
-    return Int(imm << 2)
+    return Int(imm)
 }
 
 func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: UnsafeMutableRawPointer) -> [UInt8] {
-    let pcRel = disassembleBranchImm(isn)
-
-    let originalTarget = Int(UInt(bitPattern: target)) + (Int(pcRel) * 4)
+    let pcRel = disassembleBranchImm(reverse(isn))
         
-    let offset = calculateOffset(ptr, UnsafeMutableRawPointer(bitPattern: originalTarget)!)
+    let originalTarget = UInt64(UInt(bitPattern: target)) + UInt64(pcRel)
     
-    var code = [UInt8]()
-    if (offset / 1024 / 1024) > 128 { // 128mb tiny branch not allowed
-        @InstructionBuilder
-        var codeBuilt: [UInt8] {
-            movz(.x16, 0)
-            movk(.x16, originalTarget % 65536)
-            movk(.x16, (originalTarget / 65536) % 65536, lsl: 16)
-            movk(.x16, ((originalTarget / 65536) / 65536) % 65536, lsl: 32)
-            movk(.x16, ((originalTarget / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
-            br(.x16)
-        }
-        code = codeBuilt
-    } else {
-        @InstructionBuilder
-        var codeBuilt: [UInt8] {
-            b(offset)
-        }
-        code = codeBuilt
-    }
+    let code = assembleJump(originalTarget, pc: UInt64(UInt(bitPattern: target)), link: false)
+    
     return code
 }
 
@@ -125,4 +103,24 @@ public class br: Instruction {
     }
     
     static let base = 0b1101011_0_0_00_11111_0000_0_0_00000_00000
+}
+
+func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false) -> [UInt8] {
+    let offset = Int(target - pc)
+    if (size >= 5 && abs(offset / 1024 / 1024) > 128) || big {
+        let target_addr = Int(UInt64(offset) + pc)
+        let codeBuild = [
+            movk(.x16, target_addr % 65536).bytes(),
+            movk(.x16, (target_addr / 65536) % 65536, lsl: 16).bytes(),
+            movk(.x16, ((target_addr / 65536) / 65536) % 65536, lsl: 32).bytes(),
+            movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48).bytes(),
+            link ? blr(.x16).bytes() : br(.x16).bytes()
+        ]
+        return codeBuild.joined().literal()
+    } else {
+        let codeBuild = [
+            link ? bl(offset).bytes() : b(offset).bytes()
+        ]
+        return codeBuild.joined().literal()
+    }
 }

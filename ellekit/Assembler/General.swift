@@ -236,11 +236,6 @@ class adrp: Instruction {
     static let base = 0b1_00_10000_0000000000000000000_00000
     
     static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
-        // Check that this is an adrp instruction
-        if ((instruction & 0x9F000000) != 0x90000000) {
-            return nil;
-        }
-        
         // Calculate imm from hi and lo
         var imm_hi_lo = (instruction & 0xFFFFE0) >> 3;
         imm_hi_lo |= (instruction & 0x60000000) >> 29;
@@ -280,20 +275,14 @@ class adr: Instruction {
     }
     
     public convenience init?(isn: UInt32, formerPC: UInt64, newPC: UInt64) {
-        guard let target = Self.destination(isn, formerPC) else {
-            return nil
-        }
+        let target = Self.destination(isn, formerPC)
         let rt = isn.bits(0...4)
         self.init(.x(Int(rt)), Int(target - newPC))
     }
     
     static let base = 0b0_00_10000_0000000000000000000_00000
     
-    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
-        // Check that this is an adr instruction
-        if ((instruction & 0x9F000000) != 0x10000000) {
-            return nil
-        }
+    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64 {
         
         var imm = (instruction & 0xFFFFE0) >> 3
         imm |= (instruction & 0x60000000) >> 29

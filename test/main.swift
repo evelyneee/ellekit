@@ -1,4 +1,6 @@
 
+// my playground!
+
 import Foundation
 import ellekit_mac
 
@@ -15,7 +17,46 @@ let repptr = unsafeBitCast(repcl, to: UnsafeMutableRawPointer.self)
 
 let test: UnsafeMutableRawPointer? = hook(atoiptr, repptr)!
 
+let origRes = unsafeBitCast(test, to: (@convention (c) (UnsafePointer<CChar>) -> Int).self)("4")
+
 print(
     atoi("3"),
-    unsafeBitCast(test, to: (@convention (c) (UnsafePointer<CChar>) -> Int).self)("4")
+    origRes
 )
+
+let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!
+
+@_cdecl("nspoprep")
+public func nspoprep() -> Int {
+    2
+}
+
+let nspoprepcl: @convention(c) () -> Int = nspoprep
+
+let nspoprepptr = unsafeBitCast(nspoprepcl, to: UnsafeMutableRawPointer.self)
+
+let test2: UnsafeMutableRawPointer = hook(nspopptr, nspoprepptr)!
+
+func test3() {
+    let h = unsafeBitCast(nspopptr, to: (@convention (c) () -> Int).self)()
+
+    print(h)
+}
+test3()
+
+
+//unsafeBitCast(test2, to: (@convention (c) () -> Void).self)()
+
+typealias freebody = @convention(c) (UnsafeMutableRawPointer?) -> Void
+
+var free_orig: (freebody)? = nil
+
+@_cdecl("free_c_orig")
+public func free_c_orig(_ ptr: UnsafeMutableRawPointer?) {
+    print("freeing", ptr as Any)
+    free_orig?(ptr)
+}
+
+let orig: UnsafeMutableRawPointer? = hook(dlsym(dlopen(nil, RTLD_NOW), "free"), dlsym(dlopen(nil, RTLD_NOW), "free_c_orig"))
+
+free_orig = unsafeBitCast(orig, to: freebody?.self)

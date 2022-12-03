@@ -48,23 +48,22 @@ public final class ExceptionHandler {
     }
     
     static func portLoop(_ `self`: ExceptionHandler?) {
-                            
+                                 
         guard let `self` else {
             if #available(macOS 11.0, *) {
                 logger.error("ellekit: exception handler deallocated.")
             }
-            return print("[-] ellekit: exception handler deallocated.")
+            print("[-] ellekit: exception handler deallocated.")
+            return
         }
-        
-        defer { Self.portLoop(self) }
-        
+                
         let msg_header = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: Int(vm_page_size))
         
         defer { msg_header.deallocate() }
         
         let krt1 = mach_msg(
             msg_header,
-            MACH_RCV_MSG | MACH_RCV_LARGE,
+            MACH_RCV_MSG | MACH_RCV_LARGE | Int32(MACH_MSG_TIMEOUT_NONE),
             0,
             mach_msg_size_t(vm_page_size),
             self.port,
@@ -85,7 +84,7 @@ public final class ExceptionHandler {
             .withMemoryRebound(to: exception_raise_request.self, capacity: Int(vm_page_size)) { $0.pointee }
         
         let thread_port = req.thread.name
-                
+                        
         defer {
             var reply = exception_raise_reply()
             reply.Head.msgh_bits = req.Head.msgh_bits & UInt32(MACH_MSGH_BITS_REMOTE_MASK)
@@ -96,7 +95,7 @@ public final class ExceptionHandler {
             
             reply.NDR = req.NDR
             reply.RetCode = KERN_SUCCESS
-            
+                        
             let krt = mach_msg(
                 &reply.Head,
                 1,
@@ -109,15 +108,17 @@ public final class ExceptionHandler {
                         
             if krt != KERN_SUCCESS {
                 if #available(macOS 11.0, *) {
-                    logger.error("error sending reply to exception")
+                    logger.notice("error sending reply to exception")
                 }
                 print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
             }
+            
+            Self.portLoop(self)
         }
         
-        #if !arch(arm64)
-        return
+        #if arch(x86_64)
         #else
+        
         
         var state = arm_thread_state64()
         var stateCnt = mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT)
@@ -127,12 +128,12 @@ public final class ExceptionHandler {
                 thread_get_state(thread_port, ARM_THREAD_STATE64, $0, &stateCnt)
             }
         }
-        
+                
         guard krt2 == KERN_SUCCESS else {
             if #available(macOS 11.0, *) {
-                logger.error("ellekit: couldn't set state for thread")
+                logger.error("ellekit: couldn't get state for thread")
             }
-            print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
+            print("[-] couldn't get state for thread:", mach_error_string(krt1) ?? "")
             return
         }
                     
@@ -153,9 +154,9 @@ public final class ExceptionHandler {
             return
         }
         #endif
-                                            
+                        
         if let newPtr = hooks[formerPtr] ?? hooks.first?.value {
-            
+                        
             #if _ptrauth(_arm64e)
             state.__opaque_pc = sign_pc(newPtr)
             state.__x.16 = UInt64(UInt(bitPattern: sign_pc(newPtr)))
@@ -163,18 +164,30 @@ public final class ExceptionHandler {
             state.__pc = UInt64(UInt(bitPattern: newPtr))
             state.__x.16 = UInt64(UInt(bitPattern: newPtr))
             #endif
-                        
-            _ = withUnsafeMutablePointer(to: &state, {
+                                                
+            let krt_set = withUnsafeMutablePointer(to: &state, {
                 $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<arm_thread_state64>.size, {
                     thread_set_state(thread_port, ARM_THREAD_STATE64, $0, mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT))
                 })
             })
-            
+                        
+            guard krt_set == KERN_SUCCESS else {
+                if #available(macOS 11.0, *) {
+                    logger.error("ellekit: couldn't set state for thread")
+                }
+                print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
+                return
+            }
+                        
         } else {
-            return Self.portLoop(self)
+            thread_suspend(thread_port)
+            mach_port_deallocate(mach_task_self_, thread_port)
+            return
         }
         #endif
         
         thread_resume(thread_port)
+                
+        return
     }
 }

@@ -36,29 +36,19 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
     var code = [UInt8]()
     
-    #warning("TODO: Write some PC-relative instruction redirection code")
-    /// Big branch code, unused atm because there are issues
-     if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
+    // fast big branch option
+    if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
 
-         let target_addr = Int(UInt(bitPattern: replacement))
+         let target_addr = UInt64(UInt(bitPattern: replacement))
 
-         @InstructionBuilder
-         var codeBuilder: [UInt8] {
-             movk(.x16, target_addr % 65536)
-             movk(.x16, (target_addr / 65536) % 65536, lsl: 16)
-             movk(.x16, ((target_addr / 65536) / 65536) % 65536, lsl: 32)
-             movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
-             br(.x16)
-         }
-         
-         code = codeBuilder
-     } else if abs(branchOffset / 1024 / 1024) > 128 {
+         code = assembleJump(target_addr, pc: 0, link: false, big: true)
+     } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
         if exceptionHandler == nil {
-            exceptionHandler = .init()
+             exceptionHandler = .init()
         }
         code = [0x20, 0x00, 0x20, 0xD4]
-    } else {
+    } else { // fastest and simplest branch
         print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
@@ -106,18 +96,9 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
         print("[*] Big branch")
 
-        let target_addr = Int(UInt(bitPattern: replacement))
+        let target_addr = UInt64(UInt(bitPattern: replacement))
 
-        @InstructionBuilder
-        var codeBuilder: [UInt8] {
-            movk(.x16, target_addr % 65536)
-            movk(.x16, (target_addr / 65536) % 65536, lsl: 16)
-            movk(.x16, ((target_addr / 65536) / 65536) % 65536, lsl: 32)
-            movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48) // stop overflow error :)
-            br(.x16)
-        }
-        
-        code = codeBuilder
+        code = assembleJump(target_addr, pc: 0, link: false, big: true)
     } else if abs(branchOffset / 1024 / 1024) > 128 {
         if exceptionHandler == nil {
             exceptionHandler = .init()
@@ -165,7 +146,7 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
                                originalPerms)
     
     // flush page cache so we don't hit cached unpatched functions
-    sys_icache_invalidate(address, Int(size))
+    sys_icache_invalidate(address, Int(vm_page_size))
     
     guard err2 == 0 else { return Int(err2) }
     

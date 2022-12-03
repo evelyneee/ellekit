@@ -13,8 +13,8 @@
 		9E2D4F512938389B00EF6619 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F502938389B00EF6619 /* main.swift */; };
 		9E2D4F562938391C00EF6619 /* libellekit-mac.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; };
 		9E2D4F572938391C00EF6619 /* libellekit-mac.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		9E2D4F5D293A9F2300EF6619 /* disasm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* disasm.swift */; };
-		9E2D4F5E293A9F6200EF6619 /* disasm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* disasm.swift */; };
+		9E2D4F5D293A9F2300EF6619 /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
+		9E2D4F5E293A9F6200EF6619 /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
 		9E48019129108EF0007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019929109B83007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
@@ -116,7 +116,7 @@
 		9E19B24C2919D82900F8C4C7 /* Usage.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Usage.md; sourceTree = "<group>"; };
 		9E2D4F4E2938389B00EF6619 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E2D4F502938389B00EF6619 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		9E2D4F5C293A9F2300EF6619 /* disasm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = disasm.swift; sourceTree = "<group>"; };
+		9E2D4F5C293A9F2300EF6619 /* Rebind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rebind.swift; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -237,14 +237,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9E2D4F5B293A9F1B00EF6619 /* Disassembler */ = {
-			isa = PBXGroup;
-			children = (
-				9E2D4F5C293A9F2300EF6619 /* disasm.swift */,
-			);
-			path = Disassembler;
-			sourceTree = "<group>";
-		};
 		9E48018C290FE5C3007E433F /* PAC */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +261,7 @@
 				9E92AA9A290D4A040018604C /* Branches.swift */,
 				9E92AA97290D4A040018604C /* Execute.swift */,
 				9E92AA99290D4A040018604C /* Math.swift */,
+				9E2D4F5C293A9F2300EF6619 /* Rebind.swift */,
 				9E92AA98290D4A040018604C /* Register.swift */,
 			);
 			path = Assembler;
@@ -365,7 +358,6 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
-				9E2D4F5B293A9F1B00EF6619 /* Disassembler */,
 				9E4801AC2913EB83007E433F /* Globals.swift */,
 				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
@@ -646,7 +638,7 @@
 				9E92AA8B290D47540018604C /* General.swift in Sources */,
 				9E92AAA2290D4A040018604C /* Branches.swift in Sources */,
 				9E4801AA2913E0F7007E433F /* Exception.swift in Sources */,
-				9E2D4F5D293A9F2300EF6619 /* disasm.swift in Sources */,
+				9E2D4F5D293A9F2300EF6619 /* Rebind.swift in Sources */,
 				9E698579290EC91700408E14 /* Sizing.swift in Sources */,
 				9E19B24929188EDA00F8C4C7 /* Method.swift in Sources */,
 				9E489EBF292978E400F81BBD /* Slide.swift in Sources */,
@@ -659,7 +651,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E2D4F5E293A9F6200EF6619 /* disasm.swift in Sources */,
+				9E2D4F5E293A9F6200EF6619 /* Rebind.swift in Sources */,
 				9E4801AE2913ED56007E433F /* Globals.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */,
@@ -703,9 +695,12 @@
 		9E2D4F522938389B00EF6619 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -716,9 +711,12 @@
 		9E2D4F532938389B00EF6619 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -729,7 +727,7 @@
 		9E78FBEF2916BDB900B3B50B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = arm64;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
@@ -748,7 +746,7 @@
 		9E78FBF02916BDB900B3B50B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = arm64;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
@@ -1001,10 +999,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = (
-					arm64e,
-					arm64,
-				);
+				ARCHS = arm64;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1030,10 +1025,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = (
-					arm64e,
-					arm64,
-				);
+				ARCHS = arm64;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

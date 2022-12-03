@@ -4,6 +4,12 @@ func reverse<T: FixedWidthInteger>(_ base: T) -> T {
 }
 
 extension FixedWidthInteger {
+    func reverse() -> Self {
+        ((self>>24)&0xff) | ((self<<8)&0xff0000) | ((self>>8)&0xff00) | ((self<<24)&0xff000000)
+    }
+}
+
+extension FixedWidthInteger {
     func bits(_ range: ClosedRange<Self>) -> Self {
         let amount: Self = (range.upperBound - range.lowerBound) + 1;
         let mask: Self = ((1 << amount) - 1) << range.lowerBound;
