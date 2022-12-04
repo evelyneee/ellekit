@@ -4,7 +4,7 @@
 import Foundation
 import ellekit_mac
 
-enforceThreadSafety = true
+EKEnableThreadSafety(1)
 
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
 

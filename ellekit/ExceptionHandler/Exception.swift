@@ -50,7 +50,7 @@ public final class ExceptionHandler {
     static func portLoop(_ `self`: ExceptionHandler?) {
                                  
         guard let `self` else {
-            if #available(macOS 11.0, *) {
+            if #available(iOS 14.0, macOS 11.0, *) {
                 logger.error("ellekit: exception handler deallocated.")
             }
             print("[-] ellekit: exception handler deallocated.")
@@ -72,7 +72,7 @@ public final class ExceptionHandler {
         )
         
         guard krt1 == KERN_SUCCESS else {
-            if #available(macOS 11.0, *) {
+            if #available(iOS 14.0, macOS 11.0, *) {
                 logger.error("ellekit: couldn't receive from port")
             }
             print("[-] couldn't receive from port:", mach_error_string(krt1) ?? "")
@@ -107,7 +107,7 @@ public final class ExceptionHandler {
             )
                         
             if krt != KERN_SUCCESS {
-                if #available(macOS 11.0, *) {
+                if #available(iOS 14.0, macOS 11.0, *) {
                     logger.notice("error sending reply to exception")
                 }
                 print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
@@ -130,7 +130,7 @@ public final class ExceptionHandler {
         }
                 
         guard krt2 == KERN_SUCCESS else {
-            if #available(macOS 11.0, *) {
+            if #available(iOS 14.0, macOS 11.0, *) {
                 logger.error("ellekit: couldn't get state for thread")
             }
             print("[-] couldn't get state for thread:", mach_error_string(krt1) ?? "")
@@ -139,7 +139,7 @@ public final class ExceptionHandler {
                     
         #if _ptrauth(_arm64e)
         guard let formerPtr = state.__opaque_pc?.makeReadable() else {
-            if #available(macOS 11.0, *) {
+            if #available(iOS 14.0, macOS 11.0, *) {
                 logger.error("couldn't get ptr from pc reg")
             }
             print("[-] couldn't get ptr from pc reg")
@@ -147,7 +147,7 @@ public final class ExceptionHandler {
         }
         #else
         guard let formerPtr = UnsafeMutableRawPointer(bitPattern: UInt(state.__pc)) else {
-            if #available(macOS 11.0, *) {
+            if #available(iOS 14.0, macOS 11.0, *) {
                 logger.error("couldn't get ptr from pc reg")
             }
             print("[-] couldn't get ptr from pc reg")
@@ -172,7 +172,7 @@ public final class ExceptionHandler {
             })
                         
             guard krt_set == KERN_SUCCESS else {
-                if #available(macOS 11.0, *) {
+                if #available(iOS 14.0, macOS 11.0, *) {
                     logger.error("ellekit: couldn't set state for thread")
                 }
                 print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")

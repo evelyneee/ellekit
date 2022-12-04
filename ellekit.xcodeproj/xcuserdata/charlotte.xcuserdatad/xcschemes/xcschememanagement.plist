@@ -17,17 +17,22 @@
 		<key>injector.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<key>launcher.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>6</integer>
+		</dict>
+		<key>loader.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 		<key>test.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>2</integer>
 		</dict>
 		<key>trampoline.xcscheme_^#shared#^_</key>
 		<dict>
@@ -37,6 +42,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>9E381C39293D1C87004D36B2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>9E78FBD92916B29700B3B50B</key>
 		<dict>
 			<key>primary</key>

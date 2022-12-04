@@ -56,7 +56,7 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
             memcpy(ptr, code, codesize * code.count);
             let krt = mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: ptr)), UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
             guard krt == KERN_SUCCESS else {
-                if #available(macOS 11.0, *) {
+                if #available(iOS 14.0, macOS 11.0, *) {
                     logger.error("ellekit: couldn't vm_protect small function orig page")
                 }
                 print("[-] couldn't vm_protect small function orig page:", mach_error_string(krt) ?? "")

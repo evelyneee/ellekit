@@ -4,8 +4,8 @@
 #include <mach-o/dyld.h>
 
 #include <stdio.h>
-
 #include <stdlib.h>
+#include <ctype.h>
 
 // MARK: - CPU
 
@@ -16,6 +16,70 @@ struct dyld_interpose_tuple {
     const void* replacee;
 };
 
+#ifndef HEXDUMP_COLS
+#define HEXDUMP_COLS 16
+#endif
+
+void* sign_pc(void* ptr) {
+#if __arm64e__
+    return ptrauth_sign_unauthenticated(ptr, ptrauth_key_process_independent_code, 0x7481);
+#else
+    return ptr;
+#endif
+}
+
+void* sign_data(void* ptr) {
+#if __arm64e__
+    return ptrauth_sign_unauthenticated(ptr, ptrauth_key_process_independent_data, 0);
+#else
+    return ptr;
+#endif
+}
+
+void hexdump_ugh2(void *mem, unsigned int len)
+{
+        unsigned int i, j;
+        
+        for(i = 0; i < len + ((len % HEXDUMP_COLS) ? (HEXDUMP_COLS - len % HEXDUMP_COLS) : 0); i++)
+        {
+                /* print offset */
+                if(i % HEXDUMP_COLS == 0)
+                {
+                        printf("0x%06x: ", i);
+                }
+ 
+                /* print hex data */
+                if(i < len)
+                {
+                        printf("%02x ", 0xFF & ((char*)mem)[i]);
+                }
+                else /* end of block, just aligning for ASCII dump */
+                {
+                        printf("   ");
+                }
+                
+                /* print ASCII dump */
+                if(i % HEXDUMP_COLS == (HEXDUMP_COLS - 1))
+                {
+                        for(j = i - (HEXDUMP_COLS - 1); j <= i; j++)
+                        {
+                                if(j >= len) /* end of block, not really printing */
+                                {
+                                        putchar(' ');
+                                }
+                                else if(isprint(((char*)mem)[j])) /* printable char */
+                                {
+                                        putchar(0xFF & ((char*)mem)[j]);
+                                }
+                                else /* other char */
+                                {
+                                        putchar('.');
+                                }
+                        }
+                        putchar('\n');
+                }
+        }
+}
 extern const struct mach_header __dso_handle;
 extern void dyld_dynamic_interpose(const struct mach_header* mh, const struct dyld_interpose_tuple array[], size_t count);
 

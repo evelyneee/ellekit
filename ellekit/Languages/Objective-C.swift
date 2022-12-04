@@ -5,7 +5,7 @@ import Foundation
 public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
     
     guard let method = class_getInstanceMethod(cls, sel) ?? class_getClassMethod(cls, sel) else {
-        if #available(macOS 11.0, *) {
+        if #available(iOS 14.0, macOS 11.0, *) {
             logger.error("ellekit: peacefully bailing out of message hook because the method cannot be found")
         }
         return

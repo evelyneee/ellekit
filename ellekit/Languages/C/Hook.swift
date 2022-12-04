@@ -71,8 +71,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
         #else
         if result != 0 {
-            if #available(macOS 11.0, *) {
-                logger.error("ellekit: Hook failure for \(target) to \(replacement)")
+            if #available(iOS 14.0, macOS 11.0, *) {
+                logger.error("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
             }
         }
         #endif
@@ -123,8 +123,8 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
         #else
         if result != 0 {
-            if #available(macOS 11.0, *) {
-                logger.error("ellekit: Hook failure for \(target) to \(replacement)")
+            if #available(iOS 14.0, macOS 11.0, *) {
+                logger.error("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
             }
         }
         #endif
@@ -157,5 +157,5 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
         resumeAllThreads()
     }
     
-    return 0;
+    return 0
 }
