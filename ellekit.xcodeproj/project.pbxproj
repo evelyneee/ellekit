@@ -40,6 +40,7 @@
 		9E78FC0029172D5600B3B50B /* launcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBFF29172D5600B3B50B /* launcherApp.swift */; };
 		9E78FC0229172D5600B3B50B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FC0129172D5600B3B50B /* ContentView.swift */; };
 		9E78FC0429172D5600B3B50B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E78FC0329172D5600B3B50B /* Assets.xcassets */; };
+		9E812066294008E4006A0EBC /* injector.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E812065294008E4006A0EBC /* injector.o */; };
 		9E92AA8B290D47540018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AA9E290D4A040018604C /* MobileSubstrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA96290D4A040018604C /* MobileSubstrate.swift */; };
 		9E92AA9F290D4A040018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
@@ -150,6 +151,8 @@
 		9E78FC0129172D5600B3B50B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9E78FC0329172D5600B3B50B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E78FC0829172D5600B3B50B /* launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = launcher.entitlements; sourceTree = "<group>"; };
+		9E81206029400429006A0EBC /* inject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = inject.h; sourceTree = "<group>"; };
+		9E812065294008E4006A0EBC /* injector.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = injector.o; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		9E92AA96290D4A040018604C /* MobileSubstrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileSubstrate.swift; sourceTree = "<group>"; };
@@ -162,6 +165,7 @@
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
+		9EAC0ACB293EC31E0048DE0A /* loader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = loader.entitlements; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -178,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E812066294008E4006A0EBC /* injector.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +267,10 @@
 		9E381C3B293D1C88004D36B2 /* loader */ = {
 			isa = PBXGroup;
 			children = (
+				9E812065294008E4006A0EBC /* injector.o */,
+				9EAC0ACB293EC31E0048DE0A /* loader.entitlements */,
 				9E381C3C293D1C88004D36B2 /* main.swift */,
+				9E81206029400429006A0EBC /* inject.h */,
 			);
 			path = loader;
 			sourceTree = "<group>";
@@ -800,13 +808,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64e;
+				CODE_SIGN_ENTITLEMENTS = loader/loader.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development: Marc-Andre Belanger (5Q27LLMHG4)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = loader/inject.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -815,13 +828,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64e;
+				CODE_SIGN_ENTITLEMENTS = loader/loader.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development: Marc-Andre Belanger (5Q27LLMHG4)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = ellekitc/include/ellekit.h;
+				SWIFT_OBJC_BRIDGING_HEADER = loader/inject.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
