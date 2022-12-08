@@ -40,7 +40,7 @@ jobs:
       - name: Upload library (mac) to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ellekit
+          name: ellekit-mac
           path: ${{ github.workspace }}/product/libellekit-mac.dylib
       
       - name: Build library (ios)
@@ -53,5 +53,5 @@ jobs:
       - name: Upload library (ios) to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ellekit
+          name: ellekit-ios
           path: ${{ github.workspace }}/product/libellekit-ios.a
