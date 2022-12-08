@@ -646,7 +646,8 @@
 /* Begin PBXShellScriptBuildPhase section */
 		9E489EBD292930F400F81BBD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -657,7 +658,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "scp -P 2222 $(BUILT_PRODUCTS_DIR) root@localhost:/usr/lib\nssh -t root@localhost \"cp /usr/lib/libinjector.dylib /usr/lib/substitute-loader.dylib && sbreload\" -p 2222\n";
 		};
