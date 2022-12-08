@@ -30,15 +30,28 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app
           
-      - name: Build library
+      - name: Build library (mac)
         run: |
           xcodebuild -target ellekit-mac
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/xcodebuild/build/Release/libellekit-mac.dylib ${{ github.workspace }}/product
           
-      - name: Upload library to artifacts
+      - name: Upload library (mac) to artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ellekit
-          path: ${{ github.workspace }}/xcodebuild/build/Release/libellekit-mac.dylib
+          path: ${{ github.workspace }}/product/libellekit-mac.dylib
+      
+      - name: Build library (ios)
+        run: |
+          xcodebuild -target ellekit
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/xcodebuild/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
+          
+      - name: Upload library (ios) to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ellekit
+          path: ${{ github.workspace }}/product/libellekit-ios.a
