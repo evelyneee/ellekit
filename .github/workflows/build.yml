@@ -48,7 +48,7 @@ jobs:
       
       - name: Build library (ios)
         run: |
-          ${{ env.build_cmd }} -target ellekit
+          ${{ env.build_cmd }} ellekit
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
@@ -61,7 +61,7 @@ jobs:
       
       - name: Build injector
         run: |
-          ${{ env.build_cmd }} -target injector
+          ${{ env.build_cmd }} injector
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/build/Release-iphoneos/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
