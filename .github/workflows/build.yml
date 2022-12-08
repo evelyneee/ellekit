@@ -35,7 +35,7 @@ jobs:
           xcodebuild -target ellekit-mac
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/xcodebuild/build/Release/libellekit-mac.dylib ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release/libellekit-mac.dylib ${{ github.workspace }}/product
           
       - name: Upload library (mac) to artifacts
         uses: actions/upload-artifact@v3
@@ -48,7 +48,7 @@ jobs:
           xcodebuild -target ellekit
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/xcodebuild/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
+          cp -R ${{ github.workspace }}/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
           
       - name: Upload library (ios) to artifacts
         uses: actions/upload-artifact@v3
