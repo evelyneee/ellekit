@@ -1,0 +1,73 @@
+name: CI
+
+env:
+  build_cmd: xcodebuild CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -target
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      
+  workflow_dispatch:
+  
+jobs:
+  build:
+    name: Build
+    runs-on: macos-12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Select Xcode version (14.1)
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_14.1.app
+          
+      - name: Build library (mac)
+        run: |
+          ${{ env.build_cmd }} ellekit-mac
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release/libellekit-mac.dylib ${{ github.workspace }}/product
+          
+      - name: Upload library (mac) to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ellekit-library-mac
+          path: ${{ github.workspace }}/product/libellekit-mac.dylib
+      
+      - name: Build library (ios)
+        run: |
+          ${{ env.build_cmd }} ellekit
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
+          
+      - name: Upload library (ios) to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ellekit-library-ios
+          path: ${{ github.workspace }}/product/libellekit-ios.a
+      
+      - name: Build injector
+        run: |
+          ${{ env.build_cmd }} injector
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release-iphoneos/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
+          
+      - name: Upload injector to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: injector
+          path: ${{ github.workspace }}/product/libinjector.dylib
