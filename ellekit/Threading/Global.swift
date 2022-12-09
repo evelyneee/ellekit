@@ -1,9 +1,3 @@
-//
-//  Global.swift
-//  ellekit
-//
-//  Created by charlotte on 2022-12-02.
-//
 
 import Foundation
 

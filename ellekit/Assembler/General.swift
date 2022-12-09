@@ -80,6 +80,16 @@ public class movk: Instruction {
         self.value = base
     }
     
+    public init(_ rd: Register, _ value: UInt64, lsl: Int = 0) {
+        var base = Self.base
+        base |= (rd.w ? 0 : 1) << 31
+        base |= (lsl / 16) << 21
+        base |= Int(value) << 5
+        base |= rd.value
+        base = reverse(base)
+        self.value = base
+    }
+    
     required public init(encoded: Int) {
         self.value = encoded
     }

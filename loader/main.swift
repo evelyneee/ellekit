@@ -1,11 +1,26 @@
-//
-//  main.swift
-//  loader
-//
-//  Created by charlotte on 2022-12-04.
-//
 
 import Foundation
+
+buildstr()
+
+let spawn = UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))) + 20
+
+print(spawn)
+
+@InstructionBuilder
+var spawn_patch: [UInt8] {
+    // Jump to posix_spawn address
+    movk(.x16, Int(spawn % 65536))
+    movk(.x16, Int((spawn / 65536) % 65536), lsl: 16)
+    movk(.x16, Int(((spawn / 65536) / 65536) % 65536), lsl: 32)
+    movk(.x16, Int(((spawn / 65536) / 65536) / 65536), lsl: 48)
+    br(.x16)
+}
+
+print(spawn_patch.map { String(format: "%02X", $0)}.joined())
+
+remoteHexDump(mach_task_self_, .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "buildstr")))))
+remoteHexDump(mach_task_self_, .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn_patch")))))
 
 var task: mach_port_t = 0
 
@@ -13,74 +28,71 @@ let pid_krt = task_for_pid(mach_task_self_, 1, &task)
 
 print("got task", task, pid_krt, String(cString: mach_error_string(pid_krt)))
 
-let act_list: UnsafeMutablePointer<thread_act_array_t?> = .allocate(capacity: 100)
-var count: UInt32 = 0
-let task_krt = task_threads(task, act_list, &count)
+let slide: Int = Int(getSlide(task))
+            
+let posix_spawn_address: mach_vm_address_t = .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))))
 
-let threadArray = act_list.pointee?.withMemoryRebound(to: thread_act_t.self, capacity: MemoryLayout<thread_act_t>.size * Int(count), { ptr in
-    Array(UnsafeMutableBufferPointer(start: ptr, count: Int(count)))
+func remoteHexDump(_ task: task_t, _ addr: mach_vm_address_t) {
+    var offset: vm_offset_t = 0
+    var outSize: mach_msg_type_number_t = 0
+
+    if mach_vm_read(task, addr, mach_vm_size_t(vm_page_size), &offset, &outSize) == KERN_SUCCESS {
+        print(UnsafeMutableRawPointer(bitPattern: offset))
+        hexdump(.init(bitPattern: offset), 1000)
+    } else {
+        print("fail")
+    }
+}
+
+//remoteHexDump(mach_task_self_, posix_spawn_address)
+//remoteHexDump(task, posix_spawn_address)
+
+let patch_addy = allocateStringBuilder()
+
+@InstructionBuilder
+var patch: [UInt8] {
+    // Jump to posix_spawn address
+    movk(.x16, patch_addy % 65536)
+    movk(.x16, (patch_addy / 65536) % 65536, lsl: 16)
+    movk(.x16, ((patch_addy / 65536) / 65536) % 65536, lsl: 32)
+    movk(.x16, ((patch_addy / 65536) / 65536) / 65536, lsl: 48)
+    blr(.x16)
+}
+
+var patchBytes = patch
+
+launchd_lock()
+
+print(
+    String(cString: mach_error_string(
+        mach_vm_protect(
+            task,
+            posix_spawn_address,
+            mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size),
+            0,
+            VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
+        )
+    ))
+)
+
+print(mach_msg_type_number_t(patchBytes.count * MemoryLayout<UInt8>.size))
+
+let write = withUnsafeBytes(of: &patchBytes, { buf in
+    mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), mach_msg_type_number_t(buf.count * MemoryLayout<UInt8>.size))
 })
 
-let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
+print(String(cString: mach_error_string(write)))
 
-var states = threadArray?.map { thread in
-    var state = __darwin_arm_thread_state64()
-    var stateCnt = mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT)
-    
-    thread_suspend(thread)
-    
-    let krt2 = withUnsafeMutablePointer(to: &state) {
-        $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<__darwin_arm_thread_state64>.size) {
-            thread_get_state(thread, ARM_THREAD_STATE64, $0, &stateCnt)
-        }
-    }
-    
-    return (thread, state)
-}
+print(
+    mach_vm_protect(task, posix_spawn_address, mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
+)
 
-sleep(2);
+launchd_unlock()
 
-inject_to_task(task, "/usr/local/lib/libinjector.dylib")
+var offset2: vm_offset_t = 0
+var outSize2: mach_msg_type_number_t = 0
 
-states?.forEach { thread, state in
-    var state = state
-    var stateCnt = mach_msg_type_number_t(ARM_THREAD_STATE64_COUNT)
-    _ = withUnsafeMutablePointer(to: &state) {
-        $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<__darwin_arm_thread_state64>.size) {
-            thread_set_state(thread, ARM_THREAD_STATE64, $0, stateCnt)
-        }
-    }
-    thread_resume(thread)
-}
-
-exit(0);
-
-#if false
-
-print("got threads", threadArray, task_krt, String(cString: mach_error_string(task_krt)))
-
-let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
-
-let sym = dlsym(dlopen(nil, RTLD_NOLOAD), "os_log_simple_now")!
-
-//var addr: mach_vm_address_t = 0;
-//assert(mach_vm_allocate(task, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE) == KERN_SUCCESS)
-//assert(mach_vm_protect(task, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE) == KERN_SUCCESS)
-//var str = ("/usr/local/lib/libtesttweak.dylib" as NSString).utf8String
-//assert(mach_vm_write(task, addr, UInt(bitPattern: str), mach_msg_type_number_t(vm_page_size)) == KERN_SUCCESS)
-
-let slide = launchd_slide(task)
-
-var addr: mach_vm_address_t = 0;
-assert(mach_vm_allocate(task, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE) == KERN_SUCCESS)
-assert(mach_vm_protect(task, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE) == KERN_SUCCESS)
-var str = ("/usr/local/lib/libinjector.dylib" as NSString).utf8String
-assert(mach_vm_write(task, addr, UInt(bitPattern: str), mach_msg_type_number_t(vm_page_size)) == KERN_SUCCESS)
-
-print("allocated everything fine!!!!")
-
-print(UInt64(UInt(bitPattern: sign_data(UnsafeMutableRawPointer(bitPattern: UInt(addr))!)!)))
-
+/*
 threadArray?.forEach { thread in
     
 //    let krt_sus = thread_suspend(thread)
@@ -188,5 +200,4 @@ threadArray?.forEach { thread in
 //        thread_resume(thread)
 //    )
 }
-
-#endif
+*/
