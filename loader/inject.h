@@ -22,7 +22,7 @@ extern void* sign_pointer(void* ptr);
 extern void* strip_pointer(void* ptr);
 extern void* sign_pc(void* ptr);
 
-extern void buildstr(char *const argv[restrict]);
+extern char** buildstr(char *const argv[restrict]);
 
 #ifndef HEXDUMP_COLS
 #define HEXDUMP_COLS 16

@@ -12,22 +12,23 @@
 .endmacro
 
 .macro jumpback
-    movk x9, #0xebdc
-    movk x9, #0xa06a, lsl #16
-    movk x9, #0x0001, lsl #32
-    movk x9, #0x0000, lsl #48
-    add x9, x9, 20
-    pacibsp
+    // pacibsp
     sub sp, sp, #0xe0
     stp x26, x25, [sp, #0x90]
     stp x24, x23, [sp, #0xa0]
     stp x22, x21, [sp, #0xb0]
-    br x9
+    movk lr, #0xebdc
+    movk lr, #0xa06a, lsl #16
+    movk lr, #0x0001, lsl #32
+    movk lr, #0x0000, lsl #48
+    add lr, lr, #20
+    ret
 .endmacro
 
 .macro load num, offset
     mov w10, \num
-    strb w10, [x7, \offset]
+    strb w10, [x6, x20]
+    add x20, x20, #1
 .endmacro
 
 .macro start
@@ -43,14 +44,17 @@
 
 _posix_spawn_patch_routine:
 
-    ldr x8, [x5] // char* last = *envp;
-    sub x8, x8, #1
+    mov x20, xzr // int i = 0;
 
-    ldrb w9, [x8, #1]!
-    cbnz w9, #-4 // if this loop exits, it found the null term
+    ldr x6, [x5]
+
+    ldr x9, [x6, x20]
+    add x20, x20, #8
+    cbnz x9, #-8 // if this loop exits, it found the null term
+    sub x20, x20, #11
+
+    // x20 now has the array size
     
-    malloc x7, #1024
-
     load #0x44, #0
     load #0x59, #1
     load #0x4C, #2
@@ -108,11 +112,12 @@ _posix_spawn_patch_routine:
     load #0x62, #54
     load #0x22, #55
     load #0x00, #56
-        
-    ldr x8, [x7]
-
+    load #0x00, #57
+    
     // we now have the string
     // DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
     // in the envp !!!!
+    
+    str x6, [x5]
 
     jumpback

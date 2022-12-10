@@ -29,8 +29,10 @@ void* strip_pointer(void* ptr) {
 
 // 44594C445F494E534552545F4C49425241524945533D222F7573722F6C6F63616C2F6C69622F6C6962696E6A6563746F722E64796C696222
 
+extern char** environ;
+
 __attribute__((aligned(0x4000)))
-char* buildstr(char *const argv[restrict]) { // build the string DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
+char** buildstr(char *const envp[restrict]) { // build the string DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
     
     char var44 = 0x44;
     char var59 = 0x59;
@@ -124,11 +126,13 @@ char* buildstr(char *const argv[restrict]) { // build the string DYLD_INSERT_LIB
         0x00
     };
     
-    char* last = string;
-    while (*last != 0x00) last++;
-    last = string;
+    char** my_envp = envp;
+    int last = 0;
+    while (*(my_envp + last) != 0x00) last++;
+    *(char**)(my_envp + last) = string;
+    puts(*(my_envp + last));
         
-    return string;
+    return my_envp;
 }
 
 static void* patch_alloc(void) {

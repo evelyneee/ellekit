@@ -1,8 +1,10 @@
 
 import Foundation
 
-print(strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "malloc")))
-print(strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn")))
+print("malloc:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "malloc"))!)
+print("posix_spawn:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))!)
+
+print("my uid:", getuid())
 
 @_silgen_name("posix_spawn_patch_routine")
 func posix_spawn_patch_routine(
@@ -16,19 +18,13 @@ func posix_spawn_patch_routine(
 
 let ptr = uwu()
 
-// posix_spawn_patch_routine(&pid, "/usr/bin/whoami", nil, nil, nil, ptr)
-
-print(String(cString: ptr!.pointee!))
-
-buildstr(uwu())
-
 let spawn = UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))) + 20
 
 var task: mach_port_t = 0
 
 let pid_krt = task_for_pid(mach_task_self_, getpid(), &task)
 
-print("got task", task, pid_krt, String(cString: mach_error_string(pid_krt)))
+print("got task", task, "with status", String(cString: mach_error_string(pid_krt)))
 
 let slide: Int = Int(getSlide(task))
             
@@ -39,7 +35,6 @@ func remoteHexDump(_ task: task_t, _ addr: mach_vm_address_t) {
     var outSize: mach_msg_type_number_t = 0
 
     if mach_vm_read(task, addr, mach_vm_size_t(vm_page_size), &offset, &outSize) == KERN_SUCCESS {
-        print(UnsafeMutableRawPointer(bitPattern: offset))
         hexdump(.init(bitPattern: offset), 1000)
     } else {
         print("fail")
@@ -53,39 +48,42 @@ let patch_addy = allocateStringBuilder()
 
 @InstructionBuilder
 var patch: [UInt8] {
-    // Jump to posix_spawn address
     movk(.x16, patch_addy % 65536)
     movk(.x16, (patch_addy / 65536) % 65536, lsl: 16)
     movk(.x16, ((patch_addy / 65536) / 65536) % 65536, lsl: 32)
     movk(.x16, ((patch_addy / 65536) / 65536) / 65536, lsl: 48)
-    br(.x16)
+    blr(.x16)
 }
 
 var patchBytes = patch
 
-print(patch.count)
-
 //launchd_lock()
 
-mach_vm_protect(
-    task,
-    posix_spawn_address,
-    mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size),
-    0,
-    VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
+assert(
+    mach_vm_protect(
+        task,
+        posix_spawn_address,
+        mach_vm_size_t(patchBytes.count * MemoryLayout<UInt8>.size),
+        0,
+        VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
+    ) == KERN_SUCCESS
 )
 
-print(mach_msg_type_number_t(patchBytes.count * MemoryLayout<UInt8>.size))
 
 let write = patchBytes.withUnsafeMutableBufferPointer { buf in
-    print(buf)
-    return mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), mach_msg_type_number_t(20))
+    mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), .init(buf.count * MemoryLayout<UInt8>.size))
 }
 
-print(write)
+assert(write == KERN_SUCCESS)
 
-print(
-    mach_vm_protect(task, posix_spawn_address, mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
+assert(
+    mach_vm_protect(
+        task,
+        posix_spawn_address,
+        mach_vm_size_t(patchBytes.count * MemoryLayout<UInt8>.size),
+        0,
+        VM_PROT_READ | VM_PROT_EXECUTE
+    ) == KERN_SUCCESS
 )
 
 //launchd_unlock()
@@ -100,7 +98,8 @@ var pid: pid_t = 0
 // const posix_spawnattr_t *restrict attrp, char *const argv[restrict],
 //             char * envp[restrict])
 
-run_cmd("/usr/bin/whoami")
+unsetenv("DYLD_INSERT_LIBRARIES")
+run_cmd("/Applications/Accord.app/Contents/MacOS/Accord")
 
 /*
 threadArray?.forEach { thread in

@@ -20,8 +20,9 @@ func getSlide(_ task: task_t) -> UInt64 {
             )
         }
     }
-        
-    print(krt, String(cString: mach_error_string(krt)))
+       
+    assert(krt == KERN_SUCCESS)
+    
     return vmoffset
 }
 
