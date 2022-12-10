@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <spawn.h>
 
 void* sign_pointer(void* ptr) {
@@ -29,7 +30,8 @@ void* strip_pointer(void* ptr) {
 // 44594C445F494E534552545F4C49425241524945533D222F7573722F6C6F63616C2F6C69622F6C6962696E6A6563746F722E64796C696222
 
 __attribute__((aligned(0x4000)))
-char* buildstr(void) { // build the string DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
+char* buildstr(char *const argv[restrict]) { // build the string DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
+    
     char var44 = 0x44;
     char var59 = 0x59;
     char var4C = 0x4C;
@@ -122,17 +124,30 @@ char* buildstr(void) { // build the string DYLD_INSERT_LIBRARIES="/usr/local/lib
         0x00
     };
     
-    puts((const char*)string);
-    
+    char* last = string;
+    while (*last != 0x00) last++;
+    last = string;
+        
     return string;
 }
 
-__attribute__((aligned(0x4000)))
-void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
-         const posix_spawn_file_actions_t *file_actions,
-         const posix_spawnattr_t *restrict attrp, char *const argv[restrict],
-                      char * envp[restrict]) {
+static void* patch_alloc(void) {
+    return malloc(1024);
+}
+
+__attribute__((optnone))
+void posix_spawn_patch (
+        pid_t *restrict pid,
+        const char *restrict path,
+        const posix_spawn_file_actions_t *file_actions,
+        const posix_spawnattr_t *restrict attrp,
+        char *const argv[restrict],
+        char * envp[restrict]
+) {
     // then we exec the first 5 instructions
+    __asm__("pacibsp");
+    
+    void* alloc = patch_alloc();
     
     char var44 = 0x44;
     char var59 = 0x59;
@@ -165,8 +180,8 @@ void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
     char var2E = 0x2E;
     char var64 = 0x64;
     char var79 = 0x79;
-    
-    char string[] = {
+        
+    alloc = (char[]){
         var44,
         var59,
         var4C,
@@ -226,11 +241,19 @@ void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
         0x00
     };
     
-    *envp = string;
-    __asm__("pacibsp");
-    __asm__("sub sp, sp, #0xe0");
-    __asm__("stp x26, x25, [sp, #0x90]");
-    __asm__("stp x24, x23, [sp, #0xa0]");
-    __asm__("stp x22, x21, [sp, #0xb0]");
-    return;
+    char* last = *envp;
+    while (*last != 0x00) last++;
+    last = alloc;
+}
+__asm__("pacibsp");
+__asm__("sub sp, sp, #0xe0");
+__asm__("stp x26, x25, [sp, #0x90]");
+__asm__("stp x24, x23, [sp, #0xa0]");
+__asm__("stp x22, x21, [sp, #0xb0]");
+__asm__("ret");
+
+extern void posix_spawn_patch_routine(void);
+
+void* patch_addr(void) {
+    return (void*)posix_spawn_patch_routine;
 }

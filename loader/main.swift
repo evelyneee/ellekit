@@ -1,30 +1,32 @@
 
 import Foundation
 
-buildstr()
+print(strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "malloc")))
+print(strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn")))
+
+@_silgen_name("posix_spawn_patch_routine")
+func posix_spawn_patch_routine(
+    _:UnsafeMutablePointer<pid_t>?,
+    _:UnsafePointer<CChar>?,
+    _:UnsafePointer<posix_spawn_file_actions_t?>?,
+    _:UnsafePointer<posix_spawnattr_t>?,
+    _:UnsafePointer<UnsafeMutablePointer<CChar>?>?,
+    _:UnsafePointer<UnsafeMutablePointer<CChar>?>?
+)
+
+let ptr = uwu()
+
+// posix_spawn_patch_routine(&pid, "/usr/bin/whoami", nil, nil, nil, ptr)
+
+print(String(cString: ptr!.pointee!))
+
+buildstr(uwu())
 
 let spawn = UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))) + 20
 
-print(spawn)
-
-@InstructionBuilder
-var spawn_patch: [UInt8] {
-    // Jump to posix_spawn address
-    movk(.x16, Int(spawn % 65536))
-    movk(.x16, Int((spawn / 65536) % 65536), lsl: 16)
-    movk(.x16, Int(((spawn / 65536) / 65536) % 65536), lsl: 32)
-    movk(.x16, Int(((spawn / 65536) / 65536) / 65536), lsl: 48)
-    br(.x16)
-}
-
-print(spawn_patch.map { String(format: "%02X", $0)}.joined())
-
-remoteHexDump(mach_task_self_, .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "buildstr")))))
-remoteHexDump(mach_task_self_, .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn_patch")))))
-
 var task: mach_port_t = 0
 
-let pid_krt = task_for_pid(mach_task_self_, 1, &task)
+let pid_krt = task_for_pid(mach_task_self_, getpid(), &task)
 
 print("got task", task, pid_krt, String(cString: mach_error_string(pid_krt)))
 
@@ -56,41 +58,49 @@ var patch: [UInt8] {
     movk(.x16, (patch_addy / 65536) % 65536, lsl: 16)
     movk(.x16, ((patch_addy / 65536) / 65536) % 65536, lsl: 32)
     movk(.x16, ((patch_addy / 65536) / 65536) / 65536, lsl: 48)
-    blr(.x16)
+    br(.x16)
 }
 
 var patchBytes = patch
 
-launchd_lock()
+print(patch.count)
 
-print(
-    String(cString: mach_error_string(
-        mach_vm_protect(
-            task,
-            posix_spawn_address,
-            mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size),
-            0,
-            VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
-        )
-    ))
+//launchd_lock()
+
+mach_vm_protect(
+    task,
+    posix_spawn_address,
+    mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size),
+    0,
+    VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
 )
 
 print(mach_msg_type_number_t(patchBytes.count * MemoryLayout<UInt8>.size))
 
-let write = withUnsafeBytes(of: &patchBytes, { buf in
-    mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), mach_msg_type_number_t(buf.count * MemoryLayout<UInt8>.size))
-})
+let write = patchBytes.withUnsafeMutableBufferPointer { buf in
+    print(buf)
+    return mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), mach_msg_type_number_t(20))
+}
 
-print(String(cString: mach_error_string(write)))
+print(write)
 
 print(
     mach_vm_protect(task, posix_spawn_address, mach_vm_size_t(patch.count * MemoryLayout<UInt8>.size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
 )
 
-launchd_unlock()
+//launchd_unlock()
 
 var offset2: vm_offset_t = 0
 var outSize2: mach_msg_type_number_t = 0
+
+var pid: pid_t = 0
+
+// void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
+// const posix_spawn_file_actions_t *file_actions,
+// const posix_spawnattr_t *restrict attrp, char *const argv[restrict],
+//             char * envp[restrict])
+
+run_cmd("/usr/bin/whoami")
 
 /*
 threadArray?.forEach { thread in

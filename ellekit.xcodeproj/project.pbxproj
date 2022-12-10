@@ -67,6 +67,7 @@
 		9EA0CC7D293AE89A0000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
+		9EA487A029440B8B0036B027 /* patch.s in Sources */ = {isa = PBXBuildFile; fileRef = 9EA4879F29440B8B0036B027 /* patch.s */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* slide.swift */; };
 /* End PBXBuildFile section */
@@ -176,6 +177,7 @@
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
+		9EA4879F29440B8B0036B027 /* patch.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = patch.s; sourceTree = "<group>"; };
 		9EAC0ACB293EC31E0048DE0A /* loader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = loader.entitlements; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = slide.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				9E81206029400429006A0EBC /* inject.h */,
 				9ED080C929417AA900A81AF1 /* slide.swift */,
 				9E823CEF2942B0410037659B /* patch.c */,
+				9EA4879F29440B8B0036B027 /* patch.s */,
 			);
 			path = loader;
 			sourceTree = "<group>";
@@ -691,6 +694,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EA487A029440B8B0036B027 /* patch.s in Sources */,
 				9E823CF02942B0410037659B /* patch.c in Sources */,
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,

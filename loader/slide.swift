@@ -61,7 +61,7 @@ func test() {
 
 func allocateStringBuilder() -> mach_vm_address_t {
     
-    let fn: mach_vm_address_t = .init(UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn_patch"))))
+    let fn: mach_vm_address_t = .init(UInt(bitPattern: strip_pointer(patch_addr())))
         
     var addr: mach_vm_address_t = 0;
     
