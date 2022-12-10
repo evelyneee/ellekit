@@ -99,7 +99,7 @@ var pid: pid_t = 0
 //             char * envp[restrict])
 
 unsetenv("DYLD_INSERT_LIBRARIES")
-run_cmd("/Applications/Accord.app/Contents/MacOS/Accord")
+run_cmd("/Users/charlotte/test")
 
 /*
 threadArray?.forEach { thread in

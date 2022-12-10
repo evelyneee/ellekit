@@ -25,7 +25,7 @@
     ret
 .endmacro
 
-.macro load num, offset
+.macro load num
     mov w10, \num
     strb w10, [x6, x20]
     add x20, x20, #1
@@ -55,69 +55,69 @@ _posix_spawn_patch_routine:
 
     // x20 now has the array size
     
-    load #0x44, #0
-    load #0x59, #1
-    load #0x4C, #2
-    load #0x44, #3
-    load #0x5F, #4
-    load #0x49, #5
-    load #0x4E, #6
-    load #0x53, #7
-    load #0x45, #8
-    load #0x52, #9
-    load #0x54, #10
-    load #0x5F, #11
-    load #0x4C, #12
-    load #0x49, #13
-    load #0x42, #14
-    load #0x52, #15
-    load #0x41, #16
-    load #0x52, #17
-    load #0x49, #18
-    load #0x45, #19
-    load #0x53, #20
-    load #0x3D, #21
-    load #0x22, #22
-    load #0x2F, #23
-    load #0x75, #24
-    load #0x73, #25
-    load #0x72, #26
-    load #0x2F, #27
-    load #0x6C, #28
-    load #0x6F, #29
-    load #0x63, #30
-    load #0x61, #31
-    load #0x6C, #32
-    load #0x2F, #33
-    load #0x6C, #34
-    load #0x69, #35
-    load #0x62, #36
-    load #0x2F, #37
-    load #0x6C, #38
-    load #0x69, #39
-    load #0x62, #40
-    load #0x69, #41
-    load #0x6E, #42
-    load #0x6A, #43
-    load #0x65, #44
-    load #0x63, #45
-    load #0x74, #46
-    load #0x6F, #47
-    load #0x72, #48
-    load #0x2E, #49
-    load #0x64, #50
-    load #0x79, #51
-    load #0x6C, #52
-    load #0x69, #53
-    load #0x62, #54
-    load #0x22, #55
-    load #0x00, #56
-    load #0x00, #57
+    load #0x44
+    load #0x59
+    load #0x4C
+    load #0x44
+    load #0x5F
+    load #0x49
+    load #0x4E
+    load #0x53
+    load #0x45
+    load #0x52
+    load #0x54
+    load #0x5F
+    load #0x4C
+    load #0x49
+    load #0x42
+    load #0x52
+    load #0x41
+    load #0x52
+    load #0x49
+    load #0x45
+    load #0x53
+    load #0x3D
+    // load #0x22
+    load #0x2F
+    load #0x75
+    load #0x73
+    load #0x72
+    load #0x2F
+    load #0x6C
+    load #0x6F
+    load #0x63
+    load #0x61
+    load #0x6C
+    load #0x2F
+    load #0x6C
+    load #0x69
+    load #0x62
+    load #0x2F
+    load #0x6C
+    load #0x69
+    load #0x62
+    load #0x69
+    load #0x6E
+    load #0x6A
+    load #0x65
+    load #0x63
+    load #0x74
+    load #0x6F
+    load #0x72
+    load #0x2E
+    load #0x64
+    load #0x79
+    load #0x6C
+    load #0x69
+    load #0x62
+    // load #0x22
+    load #0x00
     
     // we now have the string
     // DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
     // in the envp !!!!
     
-    str x6, [x5]
+    mov x5, x6
+    str x5, [x5]
 
     jumpback
