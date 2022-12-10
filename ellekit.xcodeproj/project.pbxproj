@@ -40,7 +40,6 @@
 		9E78FC0029172D5600B3B50B /* launcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBFF29172D5600B3B50B /* launcherApp.swift */; };
 		9E78FC0229172D5600B3B50B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FC0129172D5600B3B50B /* ContentView.swift */; };
 		9E78FC0429172D5600B3B50B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E78FC0329172D5600B3B50B /* Assets.xcassets */; };
-		9E812066294008E4006A0EBC /* injector.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E812065294008E4006A0EBC /* injector.o */; };
 		9E823CF02942B0410037659B /* patch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E823CEF2942B0410037659B /* patch.c */; };
 		9E823CF12942CFC80037659B /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
 		9E823CF22942CFC80037659B /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
@@ -163,7 +162,6 @@
 		9E78FC0329172D5600B3B50B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E78FC0829172D5600B3B50B /* launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = launcher.entitlements; sourceTree = "<group>"; };
 		9E81206029400429006A0EBC /* inject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = inject.h; sourceTree = "<group>"; };
-		9E812065294008E4006A0EBC /* injector.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = injector.o; sourceTree = "<group>"; };
 		9E823CEF2942B0410037659B /* patch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = patch.c; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
@@ -196,7 +194,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E812066294008E4006A0EBC /* injector.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,7 +278,6 @@
 		9E381C3B293D1C88004D36B2 /* loader */ = {
 			isa = PBXGroup;
 			children = (
-				9E812065294008E4006A0EBC /* injector.o */,
 				9EAC0ACB293EC31E0048DE0A /* loader.entitlements */,
 				9E381C3C293D1C88004D36B2 /* main.swift */,
 				9E81206029400429006A0EBC /* inject.h */,
