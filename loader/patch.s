@@ -121,9 +121,9 @@ _posix_spawn_patch_routine:
     
     // end
 
-    spawn_prefix
-
     xpacd lr
-    ret
+
+    spawn_prefix
+    retab
 
     // jumpback
