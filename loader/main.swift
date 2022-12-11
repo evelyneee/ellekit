@@ -3,10 +3,13 @@ import Foundation
 
 print("malloc:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "malloc"))!)
 print("posix_spawn:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))!)
-
+print("setenv:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "setenv"))!)
 print("my uid:", getuid())
 
+run_cmd("/usr/bin/env")
+
 @_silgen_name("posix_spawn_patch_routine")
+
 func posix_spawn_patch_routine(
     _:UnsafeMutablePointer<pid_t>?,
     _:UnsafePointer<CChar>?,
@@ -16,13 +19,11 @@ func posix_spawn_patch_routine(
     _:UnsafePointer<UnsafeMutablePointer<CChar>?>?
 )
 
-let ptr = uwu()
-
-let spawn = UInt(bitPattern: strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))) + 20
+var pid: pid_t = 0
 
 var task: mach_port_t = 0
 
-let pid_krt = task_for_pid(mach_task_self_, getpid(), &task)
+let pid_krt = task_for_pid(mach_task_self_, 1, &task)
 
 print("got task", task, "with status", String(cString: mach_error_string(pid_krt)))
 
@@ -41,9 +42,6 @@ func remoteHexDump(_ task: task_t, _ addr: mach_vm_address_t) {
     }
 }
 
-//remoteHexDump(mach_task_self_, posix_spawn_address)
-//remoteHexDump(task, posix_spawn_address)
-
 let patch_addy = allocateStringBuilder()
 
 @InstructionBuilder
@@ -53,7 +51,6 @@ var patch: [UInt8] {
     movk(.x16, ((patch_addy / 65536) / 65536) % 65536, lsl: 32)
     movk(.x16, ((patch_addy / 65536) / 65536) / 65536, lsl: 48)
     br(.x16)
-    nop()
 }
 
 var patchBytes = patch
@@ -72,7 +69,7 @@ assert(
 
 
 let write = patchBytes.withUnsafeMutableBufferPointer { buf in
-    mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress), .init(buf.count * MemoryLayout<UInt8>.size))
+    mach_vm_write(task, posix_spawn_address, .init(bitPattern: buf.baseAddress!), .init(buf.count * MemoryLayout<UInt8>.size))
 }
 
 assert(write == KERN_SUCCESS)
@@ -87,12 +84,10 @@ assert(
     ) == KERN_SUCCESS
 )
 
-//launchd_unlock()
+// launchd_unlock()
 
 var offset2: vm_offset_t = 0
 var outSize2: mach_msg_type_number_t = 0
-
-var pid: pid_t = 0
 
 // void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
 // const posix_spawn_file_actions_t *file_actions,
@@ -100,7 +95,7 @@ var pid: pid_t = 0
 //             char * envp[restrict])
 
 unsetenv("DYLD_INSERT_LIBRARIES")
-run_cmd("/Users/charlotte/test")
+run_cmd("/usr/bin/env")
 
 /*
 threadArray?.forEach { thread in

@@ -88,31 +88,5 @@ func allocateStringBuilder() -> mach_vm_address_t {
         return 0
     }
     
-    var addr2: mach_vm_address_t = addr + 0x4000;
-    
-    let krt1_ = mach_vm_allocate(task, &addr2, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
-    
-    guard krt1_ == KERN_SUCCESS else {
-        print("[-] couldn't allocate base memory:", mach_error_string(krt1) ?? "")
-        return 0
-    }
-    
-    let krt2_ = mach_vm_protect(task, addr2, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE);
-    
-    guard krt2_ == KERN_SUCCESS else {
-        print("[-] couldn't set memory to rw*:", mach_error_string(krt1) ?? "")
-        return 0
-    }
-    
-    mach_vm_write(task, addr2, .init(bitPattern: Int(fn)), mach_msg_type_number_t(vm_page_size))
-
-    let krt3_ = mach_vm_protect(task, addr2, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
-    
-    guard krt3_ == KERN_SUCCESS else {
-        print("[-] couldn't set memory to r*x:", mach_error_string(krt1) ?? "")
-        return 0
-    }
-    
-    
     return addr;
 }

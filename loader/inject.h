@@ -16,6 +16,8 @@
 kern_return_t inject_to_task(mach_port_t task, const char *argument);
 kern_return_t get_thread_port_for_task(mach_port_t task, mach_port_t *thread);
 
+extern char ***_NSGetEnviron(void);
+
 // MARK: - PAC
 
 extern void* sign_pointer(void* ptr);
@@ -38,18 +40,17 @@ char **const uwu(void) {
 void run_cmd(const char *cmd)
 {
     pid_t pid;
-    char *argv[] = { NULL };
+    char *argv[] = { cmd, NULL };
     int status;
-    printf("Run command: %s\n", cmd);
-    status = posix_spawn(&pid, cmd, NULL, NULL, argv, environ);
+    puts("running command");
+    status = posix_spawn(&pid, cmd, NULL, NULL, argv, *_NSGetEnviron());
     if (status == 0) {
-        printf("Child pid: %i\n", pid);
+        printf("child pid is %i\n", pid);
         do {
           if (waitpid(pid, &status, 0) != -1) {
-            printf("Child status %d\n", WEXITSTATUS(status));
+            printf("child status %d\n", WEXITSTATUS(status));
           } else {
             perror("waitpid");
-            exit(1);
           }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     } else {
