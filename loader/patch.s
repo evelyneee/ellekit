@@ -2,8 +2,6 @@
 .global _posix_spawn_patch_routine
 
 .macro start
-    pacibsp
-    sub    sp, sp, #16
     stp    fp, lr, [sp, #0]
     add    fp, sp, #0
 .endmacro
@@ -19,44 +17,42 @@
     stp x26, x25, [sp, #0x90]
     stp x24, x23, [sp, #0xa0]
     stp x22, x21, [sp, #0xb0]
+    stp x29, x30, [sp, #0xD0]
 .endmacro
 
 .macro jumpback
-    movk x16, #0xebdc // load posix_spawn original address in x16
-    movk x16, #0xa06a, lsl #16
-    movk x16, #0x0001, lsl #32
-    movk x16, #0x0000, lsl #48
-    add x16, x16, #20 // skip first (patched) instructions
-    spawn_prefix
-    br x16
+    movk x14, #0xebdc // load posix_spawn original address in x16
+    movk x14, #0xa06a, lsl #16
+    movk x14, #0x0001, lsl #32
+    movk x14, #0x0000, lsl #48
+    add x14, x14, #20 // skip first (patched) instructions
+    br x14
 .endmacro
 
 .macro load num
     mov w10, \num
-    strb w10, [x11, x12]
-    add x12, x12, #1
+    strb w10, [x14, x15]
+    add x15, x15, #1
 .endmacro
 
 // REGISTERS:
-// - x11: value of x5
+// - x14: value of x5
 _posix_spawn_patch_routine:
 
-    // start
+    spawn_prefix
 
-    mov x12, xzr // int i = 0;
+    mov x15, xzr // int i = 0;
 
-    xpacd x5
-    xpaci x5
+    mov x14, x5
 
-    mov x11, x5
+    ldr x13, [x14, x15]
+    add x15, x15, #8
+    cbnz x13, #-8 // if this loop exits, it found the null term
 
-    ldr x9, [x11, x12]
-    add x12, x12, #8
-    cbnz x9, #-8 // if this loop exits, it found the null term
-    sub x12, x12, #11
-    
-    // x12 now has the array size
-    
+    ldr x14, [x14]
+
+    // x15 now has the array size
+    load #0x00
     load #0x44
     load #0x59
     load #0x4C
@@ -114,16 +110,9 @@ _posix_spawn_patch_routine:
     load #0x62
     // load #0x22
     load #0x00
-    
+
     // we now have the string
     // DYLD_INSERT_LIBRARIES="/usr/local/lib/libinjector.dylib"
     // in the envp !!!!
     
-    // end
-
-    xpacd lr
-
-    spawn_prefix
-    retab
-
-    // jumpback
+    jumpback

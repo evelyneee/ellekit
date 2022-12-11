@@ -30,13 +30,18 @@ extern char** buildstr(char *const argv[restrict]);
 
 extern char **environ;
 
+char **const uwu(void) {
+    char *const arr[] = { "DYLD_INSERT=\"a\"", "DYLD_INSERT=\"b\"" };
+    return arr;
+}
+
 void run_cmd(const char *cmd)
 {
     pid_t pid;
-    char *argv[] = {"sh", "-c", cmd, NULL};
+    char *argv[] = { NULL };
     int status;
     printf("Run command: %s\n", cmd);
-    status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, environ);
+    status = posix_spawn(&pid, cmd, NULL, NULL, argv, environ);
     if (status == 0) {
         printf("Child pid: %i\n", pid);
         do {
@@ -58,11 +63,6 @@ extern void posix_spawn_patch(pid_t *restrict pid, const char *restrict path,
                               char * envp[restrict]);
 
 extern void* patch_addr(void);
-
-char **const uwu(void) {
-    char *const arr[] = { "DYLD_INSERT=\"a\"", "DYLD_INSERT=\"b\"" };
-    return arr;
-}
 
 void hexdump(void *mem, unsigned int len)
 {
