@@ -53,6 +53,7 @@ var patch: [UInt8] {
     movk(.x16, ((patch_addy / 65536) / 65536) % 65536, lsl: 32)
     movk(.x16, ((patch_addy / 65536) / 65536) / 65536, lsl: 48)
     blr(.x16)
+    bytes(0x1f, 0x0a, 0x3f, 0xd6) // blraaz x16
 }
 
 var patchBytes = patch
