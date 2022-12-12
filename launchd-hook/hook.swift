@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import os.log
+
+let logger = Logger(subsystem: "red.charlotte.ellekit", category: "spawn-hook")
 
 var orig_spawn_pointer: UnsafeMutableRawPointer? = nil
 
@@ -13,6 +16,7 @@ typealias MSHookFunctionBody = @convention(c) (UnsafeMutableRawPointer?, UnsafeM
 
 @_cdecl("spawn_hook_entry")
 public func entry() {
+    logger.notice("[ellekit] spawn-hook: loaded")
     DispatchQueue.global().async {
         sleep(2); // the launchd hook needs to patch back posix_spawn i guess
         let spawn_orig = dlsym(dlopen("/usr/lib/system/libdyld.dylib", RTLD_NOW), "posix_spawn")!
@@ -43,6 +47,7 @@ public func replacement_posix_spawn(
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>>,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>>
 ) -> Int32 {
+    let parsed_envp = 
     if let orig_spawn_pointer {
         return unsafeBitCast(orig_spawn_pointer, to: SpawnBody.self)(pid, path, actions, attr, argv, envp)
     } else {

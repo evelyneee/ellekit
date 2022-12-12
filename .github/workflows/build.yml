@@ -64,7 +64,7 @@ jobs:
           ${{ env.build_cmd }} injector
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release-iphoneos/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
+          cp -R ${{ github.workspace }}/build/Release/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
           
       - name: Upload injector to artifacts
         uses: actions/upload-artifact@v3
