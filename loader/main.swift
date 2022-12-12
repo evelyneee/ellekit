@@ -44,7 +44,7 @@ var patch: [UInt8] {
     movk(.x0, (tweak_str_addr / 65536) % 65536, lsl: 16)
     movk(.x0, ((tweak_str_addr / 65536) / 65536) % 65536, lsl: 32)
     movk(.x0, ((tweak_str_addr / 65536) / 65536) / 65536, lsl: 48)
-    movz(.x1, Int(RTLD_NOW))
+    movz(.x1, Int(RTLD_LAZY))
     movk(.x16, dlopen_fn % 65536)
     movk(.x16, (dlopen_fn / 65536) % 65536, lsl: 16)
     movk(.x16, ((dlopen_fn / 65536) / 65536) % 65536, lsl: 32)
@@ -65,9 +65,11 @@ var unpatched = strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))!.with
     Array(UnsafeMutableBufferPointer(start: ptr, count: patchBytes.count))
 })
 
-applyPatch(patchBytes, true) // install hook
+applyPatch(patchBytes, lock: true) // install hook
 
 NSWorkspace.shared.open(NSURL.fileURL(withPath: "/System/Applications/Calculator.app")) // trigger hook
 sleep(2)
 
-applyPatch(unpatched, true) // unhook
+applyPatch(unpatched, lock: true) // unhook
+
+mach_port_deallocate(mach_task_self_, task)

@@ -1,7 +1,7 @@
 
 import Foundation
 
-func applyPatch(_ patchBytes: [UInt8], _ lock: Bool) {
+func applyPatch(_ patchBytes: [UInt8], lock: Bool) {
     
     var patchBytes = patchBytes
     
@@ -52,11 +52,11 @@ func launchd_threads() -> [thread_act_t] {
 }
 
 public func launchd_lock() {
-    var threads = launchd_threads()
+    let threads = launchd_threads()
     threads.forEach { thread_suspend($0) }
 }
 
 public func launchd_unlock() {
-    var threads = launchd_threads()
+    let threads = launchd_threads()
     threads.forEach { thread_resume($0) }
 }

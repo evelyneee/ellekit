@@ -35,6 +35,10 @@
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
+		9E77510D2947E1EB00747209 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510C2947E1EB00747209 /* load.s */; };
+		9E77510F2947E1F400747209 /* hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510E2947E1F400747209 /* hook.swift */; };
+		9E7751102947E27C00747209 /* libellekit-mac.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; };
+		9E7751112947E27C00747209 /* libellekit-mac.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
 		9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */; };
 		9E78FBF62916BDD500B3B50B /* trampoline_x64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF32916BDD500B3B50B /* trampoline_x64.S */; };
@@ -78,6 +82,13 @@
 			remoteGlobalIDString = 9E92AAA8290D4E680018604C;
 			remoteInfo = "ellekit-mac";
 		};
+		9E7751122947E27C00747209 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9E92AA7F290D47540018604C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E92AAA8290D4E680018604C;
+			remoteInfo = "ellekit-mac";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -109,6 +120,17 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		9E7751142947E27C00747209 /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9E7751112947E27C00747209 /* libellekit-mac.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9E78FBE82916BDB900B3B50B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -153,6 +175,9 @@
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
+		9E7751042947E0E100747209 /* libposixspawn-hook.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libposixspawn-hook.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E77510C2947E1EB00747209 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
+		9E77510E2947E1F400747209 /* hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hook.swift; sourceTree = "<group>"; };
 		9E78FBEA2916BDB900B3B50B /* trampoline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trampoline; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E78FBF12916BDD500B3B50B /* trampoline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
 		9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_arm64.S; sourceTree = "<group>"; };
@@ -191,6 +216,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E7751022947E0E100747209 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E7751102947E27C00747209 /* libellekit-mac.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +365,15 @@
 			path = C;
 			sourceTree = "<group>";
 		};
+		9E7751082947E13500747209 /* launchd-hook */ = {
+			isa = PBXGroup;
+			children = (
+				9E77510E2947E1F400747209 /* hook.swift */,
+				9E77510C2947E1EB00747209 /* load.s */,
+			);
+			path = "launchd-hook";
+			sourceTree = "<group>";
+		};
 		9E78FBE42916BD2B00B3B50B /* ExceptionHandler */ = {
 			isa = PBXGroup;
 			children = (
@@ -374,16 +416,17 @@
 		9E92AA7E290D47540018604C = {
 			isa = PBXGroup;
 			children = (
-				9E19B22D2918011800F8C4C7 /* Package.swift */,
 				9E4801B329144B7A007E433F /* README.md */,
 				9E19B24C2919D82900F8C4C7 /* Usage.md */,
+				9E19B22D2918011800F8C4C7 /* Package.swift */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E19B23A291812EA00F8C4C7 /* ellekitc */,
+				9E381C3B293D1C88004D36B2 /* loader */,
 				9EA0D1BE291C5D5B0061B187 /* injector */,
+				9E7751082947E13500747209 /* launchd-hook */,
 				9E78FBFE29172D5600B3B50B /* launcher */,
 				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E2D4F4F2938389B00EF6619 /* test */,
-				9E381C3B293D1C88004D36B2 /* loader */,
 				9E92AA88290D47540018604C /* Products */,
 				9E2D4F552938391C00EF6619 /* Frameworks */,
 			);
@@ -399,6 +442,7 @@
 				9EA0D1BA291C5D500061B187 /* libinjector.dylib */,
 				9E2D4F4E2938389B00EF6619 /* test */,
 				9E381C3A293D1C87004D36B2 /* loader */,
+				9E7751042947E0E100747209 /* libposixspawn-hook.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -438,6 +482,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		9E7751002947E0E100747209 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E92AAA5290D4E680018604C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -490,6 +541,25 @@
 			productName = loader;
 			productReference = 9E381C3A293D1C87004D36B2 /* loader */;
 			productType = "com.apple.product-type.tool";
+		};
+		9E7751032947E0E100747209 /* posixspawn-hook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "posixspawn-hook" */;
+			buildPhases = (
+				9E7751002947E0E100747209 /* Headers */,
+				9E7751012947E0E100747209 /* Sources */,
+				9E7751022947E0E100747209 /* Frameworks */,
+				9E7751142947E27C00747209 /* Embed Libraries */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9E7751132947E27C00747209 /* PBXTargetDependency */,
+			);
+			name = "posixspawn-hook";
+			productName = "posixspawn-hook";
+			productReference = 9E7751042947E0E100747209 /* libposixspawn-hook.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		9E78FBE92916BDB900B3B50B /* trampoline */ = {
 			isa = PBXNativeTarget;
@@ -570,7 +640,6 @@
 				9EA0D1B6291C5D500061B187 /* Headers */,
 				9EA0D1B7291C5D500061B187 /* Sources */,
 				9EA0D1B8291C5D500061B187 /* Frameworks */,
-				9E489EBD292930F400F81BBD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -595,6 +664,9 @@
 						CreatedOnToolsVersion = 14.1;
 					};
 					9E381C39293D1C87004D36B2 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					9E7751032947E0E100747209 = {
 						CreatedOnToolsVersion = 14.1;
 					};
 					9E78FBE92916BDB900B3B50B = {
@@ -636,6 +708,7 @@
 				9EA0D1B9291C5D500061B187 /* injector */,
 				9E2D4F4D2938389B00EF6619 /* test */,
 				9E381C39293D1C87004D36B2 /* loader */,
+				9E7751032947E0E100747209 /* posixspawn-hook */,
 			);
 		};
 /* End PBXProject section */
@@ -651,27 +724,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		9E489EBD292930F400F81BBD /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "scp -P 2222 $(BUILT_PRODUCTS_DIR) root@localhost:/usr/lib\nssh -t root@localhost \"cp /usr/lib/libinjector.dylib /usr/lib/substitute-loader.dylib && sbreload\" -p 2222\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		9E2D4F4A2938389B00EF6619 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -685,8 +737,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E77510D2947E1EB00747209 /* load.s in Sources */,
 				9E7750FF2947DE3000747209 /* pac.c in Sources */,
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
+				9E77510F2947E1F400747209 /* hook.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,
 				9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */,
 				9E823CF62942CFC80037659B /* Register.swift in Sources */,
@@ -696,6 +750,13 @@
 				9E823CF12942CFC80037659B /* Rebind.swift in Sources */,
 				9E823CF22942CFC80037659B /* General.swift in Sources */,
 				9E823CF82942CFF40037659B /* Sizing.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E7751012947E0E100747209 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,6 +849,11 @@
 			target = 9E92AAA8290D4E680018604C /* ellekit-mac */;
 			targetProxy = 9E2D4F582938391C00EF6619 /* PBXContainerItemProxy */;
 		};
+		9E7751132947E27C00747209 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9E92AAA8290D4E680018604C /* ellekit-mac */;
+			targetProxy = 9E7751122947E27C00747209 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -860,6 +926,44 @@
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = loader/pac.h;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9E7751062947E0E100747209 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ARCHS = arm64e;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+			};
+			name = Debug;
+		};
+		9E7751072947E0E100747209 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ARCHS = arm64e;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 			};
 			name = Release;
 		};
@@ -1279,6 +1383,15 @@
 			buildConfigurations = (
 				9E381C3E293D1C88004D36B2 /* Debug */,
 				9E381C3F293D1C88004D36B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "posixspawn-hook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E7751062947E0E100747209 /* Debug */,
+				9E7751072947E0E100747209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
