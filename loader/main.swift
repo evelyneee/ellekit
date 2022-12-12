@@ -23,7 +23,7 @@ var pid: pid_t = 0
 
 var task: mach_port_t = 0
 
-let pid_krt = task_for_pid(mach_task_self_, 1, &task)
+let pid_krt = task_for_pid(mach_task_self_, getpid(), &task)
 
 print("got task", task, "with status", String(cString: mach_error_string(pid_krt)))
 
@@ -95,7 +95,7 @@ var outSize2: mach_msg_type_number_t = 0
 //             char * envp[restrict])
 
 unsetenv("DYLD_INSERT_LIBRARIES")
-run_cmd("/usr/bin/env")
+run_cmd("/Users/charlotte/test")
 
 /*
 threadArray?.forEach { thread in

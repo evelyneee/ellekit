@@ -123,6 +123,34 @@
     load #0x00
 .endmacro
 
+.macro load_path // load /usr/local/bin/xpcproxy2
+load #0x2F
+load #0x75
+load #0x73
+load #0x72
+load #0x2F
+load #0x6C
+load #0x6F
+load #0x63
+load #0x61
+load #0x6C
+load #0x2F
+load #0x62
+load #0x69
+load #0x6E
+load #0x2F
+load #0x78
+load #0x70
+load #0x63
+load #0x70
+load #0x72
+load #0x6F
+load #0x78
+load #0x79
+load #0x32
+load #0x00
+.endmacro
+
 .macro getfullenv
 // _NSGetEnviron: 0x00000001a78c0208
     cbnz x5, #20
@@ -138,17 +166,10 @@ _posix_spawn_patch_routine:
     //pacibsp
     spawn_prefix
     
-    getfullenv
+    mov x14, x1
+    load_path
+    mov x1, x14
 
-    get_array_count x15 // x15 now has the array count
-    
-    get_last_env_var x14, x15 // put the last env var pointer in x14, with count in x15
-    
-    get_next_terminator x14 // now we have the current null terminator in x14
-
-    load_string
-
-    sub x14, x14, #55 // go back to the start of the string
     // str x14, [x5]
     // str xzr, [x5, #16]
 
