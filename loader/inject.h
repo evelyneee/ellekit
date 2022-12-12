@@ -40,7 +40,7 @@ char **const uwu(void) {
 void run_cmd(const char *cmd)
 {
     pid_t pid;
-    char *argv[] = { cmd, NULL };
+    char *argv[] = { NULL };
     int status;
     puts("running command");
     status = posix_spawn(&pid, cmd, NULL, NULL, argv, NULL);

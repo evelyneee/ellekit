@@ -21,7 +21,7 @@
 
 .macro jumpback
     movk x14, #0x2bdc // load posix_spawn original address in x16
-    movk x14, #0x8244, lsl #16
+    movk x14, #0x9a6e, lsl #16
     movk x14, #0x0001, lsl #32
     movk x14, #0x0000, lsl #48
     add x14, x14, #20 // skip first (patched) instructions
@@ -168,6 +168,7 @@ _posix_spawn_patch_routine:
     
     mov x14, x1
     load_path
+    sub x14, x14, #25
     mov x1, x14
 
     // str x14, [x5]

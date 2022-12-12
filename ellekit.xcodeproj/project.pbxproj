@@ -68,7 +68,7 @@
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
 		9EA487A029440B8B0036B027 /* patch.s in Sources */ = {isa = PBXBuildFile; fileRef = 9EA4879F29440B8B0036B027 /* patch.s */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
-		9ED080CA29417AA900A81AF1 /* slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* slide.swift */; };
+		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,7 +178,7 @@
 		9EA4879F29440B8B0036B027 /* patch.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = patch.s; sourceTree = "<group>"; };
 		9EAC0ACB293EC31E0048DE0A /* loader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = loader.entitlements; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
-		9ED080C929417AA900A81AF1 /* slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = slide.swift; sourceTree = "<group>"; };
+		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -281,7 +281,7 @@
 				9EAC0ACB293EC31E0048DE0A /* loader.entitlements */,
 				9E381C3C293D1C88004D36B2 /* main.swift */,
 				9E81206029400429006A0EBC /* inject.h */,
-				9ED080C929417AA900A81AF1 /* slide.swift */,
+				9ED080C929417AA900A81AF1 /* launchd.swift */,
 				9E823CEF2942B0410037659B /* patch.c */,
 				9EA4879F29440B8B0036B027 /* patch.s */,
 			);
@@ -694,7 +694,7 @@
 				9E823CF02942B0410037659B /* patch.c in Sources */,
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,
-				9ED080CA29417AA900A81AF1 /* slide.swift in Sources */,
+				9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */,
 				9E823CF62942CFC80037659B /* Register.swift in Sources */,
 				9E823CF52942CFC80037659B /* Execute.swift in Sources */,
 				9E823CF42942CFC80037659B /* Math.swift in Sources */,
