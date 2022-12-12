@@ -47,9 +47,27 @@ public func replacement_posix_spawn(
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>>,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>>
 ) -> Int32 {
-    let parsed_envp = 
+    
+    var inserting = "DYLD_INSERT_LIBRARIES=/usr/local/lib/libinjector.dylib"
+    if String(cString: path).contains("xpcproxy") {
+        inserting = "DYLD_INSERT_LIBRARIES=/usr/local/lib/spawn_hook.dylib"
+    }
+    
+    let new_envp: UnsafeMutablePointer<UnsafeMutablePointer<CChar>> = malloc(0x4000).assumingMemoryBound(to: UnsafeMutablePointer<CChar>.self)
+    memcpy(UnsafeMutableRawPointer(new_envp), envp, 0x4000)
+    
+    var envp_array = Array(UnsafeMutableBufferPointer(start: new_envp, count: 0x4000 / MemoryLayout<UnsafeMutablePointer<CChar>>.size))
+        .compactMap { $0 }
+    var string = inserting.compactMap(\.asciiValue).compactMap(CChar.init)
+    
+    string.withUnsafeMutableBufferPointer { envp_array.append($0.baseAddress!) }
+    
     if let orig_spawn_pointer {
-        return unsafeBitCast(orig_spawn_pointer, to: SpawnBody.self)(pid, path, actions, attr, argv, envp)
+        let ret = envp_array.withUnsafeBufferPointer { envp in
+            unsafeBitCast(orig_spawn_pointer, to: SpawnBody.self)(pid, path, actions, attr, argv, envp.baseAddress)
+        }
+        new_envp.deallocate()
+        return ret;
     } else {
         return 1;
     }
