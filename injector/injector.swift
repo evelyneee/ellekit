@@ -16,6 +16,8 @@ let logger = Logger(subsystem: "red.charlotte.ellekit", category: "injector")
 @_cdecl("injector_entry")
 public func entry() {
     logger.notice("[ellekit] injector: out here")
+    try? (String(describing: ProcessInfo.processInfo.environment) + String(describing: ProcessInfo.processInfo.arguments) + ProcessInfo.processInfo.processName).write(toFile: "/Users/charlotte/Desktop/\(ProcessInfo.processInfo.processName).txt", atomically: true, encoding: .utf8)
+    setenv("DYLD_INSERT_LIBRARIES", "/usr/local/lib/libinjector.dylib", 1)
     do {
         try FileManager.default.contentsOfDirectory(atPath: path)
             .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }

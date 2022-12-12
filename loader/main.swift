@@ -4,10 +4,10 @@ import Foundation
 print("malloc:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "malloc"))!)
 print("posix_spawn:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "posix_spawn"))!)
 print("setenv:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "setenv"))!)
+print("_NSGetEnviron:", strip_pointer(dlsym(dlopen(nil, RTLD_NOW), "_NSGetEnviron"))!)
+print("environ:", _NSGetEnviron().pointee!)
 print("my uid:", getuid())
-
 run_cmd("/usr/bin/env")
-
 @_silgen_name("posix_spawn_patch_routine")
 
 func posix_spawn_patch_routine(

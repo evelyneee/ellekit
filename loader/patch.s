@@ -20,8 +20,8 @@
 .endmacro
 
 .macro jumpback
-    movk x14, #0x6bdc // load posix_spawn original address in x16
-    movk x14, #0x883b, lsl #16
+    movk x14, #0x2bdc // load posix_spawn original address in x16
+    movk x14, #0x8244, lsl #16
     movk x14, #0x0001, lsl #32
     movk x14, #0x0000, lsl #48
     add x14, x14, #20 // skip first (patched) instructions
@@ -34,15 +34,15 @@
 .endmacro
 
 .macro get_array_count dst
-ldr     x8, [x5]
-mov     \dst, xzr // int i = 0;
-add     x7, x5, #8 // first pointer
-// loop start
-mov     x9, \dst
-mov     \dst, x8
-ldr     x8, [x7, x9, lsl #3]
-add     \dst, x9, #1
-cbnz    x8, #-16 // goto loop start if the read byte isn't 0
+    ldr     x8, [x5]
+    mov     \dst, xzr // int i = 0;
+    add     x7, x5, #8 // first pointer
+    // loop start
+    mov     x9, \dst
+    mov     \dst, x8
+    ldr     x8, [x7, x9, lsl #3]
+    add     \dst, x9, #1
+    cbnz    x8, #-16 // goto loop start if the read byte isn't 0
 .endmacro
 
 .macro get_last_env_var dst, count
@@ -56,6 +56,12 @@ cbnz    x8, #-16 // goto loop start if the read byte isn't 0
 .macro get_next_terminator dst
     mov x16, xzr
     ldrb w12, [\dst], #1
+    cbnz w12, #-4 // if this loop exits, it found the next term
+.endmacro
+
+.macro get_prev_terminator dst
+    mov x16, xzr
+    ldrb w12, [\dst], #-1
     cbnz w12, #-4 // if this loop exits, it found the next term
 .endmacro
 
@@ -117,14 +123,22 @@ cbnz    x8, #-16 // goto loop start if the read byte isn't 0
     load #0x00
 .endmacro
 
+.macro getfullenv
+// _NSGetEnviron: 0x00000001a78c0208
+    cbnz x5, #20
+    movk x5, #0xf600 // load environ function original address in x16
+    movk x5, #0x6fdf, lsl #16
+    movk x5, #0x0001, lsl #32
+    movk x5, #0x0000, lsl #48
+.endmacro
+
 // REGISTERS:
 // - x14: value of x5
 _posix_spawn_patch_routine:
-
-    pacibsp
-    //spawn_prefix
+    //pacibsp
+    spawn_prefix
     
-    xpacd x5
+    getfullenv
 
     get_array_count x15 // x15 now has the array count
     
@@ -134,21 +148,11 @@ _posix_spawn_patch_routine:
 
     load_string
 
-    add x15, x15, #8
     sub x14, x14, #55 // go back to the start of the string
-
-    str x14, [x5, #16]
+    // str x14, [x5]
+    // str xzr, [x5, #16]
 
     // we now have the string
     // DYLD_INSERT_LIBRARIES=/usr/local/lib/libinjector.dylib
     // in the envp !!!!
-
-    mov x2, #0
-    mov x3, x4
-    mov x4, x5
-    mov x5, #0
-
-    mov x16, #0xF4
-    svc #0x80
-
-    retab
+    jumpback

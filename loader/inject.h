@@ -43,16 +43,9 @@ void run_cmd(const char *cmd)
     char *argv[] = { cmd, NULL };
     int status;
     puts("running command");
-    status = posix_spawn(&pid, cmd, NULL, NULL, argv, *_NSGetEnviron());
+    status = posix_spawn(&pid, cmd, NULL, NULL, argv, NULL);
     if (status == 0) {
         printf("child pid is %i\n", pid);
-        do {
-          if (waitpid(pid, &status, 0) != -1) {
-            printf("child status %d\n", WEXITSTATUS(status));
-          } else {
-            perror("waitpid");
-          }
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     } else {
         printf("posix_spawn: %s\n", strerror(status));
     }
