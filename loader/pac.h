@@ -1,9 +1,3 @@
-//
-//  pac.h
-//  loader
-//
-//  Created by charlotte on 2022-12-12.
-//
 
 #ifndef pac_h
 #define pac_h

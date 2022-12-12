@@ -37,8 +37,7 @@
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
 		9E77510D2947E1EB00747209 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510C2947E1EB00747209 /* load.s */; };
 		9E77510F2947E1F400747209 /* hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510E2947E1F400747209 /* hook.swift */; };
-		9E7751102947E27C00747209 /* libellekit-mac.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; };
-		9E7751112947E27C00747209 /* libellekit-mac.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9E7751152947E4C700747209 /* libellekit-mac.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit-mac.dylib */; };
 		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
 		9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */; };
 		9E78FBF62916BDD500B3B50B /* trampoline_x64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF32916BDD500B3B50B /* trampoline_x64.S */; };
@@ -82,7 +81,7 @@
 			remoteGlobalIDString = 9E92AAA8290D4E680018604C;
 			remoteInfo = "ellekit-mac";
 		};
-		9E7751122947E27C00747209 /* PBXContainerItemProxy */ = {
+		9E7751172947E4C700747209 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9E92AA7F290D47540018604C /* Project object */;
 			proxyType = 1;
@@ -121,13 +120,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		9E7751142947E27C00747209 /* Embed Libraries */ = {
+		9E7751192947E4C700747209 /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9E7751112947E27C00747209 /* libellekit-mac.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,7 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E7751102947E27C00747209 /* libellekit-mac.dylib in Frameworks */,
+				9E7751152947E4C700747209 /* libellekit-mac.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,12 +547,12 @@
 				9E7751002947E0E100747209 /* Headers */,
 				9E7751012947E0E100747209 /* Sources */,
 				9E7751022947E0E100747209 /* Frameworks */,
-				9E7751142947E27C00747209 /* Embed Libraries */,
+				9E7751192947E4C700747209 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				9E7751132947E27C00747209 /* PBXTargetDependency */,
+				9E7751182947E4C700747209 /* PBXTargetDependency */,
 			);
 			name = "posixspawn-hook";
 			productName = "posixspawn-hook";
@@ -849,10 +847,10 @@
 			target = 9E92AAA8290D4E680018604C /* ellekit-mac */;
 			targetProxy = 9E2D4F582938391C00EF6619 /* PBXContainerItemProxy */;
 		};
-		9E7751132947E27C00747209 /* PBXTargetDependency */ = {
+		9E7751182947E4C700747209 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9E92AAA8290D4E680018604C /* ellekit-mac */;
-			targetProxy = 9E7751122947E27C00747209 /* PBXContainerItemProxy */;
+			targetProxy = 9E7751172947E4C700747209 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -939,7 +937,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -958,7 +957,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1243,9 +1243,9 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = (
+					arm64e,
 					arm64,
 					x86_64,
-					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1273,9 +1273,9 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = (
+					arm64e,
 					arm64,
 					x86_64,
-					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
