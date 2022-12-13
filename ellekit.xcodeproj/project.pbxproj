@@ -30,13 +30,13 @@
 		9E489EBF292978E400F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
+		9E649ACE2947F3D2003D425D /* hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510E2947E1F400747209 /* hook.swift */; };
+		9E649ACF2947F3D5003D425D /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510C2947E1EB00747209 /* load.s */; };
 		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
-		9E77510D2947E1EB00747209 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510C2947E1EB00747209 /* load.s */; };
-		9E77510F2947E1F400747209 /* hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E77510E2947E1F400747209 /* hook.swift */; };
 		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
 		9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */; };
 		9E78FBF62916BDD500B3B50B /* trampoline_x64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF32916BDD500B3B50B /* trampoline_x64.S */; };
@@ -725,10 +725,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E77510D2947E1EB00747209 /* load.s in Sources */,
 				9E7750FF2947DE3000747209 /* pac.c in Sources */,
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
-				9E77510F2947E1F400747209 /* hook.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,
 				9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */,
 				9E823CF62942CFC80037659B /* Register.swift in Sources */,
@@ -745,6 +743,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E649ACE2947F3D2003D425D /* hook.swift in Sources */,
+				9E649ACF2947F3D5003D425D /* load.s in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,6 +884,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -904,6 +905,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
