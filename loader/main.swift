@@ -22,7 +22,11 @@ assert(mach_vm_allocate(task, &tweak_str_addr, UInt64(vm_page_size), VM_FLAGS_AN
 assert(mach_vm_protect(task, tweak_str_addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY) == KERN_SUCCESS)
 
 class retain {
+    #if os(macOS)
     static var str_c = ("/usr/local/lib/libinjector.dylib" as NSString).utf8String
+    #else
+    static var str_c = ("/usr/lib/libinjector.dylib" as NSString).utf8String
+    #endif
 }
 
 assert(mach_vm_write(task, tweak_str_addr, UInt(bitPattern: retain.str_c), mach_msg_type_number_t(vm_page_size)) == KERN_SUCCESS)
