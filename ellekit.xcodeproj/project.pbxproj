@@ -877,6 +877,7 @@
 		9E381C3E293D1C88004D36B2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = arm64e;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development: Marc-Andre Belanger (5Q27LLMHG4)";
@@ -890,6 +891,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = loader/pac.h;
 				SWIFT_VERSION = 5.0;
 			};
@@ -898,6 +901,7 @@
 		9E381C3F293D1C88004D36B2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = arm64e;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development: Marc-Andre Belanger (5Q27LLMHG4)";
@@ -911,6 +915,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = loader/pac.h;
 				SWIFT_VERSION = 5.0;
 			};
