@@ -78,7 +78,9 @@ var thread_start_routine: [UInt8] {
         0xE0, 0x23, 0x00, 0x91 // add x0, sp, #8
     ])
     movz(.x1, 0)
+    #if _ptrauth(_arm64e)
     bytes([0xe2, 0x23, 0xc1, 0xda]) // paciza x2
+    #endif
     movz(.x3, 0)
     movk(.x14, pthread_create_addr % 65536)
     movk(.x14, (pthread_create_addr / 65536) % 65536, lsl: 16)

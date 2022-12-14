@@ -12,18 +12,14 @@ void* sign_pointer(void* ptr) {
 }
 
 void set_pc(void* ptr, arm_thread_state64_t* state) {
-#if __arm64e__
     __darwin_arm_thread_state64_set_pc_fptr(
         *state,
         ptr
     );
-#endif
 }
 
 void set_sp(void* ptr, arm_thread_state64_t* state) {
-#if __arm64e__
     __darwin_arm_thread_state64_set_sp(*state, ptr);
-#endif
 }
 
 void* strip_pointer(void* ptr) {
