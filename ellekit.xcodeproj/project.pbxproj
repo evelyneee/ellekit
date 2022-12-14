@@ -36,6 +36,7 @@
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E75EF7929492C5800C7AFEC /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
 		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
 		9E78FBF52916BDD500B3B50B /* trampoline_arm64.S in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */; };
@@ -729,6 +730,7 @@
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,
 				9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */,
+				9E75EF7929492C5800C7AFEC /* PAC.swift in Sources */,
 				9E823CF62942CFC80037659B /* Register.swift in Sources */,
 				9E823CF52942CFC80037659B /* Execute.swift in Sources */,
 				9E823CF42942CFC80037659B /* Math.swift in Sources */,
