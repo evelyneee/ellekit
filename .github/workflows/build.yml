@@ -71,3 +71,16 @@ jobs:
         with:
           name: injector
           path: ${{ github.workspace }}/product/libinjector.dylib
+          
+      - name: Build loader
+        run: |
+          ${{ env.build_cmd }} loader
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release/loader ${{ github.workspace }}/product/loader
+          
+      - name: Upload loader to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: loader
+          path: ${{ github.workspace }}/product/loader
