@@ -90,11 +90,11 @@ jobs:
           ${{ env.build_cmd }} pspawn
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/libpspawn.dylib
+          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/pspawn.dylib
           
       - name: Upload pspawn lib to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: libpspawn
-          path: ${{ github.workspace }}/product/libpspawn.dylib
+          name: pspawn
+          path: ${{ github.workspace }}/product/pspawn.dylib
     
