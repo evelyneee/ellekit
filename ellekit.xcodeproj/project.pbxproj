@@ -69,7 +69,7 @@
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
-		9EF86E20294A757B004A96C4 /* spawn.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EF86E1F294A757B004A96C4 /* spawn.c */; };
+		9EF86E20294A757B004A96C4 /* pspawn.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EF86E1F294A757B004A96C4 /* pspawn.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,7 +167,7 @@
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
-		9E7751042947E0E100747209 /* libposixspawn-hook.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libposixspawn-hook.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E7751042947E0E100747209 /* libpspawn.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libpspawn.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E78FBEA2916BDB900B3B50B /* trampoline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trampoline; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E78FBF12916BDD500B3B50B /* trampoline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
 		9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_arm64.S; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
-		9EF86E1F294A757B004A96C4 /* spawn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = spawn.c; sourceTree = "<group>"; };
+		9EF86E1F294A757B004A96C4 /* pspawn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pspawn.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -360,7 +360,7 @@
 		9E7751082947E13500747209 /* launchd-hook */ = {
 			isa = PBXGroup;
 			children = (
-				9EF86E1F294A757B004A96C4 /* spawn.c */,
+				9EF86E1F294A757B004A96C4 /* pspawn.c */,
 			);
 			path = "launchd-hook";
 			sourceTree = "<group>";
@@ -433,7 +433,7 @@
 				9EA0D1BA291C5D500061B187 /* libinjector.dylib */,
 				9E2D4F4E2938389B00EF6619 /* test */,
 				9E381C3A293D1C87004D36B2 /* loader */,
-				9E7751042947E0E100747209 /* libposixspawn-hook.dylib */,
+				9E7751042947E0E100747209 /* libpspawn.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -533,9 +533,9 @@
 			productReference = 9E381C3A293D1C87004D36B2 /* loader */;
 			productType = "com.apple.product-type.tool";
 		};
-		9E7751032947E0E100747209 /* posixspawn-hook */ = {
+		9E7751032947E0E100747209 /* pspawn */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "posixspawn-hook" */;
+			buildConfigurationList = 9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "pspawn" */;
 			buildPhases = (
 				9E7751002947E0E100747209 /* Headers */,
 				9E7751012947E0E100747209 /* Sources */,
@@ -546,9 +546,9 @@
 			);
 			dependencies = (
 			);
-			name = "posixspawn-hook";
+			name = pspawn;
 			productName = "posixspawn-hook";
-			productReference = 9E7751042947E0E100747209 /* libposixspawn-hook.dylib */;
+			productReference = 9E7751042947E0E100747209 /* libpspawn.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		9E78FBE92916BDB900B3B50B /* trampoline */ = {
@@ -698,7 +698,7 @@
 				9EA0D1B9291C5D500061B187 /* injector */,
 				9E2D4F4D2938389B00EF6619 /* test */,
 				9E381C39293D1C87004D36B2 /* loader */,
-				9E7751032947E0E100747209 /* posixspawn-hook */,
+				9E7751032947E0E100747209 /* pspawn */,
 			);
 		};
 /* End PBXProject section */
@@ -746,7 +746,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EF86E20294A757B004A96C4 /* spawn.c in Sources */,
+				9EF86E20294A757B004A96C4 /* pspawn.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1400,7 +1400,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "posixspawn-hook" */ = {
+		9E7751052947E0E100747209 /* Build configuration list for PBXNativeTarget "pspawn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9E7751062947E0E100747209 /* Debug */,

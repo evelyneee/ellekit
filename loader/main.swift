@@ -25,7 +25,7 @@ class retain {
     #if os(macOS)
     static var str_c = ("/usr/local/lib/pspawn.dylib" as NSString).utf8String
     #else
-    static var str_c = ("/usr/lib/libinjector.dylib" as NSString).utf8String
+    static var str_c = ("/usr/lib/pspawn.dylib" as NSString).utf8String
     #endif
 }
 
