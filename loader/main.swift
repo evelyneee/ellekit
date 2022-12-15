@@ -23,7 +23,7 @@ assert(mach_vm_protect(task, tweak_str_addr, UInt64(vm_page_size), 0, VM_PROT_RE
 
 class retain {
     #if os(macOS)
-    static var str_c = ("/usr/local/lib/libinjector.dylib" as NSString).utf8String
+    static var str_c = ("/usr/local/lib/pspawn.dylib" as NSString).utf8String
     #else
     static var str_c = ("/usr/lib/libinjector.dylib" as NSString).utf8String
     #endif
