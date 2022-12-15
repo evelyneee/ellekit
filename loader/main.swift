@@ -107,7 +107,7 @@ var thread: thread_t = 0
 var count = mach_msg_type_number_t(MemoryLayout<__darwin_arm_thread_state64>.size / MemoryLayout<UInt32>.size)
 
 guard thread_create(task, &thread) == KERN_SUCCESS else {
-    print("[+] loader: failed to spawn thread")
+    print("[-] loader: failed to spawn thread")
     exit(1)
 }
 
@@ -128,7 +128,7 @@ let convert = withUnsafeMutablePointer(to: &state, {
 })
 
 guard convert == KERN_SUCCESS else {
-    print("[+] loader: failed to convert thread state")
+    print("[-] loader: failed to convert thread state")
     exit(1)
 }
 
@@ -141,7 +141,7 @@ let create = withUnsafeMutablePointer(to: &state, {
 })
 
 guard create == KERN_SUCCESS else {
-    print("[+] loader: failed to set thread state")
+    print("[-] loader: failed to set thread state")
     exit(1)
 }
 
@@ -149,7 +149,10 @@ print("[+] loader: set thread state")
 
 DispatchQueue.global().async {
     thread_resume(thread)
-    print("[+] loader: resumed thread state. done!")
+    print("[+] loader: resumed thread state. waiting for launchd...")
+    sleep(5)
+    print("[+] loader: closed thread. done!")
+    thread_suspend(thread)
     exit(0)
 }
 
