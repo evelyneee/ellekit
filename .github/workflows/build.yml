@@ -85,8 +85,7 @@ jobs:
           name: loader
           path: ${{ github.workspace }}/product/loader
           
-
-     - name: Build loader for iOS
+      - name: Build loader for iOS
         run: |
           ${{ env.build_cmd }} loader -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
           
