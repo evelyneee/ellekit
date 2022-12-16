@@ -94,7 +94,13 @@
 			{
 				[tweakListForExecutable addObject:tweakInfo];
 				return;
-			}
+            }
+#if TARGET_OS_IOS
+            else if ([tweakInfo.filterBundles containsObject:@"com.apple.UIKit"] && [executablePath containsString:@".app"]) {
+                [tweakListForExecutable addObject:tweakInfo];
+                return;
+            }
+#endif
 		}
 
 		if(executableName)
