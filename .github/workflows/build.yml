@@ -84,4 +84,17 @@ jobs:
         with:
           name: loader
           path: ${{ github.workspace }}/product/loader
+          
+      - name: Build pspawn lib
+        run: |
+          ${{ env.build_cmd }} pspawn
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/pspawn.dylib
+          
+      - name: Upload pspawn lib to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: pspawn
+          path: ${{ github.workspace }}/product/pspawn.dylib
     
