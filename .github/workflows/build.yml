@@ -97,7 +97,6 @@ jobs:
         with:
           name: pspawn
           path: ${{ github.workspace }}/product/pspawn.dylib
-loader
           
       - name: Build pspawn lib for iOS
         run: |
