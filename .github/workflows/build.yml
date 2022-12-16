@@ -100,7 +100,7 @@ jobs:
           
       - name: Build pspawn lib for iOS
         run: |
-          ${{ env.build_cmd }} pspawn -destination "arch=arm64e,os=iOS" -destination "arch=arm64,os=iOS"
+          ${{ env.build_cmd }} pspawn -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/build/Release-iphoneos/libpspawn.dylib ${{ github.workspace }}/product/ios-pspawn.dylib
@@ -108,6 +108,6 @@ jobs:
       - name: Upload iOS pspawn lib to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: pspawn
+          name: ios-pspawn
           path: ${{ github.workspace }}/product/ios-pspawn.dylib
     
