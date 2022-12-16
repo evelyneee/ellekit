@@ -1,3 +1,4 @@
 build/
 .build/
 launchd-hook/fishhook/*
+.DS_Store
