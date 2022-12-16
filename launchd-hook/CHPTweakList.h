@@ -28,5 +28,4 @@
 + (instancetype)sharedInstance;
 - (void)updateTweakList;
 - (NSArray*)tweakListForExecutableAtPath:(NSString*)executablePath;
-- (BOOL)oneOrMoreTweaksInjectIntoExecutableAtPath:(NSString*)executablePath;
 @end

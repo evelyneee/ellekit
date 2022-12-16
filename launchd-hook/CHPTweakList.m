@@ -48,7 +48,13 @@
 - (void)updateTweakList
 {
 	NSMutableArray* tweakListM = [NSMutableArray new];
-	NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:@"/Users/charlotte/.tweaks/"].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
+#if TARGET_OS_OSX
+    NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[@"~/.tweaks/" stringByExpandingTildeInPath]].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
+#elif ROOTLESS // iOS/macOS rootless
+    NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:@"/var/jb/usr/lib/TweakInject/"].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
+#else
+    NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:@"/Library/MobileSubstrate/DynamicLibraries/"].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
+#endif
 
 	for(NSURL* URL in dynamicLibraries)
 	{
@@ -72,7 +78,11 @@
 {
 	if(!executablePath) return nil;
 
-	NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
+#if TARGET_OS_OSX
+    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
+#else
+    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent].bundleIdentifier;
+#endif
 	NSString* executableName = executablePath.lastPathComponent;
 
 	NSMutableArray* tweakListForExecutable = [NSMutableArray new];
@@ -98,16 +108,6 @@
 	}];
 
 	return tweakListForExecutable;
-}
-
-- (BOOL)oneOrMoreTweaksInjectIntoExecutableAtPath:(NSString*)executablePath
-{
-	for(CHPTweakInfo* tweakInfo in [self tweakListForExecutableAtPath:executablePath])
-	{
-		return YES;
-	}
-
-	return NO;
 }
 
 @end

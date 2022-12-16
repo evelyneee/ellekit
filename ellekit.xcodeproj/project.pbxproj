@@ -71,11 +71,6 @@
 		9EA0CC7D293AE89A0000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
-		9EABB3DB294BEB6700E740FB /* CoreServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3C4294BEB6700E740FB /* CoreServices.h */; };
-		9EABB3DF294BEB6700E740FB /* CHPMachoParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3C8294BEB6700E740FB /* CHPMachoParser.h */; };
-		9EABB3E8294BEB6700E740FB /* CHPMachoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3D1294BEB6700E740FB /* CHPMachoParser.m */; };
-		9EABB3E9294BEB6700E740FB /* CHPPackageInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3D2294BEB6700E740FB /* CHPPackageInfo.h */; };
-		9EABB3EB294BEB6700E740FB /* CHPPackageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3D4294BEB6700E740FB /* CHPPackageInfo.m */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 		9EF86E20294A757B004A96C4 /* pspawn.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF86E1F294A757B004A96C4 /* pspawn.m */; };
@@ -199,15 +194,9 @@
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
-		9EABB3C1294BEA8400E740FB /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
-		9EABB3C4294BEB6700E740FB /* CoreServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreServices.h; path = injector/CoreServices.h; sourceTree = SOURCE_ROOT; };
-		9EABB3C8294BEB6700E740FB /* CHPMachoParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPMachoParser.h; path = injector/CHPMachoParser.h; sourceTree = SOURCE_ROOT; };
 		9EABB3CA294BEB6700E740FB /* CHPTweakInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPTweakInfo.m; path = "launchd-hook/CHPTweakInfo.m"; sourceTree = SOURCE_ROOT; };
 		9EABB3CE294BEB6700E740FB /* CHPTweakList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPTweakList.m; path = "launchd-hook/CHPTweakList.m"; sourceTree = SOURCE_ROOT; };
-		9EABB3D1294BEB6700E740FB /* CHPMachoParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPMachoParser.m; path = injector/CHPMachoParser.m; sourceTree = SOURCE_ROOT; };
-		9EABB3D2294BEB6700E740FB /* CHPPackageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPPackageInfo.h; path = injector/CHPPackageInfo.h; sourceTree = SOURCE_ROOT; };
 		9EABB3D3294BEB6700E740FB /* CHPTweakList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPTweakList.h; path = "launchd-hook/CHPTweakList.h"; sourceTree = SOURCE_ROOT; };
-		9EABB3D4294BEB6700E740FB /* CHPPackageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPPackageInfo.m; path = injector/CHPPackageInfo.m; sourceTree = SOURCE_ROOT; };
 		9EABB3D7294BEB6700E740FB /* CHPTweakInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPTweakInfo.h; path = "launchd-hook/CHPTweakInfo.h"; sourceTree = SOURCE_ROOT; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
@@ -489,24 +478,10 @@
 		9EA0D1BE291C5D5B0061B187 /* injector */ = {
 			isa = PBXGroup;
 			children = (
-				9EABB3C3294BEB5200E740FB /* Choicy */,
 				9EA0D1C1291C5D7F0061B187 /* injector.swift */,
 				9ECE28DD292026B10038D993 /* load.s */,
-				9EABB3C1294BEA8400E740FB /* Bridge.h */,
 			);
 			path = injector;
-			sourceTree = "<group>";
-		};
-		9EABB3C3294BEB5200E740FB /* Choicy */ = {
-			isa = PBXGroup;
-			children = (
-				9EABB3C8294BEB6700E740FB /* CHPMachoParser.h */,
-				9EABB3D1294BEB6700E740FB /* CHPMachoParser.m */,
-				9EABB3D2294BEB6700E740FB /* CHPPackageInfo.h */,
-				9EABB3D4294BEB6700E740FB /* CHPPackageInfo.m */,
-				9EABB3C4294BEB6700E740FB /* CoreServices.h */,
-			);
-			path = Choicy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -532,9 +507,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EABB3E9294BEB6700E740FB /* CHPPackageInfo.h in Headers */,
-				9EABB3DF294BEB6700E740FB /* CHPMachoParser.h in Headers */,
-				9EABB3DB294BEB6700E740FB /* CoreServices.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -872,9 +844,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EABB3EB294BEB6700E740FB /* CHPPackageInfo.m in Sources */,
 				9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */,
-				9EABB3E8294BEB6700E740FB /* CHPMachoParser.m in Sources */,
 				9ECE28DE292026B10038D993 /* load.s in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
