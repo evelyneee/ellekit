@@ -16,6 +16,8 @@ let logger = Logger(subsystem: "red.charlotte.ellekit", category: "injector")
 @_cdecl("injector_entry")
 public func entry() {
     logger.notice("[ellekit] injector: out here")
+    print("hi stdout")
+    print(CHPTweakList().tweakListForExecutable(atPath: "/System/Applications/Messages.app/Contents/MacOS/Messages"))
     do {
         try FileManager.default.contentsOfDirectory(atPath: path)
             .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }

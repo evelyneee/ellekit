@@ -150,7 +150,7 @@ print("[+] loader: set thread state")
 DispatchQueue.global().async {
     thread_resume(thread)
     print("[+] loader: resumed thread state. waiting for launchd...")
-    sleep(5)
+    sleep(3)
     print("[+] loader: closed thread. done!")
     thread_suspend(thread)
     exit(0)
