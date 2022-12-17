@@ -90,7 +90,7 @@ jobs:
           ${{ env.build_cmd }} loader -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release-iphoneos/loader ${{ github.workspace }}/product/loader-ios
+          cp -R ${{ github.workspace }}/build/Release/loader ${{ github.workspace }}/product/loader-ios
           
       - name: Upload loader to artifacts for iOS
         uses: actions/upload-artifact@v3
@@ -116,7 +116,7 @@ jobs:
           ${{ env.build_cmd }} pspawn -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release-iphoneos/libpspawn.dylib ${{ github.workspace }}/product/ios-pspawn.dylib
+          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/ios-pspawn.dylib
           
       - name: Upload iOS pspawn lib to artifacts
         uses: actions/upload-artifact@v3
