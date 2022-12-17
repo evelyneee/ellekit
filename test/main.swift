@@ -1,4 +1,3 @@
-
 // my playground!
 
 import Foundation
@@ -56,12 +55,11 @@ func test3() {
 }
 test3()
 
-
-//unsafeBitCast(test2, to: (@convention (c) () -> Void).self)()
+// unsafeBitCast(test2, to: (@convention (c) () -> Void).self)()
 
 typealias freebody = @convention(c) (UnsafeMutableRawPointer?) -> Void
 
-var free_orig: (freebody)? = nil
+var free_orig: (freebody)?
 
 @_cdecl("free_c_orig")
 public func free_c_orig(_ ptr: UnsafeMutableRawPointer?) {

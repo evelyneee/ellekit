@@ -1,4 +1,3 @@
-
 import Foundation
 import Darwin
 
@@ -22,32 +21,32 @@ func executeAssemblyBytes(_ code: [UInt8]) {
 }
 
 func execWithRelativePtr(@InstructionBuilder _ instructions: (mach_vm_address_t) -> [UInt8]) {
-    
-    var addr: mach_vm_address_t = 0;
-    mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE);
-        
+
+    var addr: mach_vm_address_t = 0
+    mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)
+    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE)
+
     let code = instructions(addr)
     let codesize = MemoryLayout.size(ofValue: code) * (code.count)
-    
-    memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), code, codesize);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
-    //now cast the address to a function pointer and call it
+
+    memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), code, codesize)
+    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
+    // now cast the address to a function pointer and call it
     let fn = unsafeBitCast(addr, to: (@convention (c) () -> Void).self)
-        
-    fn();
+
+    fn()
     return
 }
 
 func executeRawByteArray(_ code: UnsafePointer<UInt8>, _ codesize: Int) -> AnyObject? {
-    var addr: mach_vm_address_t = 0;
-    mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE);
-    memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), code, codesize);
-    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE);
-    //now cast the address to a function pointer and call it
+    var addr: mach_vm_address_t = 0
+    mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)
+    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE)
+    memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), code, codesize)
+    mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
+    // now cast the address to a function pointer and call it
     let fn = unsafeBitCast(addr, to: (@convention (c) () -> AnyObject?).self)
-    return fn();
+    return fn()
 }
 
 func byteArray<T: FixedWidthInteger>(from value: T) -> [UInt8] {
@@ -67,8 +66,8 @@ func dumpInstructions(_ array: [Instruction]) {
     array.forEach {
         print(
             type(of: $0),
-            $0.bytes().map { "0x" + String(format:"%02X", $0) }.joined(separator: ", "),
-            $0.bytes().map { String(format:"%02X", $0) }.joined()
+            $0.bytes().map { "0x" + String(format: "%02X", $0) }.joined(separator: ", "),
+            $0.bytes().map { String(format: "%02X", $0) }.joined()
         )
     }
 }
@@ -78,11 +77,11 @@ public struct InstructionBuilder {
     static public func buildEither(first component: Instruction) -> Instruction {
         component
     }
-    
+
     static public func buildEither(second component: Instruction) -> Instruction {
         component
     }
-    
+
     static public func buildBlock(_ components: Instruction...) -> [UInt8] {
         return Array(
             components.map { $0.bytes() }.joined()

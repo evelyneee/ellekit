@@ -1,4 +1,3 @@
-
 import Foundation
 
 func getAllThreads() -> [thread_act_t] {

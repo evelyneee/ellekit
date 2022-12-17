@@ -1,23 +1,22 @@
-
 import Foundation
 
 func allocateFunction(_ patchBytes: [UInt8]) -> UnsafeMutableRawPointer {
-    var page_address: mach_vm_address_t = 0;
+    var page_address: mach_vm_address_t = 0
     assert(mach_vm_allocate(task, &page_address, UInt64(vm_page_size), VM_FLAGS_ANYWHERE) == KERN_SUCCESS)
     assert(mach_vm_protect(task, page_address, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY) == KERN_SUCCESS)
-    
+
     let write = patchBytes.withUnsafeBufferPointer { buf in
         mach_vm_write(task, page_address, .init(bitPattern: buf.baseAddress!), .init(buf.count * MemoryLayout<UInt8>.size))
     }
-    
+
     assert(write == KERN_SUCCESS)
-    
+
     assert(mach_vm_protect(task, page_address, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE) == KERN_SUCCESS)
     return UnsafeMutableRawPointer(bitPattern: UInt(page_address))!
 }
 
 func allocateStack() -> UnsafeMutableRawPointer {
-    var page_address: mach_vm_address_t = 0;
+    var page_address: mach_vm_address_t = 0
     assert(mach_vm_allocate(task, &page_address, 65536, VM_FLAGS_ANYWHERE) == KERN_SUCCESS)
     assert(mach_vm_protect(task, page_address, 65536, 0, VM_PROT_READ | VM_PROT_WRITE) == KERN_SUCCESS)
     return UnsafeMutableRawPointer(bitPattern: UInt(page_address) + (65536 / 2))!

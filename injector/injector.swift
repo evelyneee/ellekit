@@ -1,4 +1,3 @@
-
 import Foundation
 import os.log
 
@@ -40,14 +39,14 @@ struct Filter: Codable {
 }
 
 func openTweak(_ tweak: String) throws {
-    
+
     let filterData = try Data(contentsOf: NSURL.fileURL(withPath: tweak+".plist"))
     let filterRoot = try PropertyListDecoder().decode(Filter.self, from: filterData)
     let filter = filterRoot
         .Filter
         .Bundles
         .map { $0.lowercased() }
-    
+
     if let bundleID = Bundle.main.bundleIdentifier {
         if filter.contains(bundleID.lowercased()) {
             logger.notice("[ellekit] injector: loaded \(tweak+".dylib")")
@@ -65,7 +64,7 @@ func openTweak(_ tweak: String) throws {
             return
         }
     }
-    
+
     if filter.contains("*") {
         logger.notice("[ellekit] injector: loading with wildcard filter: \(tweak+".dylib")")
         let handle = dlopen(tweak + ".dylib", RTLD_NOW)

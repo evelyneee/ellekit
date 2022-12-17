@@ -1,13 +1,12 @@
-
 import Foundation
 
 guard safe_boot() == 0 else {
-    print("[-] not injecting, this is macOS safe mode");
+    print("[-] not injecting, this is macOS safe mode")
     exit(1)
 }
 
 guard getuid() == 0 else {
-    print("[-] can't get launchd's task port without root permissions");
+    print("[-] can't get launchd's task port without root permissions")
     exit(1)
 }
 
@@ -22,7 +21,7 @@ guard pid_krt == KERN_SUCCESS else {
 
 print("[+]", "got task", task)
 
-var tweak_str_addr: mach_vm_address_t = 0;
+var tweak_str_addr: mach_vm_address_t = 0
 assert(mach_vm_allocate(task, &tweak_str_addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE) == KERN_SUCCESS)
 assert(mach_vm_protect(task, tweak_str_addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY) == KERN_SUCCESS)
 
@@ -49,7 +48,7 @@ var thread_target_routine: [UInt8] {
     bytes([
         0xFF, 0x43, 0x00, 0xD1,
         0xFD, 0x7B, 0x00, 0xA9,
-        0xFD, 0x03, 0x00, 0x91,
+        0xFD, 0x03, 0x00, 0x91
     ])
     movk(.x0, tweak_str_addr % 65536)
     movk(.x0, (tweak_str_addr / 65536) % 65536, lsl: 16)
@@ -128,7 +127,7 @@ let convert = withUnsafeMutablePointer(to: &state, {
             mach_msg_type_number_t(MemoryLayout<__darwin_arm_thread_state64>.size / MemoryLayout<UInt32>.size),
             statePtr,
             &count
-        );
+        )
     })
 })
 

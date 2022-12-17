@@ -1,4 +1,3 @@
-
 import ObjectiveC
 
 @_cdecl("MSGetImageByName")

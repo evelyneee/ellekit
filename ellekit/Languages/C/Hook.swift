@@ -1,4 +1,3 @@
-
 import Foundation
 
 #if SWIFT_PACKAGE
@@ -6,11 +5,11 @@ import ellekitc
 #endif
 
 public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuilder _ instructions: () -> [UInt8]) {
-    
+
     let code = instructions()
-        
+
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
-    
+
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: function.makeReadable(), code: buf.baseAddress, size: size)
         #if DEBUG
@@ -22,20 +21,20 @@ public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuild
 }
 
 public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
-    
+
     let target = stockTarget.makeReadable()
     let replacement = stockReplacement.makeReadable()
-    
+
     let targetSize = findFunctionSize(target) ?? 6
-        
+
     print("[*] ellekit: Size of target:", targetSize as Any)
-    
+
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
-    
+
     hooks[target] = replacement
 
     var code = [UInt8]()
-    
+
     // fast big branch option
     if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
@@ -56,15 +55,15 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         }
         code = codeBuilder
     }
-                
+
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
-    
+
     let orig = getOriginal(
         target,
         targetSize,
         usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
     )
-    
+
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
@@ -77,22 +76,22 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         }
         #endif
     }
-    
+
     return orig.0?.makeCallable()
 }
 
 public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
-        
+
     let target = originalTarget.makeReadable()
     let replacement = originalReplacement.makeReadable()
-    
+
     let targetSize = findFunctionSize(target) ?? 6
     print("[*] ellekit: Size of target:", targetSize as Any)
-            
+
     let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
-    
+
     var code = [UInt8]()
-    
+
     if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
         print("[*] Big branch")
 
@@ -112,11 +111,11 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         }
         code = codeBuilder
     }
-    
+
     hooks[target] = replacement
-            
+
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
-        
+
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
@@ -133,29 +132,29 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
 @discardableResult
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
-    let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY;
+    let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
     let enforceThreadSafety = enforceThreadSafety
     if enforceThreadSafety {
         stopAllThreads()
     }
-    mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions);
-    
-    memcpy(address, code, Int(size));
-    
-    let originalPerms = VM_PROT_READ | VM_PROT_EXECUTE;
+    mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions)
+
+    memcpy(address, code, Int(size))
+
+    let originalPerms = VM_PROT_READ | VM_PROT_EXECUTE
     let err2 = mach_vm_protect(mach_task_self_,
                                mach_vm_address_t(UInt(bitPattern: address)),
                                mach_vm_size_t(size),
                                0,
                                originalPerms)
-    
+
     // flush page cache so we don't hit cached unpatched functions
     sys_icache_invalidate(address, Int(vm_page_size))
-    
+
     guard err2 == 0 else { return Int(err2) }
     if enforceThreadSafety {
         resumeAllThreads()
     }
-    
+
     return 0
 }

@@ -1,4 +1,3 @@
-
 import Foundation
 import os.log
 
@@ -16,4 +15,3 @@ public var enforceThreadSafety: Bool = false
 public func EKEnableThreadSafety(_ on: Int) {
     enforceThreadSafety = on == 1
 }
-

@@ -11,7 +11,7 @@ let package = Package(
         .library(
             name: "ellekit",
             targets: ["ellekit"]
-        ),
+        )
     ],
     dependencies: [
     ],

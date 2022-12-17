@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct Tweak: Codable {
@@ -7,23 +6,23 @@ struct Tweak: Codable {
 }
 
 struct ContentView: View {
-    
+
     @State
     var tweaks: [Tweak] = []
-    
+
     func addTweak(_ new: Tweak) throws {
         self.tweaks.append(new)
         self.tweaksData = try! JSONEncoder().encode(self.tweaks)
         print(self.tweaksData)
     }
-    
+
     @AppStorage("Tweaks")
     var tweaksData: Data = .init()
-    
+
     @State var addingTweak: Bool = false
-    
+
     @State var newTweak: (app: String, tweaks: [String]) = (app: "", tweaks: [])
-    
+
     var body: some View {
         if addingTweak {
             List {
@@ -67,12 +66,12 @@ struct ContentView: View {
                         Text(tweak.app.lastPathComponent)
                         Spacer()
                         Button {
-                            
+
                             print(tweak)
                             let url = tweak.app
                             let path = url.absoluteString.dropFirst(7)
                             let task = Process()
-                            task.environment = ["DYLD_INSERT_LIBRARIES":tweak.tweaks.map(\.absoluteString).map { $0.dropFirst(7) }.joined(separator: ":")]
+                            task.environment = ["DYLD_INSERT_LIBRARIES": tweak.tweaks.map(\.absoluteString).map { $0.dropFirst(7) }.joined(separator: ":")]
                             task.launchPath = String(path)
                             task.launch()
                         } label: {

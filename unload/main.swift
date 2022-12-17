@@ -1,4 +1,3 @@
-
 import Foundation
 
 func launchd_threads() -> [thread_act_t] {
@@ -22,7 +21,7 @@ public func launchd_unlock() {
 }
 
 guard getuid() == 0 else {
-    print("ellekit: [loader] can't get launchd's task port without root permissions");
+    print("ellekit: [loader] can't get launchd's task port without root permissions")
     exit(1)
 }
 

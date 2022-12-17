@@ -1,12 +1,11 @@
-
 import SwiftUI
 
 @main
 struct launcherApp: App {
-    
+
     @NSApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate
-    
+
     var body: some Scene {
         Settings {
             EmptyView()
@@ -19,9 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        
+
         NSApp.setActivationPolicy(.accessory)
-        
+
         let contentView = ContentView()
 
         popover.behavior = .transient

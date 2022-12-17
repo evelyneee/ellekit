@@ -1,4 +1,3 @@
-
 import Foundation
 
 public enum Register {
@@ -7,21 +6,21 @@ public enum Register {
     case sp
     case xzr
     case wzr
-        
+
     var value: Int {
         switch self {
         case .x(let num), .w(let num): return num
         case .sp, .xzr, .wzr: return 31
         }
     }
-    
+
     var w: Bool {
         switch self {
-        case .w(_), .wzr: return true
+        case .w, .wzr: return true
         default: return false
         }
     }
-    
+
     static public let x0 = Self.x(0)
     static public let x1 = Self.x(1)
     static public let x2 = Self.x(2)
@@ -53,7 +52,7 @@ public enum Register {
     static public let x28 = Self.x(28)
     static public let x29 = Self.x(29)
     static public let x30 = Self.x(30)
-    
+
     static public let w0 = Self.w(0)
     static public let w1 = Self.w(1)
     static public let w2 = Self.w(2)
@@ -88,13 +87,13 @@ public enum Register {
 }
 
 public struct Cond {
-    
+
     init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     var rawValue: Int
-    
+
     static public let EQ = Self(0b0000)
     static public let NE = Self(0b0001)
     static public let CS = Self(0b0010)

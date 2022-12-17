@@ -1,15 +1,14 @@
-
 import Foundation
 
 func checkBranch(_ opcode: UInt64) -> Bool {
-            
+
     let opcode = reverse(opcode)
     let bits = opcode.bits(25...28)
-        
+
     if (bits >> 1) == 5 {
         return true
     }
-        
+
     return false
 }
 
@@ -22,7 +21,7 @@ func checkBranch(_ isn: [UInt8]) -> Bool {
 }
 
 func findFunctionSize(_ target: UnsafeMutableRawPointer) -> Int? {
-        
+
     let instructions: [UInt8] = target.withMemoryRebound(to: UInt8.self, capacity: 4 * 5, { ptr in
         Array(UnsafeMutableBufferPointer(start: ptr, count: 4 * 5))
     })
