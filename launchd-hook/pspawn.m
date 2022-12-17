@@ -50,6 +50,34 @@ TweakList* tweaks;
 os_log_t logger;
 
 char **
+remove_dyld_env(const char* path, char **env)
+{
+    // Determines the size of the array by counting the number of strings
+    // until it reaches a null pointer.
+    int env_size = 0;
+    while (env[env_size] != NULL) {
+        env_size++;
+    }
+
+    // Allocates a new array with enough space to hold the existing strings
+    // plus the new string.
+    char **newenv = (char**)malloc(sizeof(char*) * (env_size + 2));
+
+    // Copies the strings from the old array to the new array.
+    for (int i = 0; i < env_size; i++) {
+        if (strstr(env[i], "DYLD_INSERT_LIBRARIES=") == 0) {
+            newenv[i] = env[i];
+        } else {
+            os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "already got env for path %s, %s", path, env[i]);
+            void* strbuf = malloc(100);
+            strcpy(strbuf, "DYLD_NEVER_INSERT_LIBRARIES=null");
+            newenv[i] = strbuf;
+        }
+    }
+    return newenv;
+}
+
+char **
 append_to_env(const char* path, char **env, bool launchd)
 {
     
@@ -121,7 +149,7 @@ int posix_spawn_hook(
     bool should_inject = (strstr(path, "BlastDoor") == 0) && (strstr(path, "mobile_assertion_agent") == 0) && (strstr(path, "WebKit") == 0) && (strstr(path, "Safari") == 0);
     
     if (!should_inject) {
-        ret = orig_spawn(pid, path, file_actions, attrp, argv, envp);
+        ret = orig_spawn(pid, path, file_actions, attrp, argv, remove_dyld_env(path, (char**)envp));
         return ret;
     } else if (strstr(path, "launchd") != 0 || strstr(path, "xpcproxy") != 0)  {
         new_envp = append_to_env(path, (char**)envp, 1);
@@ -147,7 +175,7 @@ int posix_spawnp_hook(
     int ret;
     char** new_envp;
     
-    bool should_inject = (strstr(path, "BlastDoor") == 0) && (strstr(path, "mobile_assertion_agent") == 0);
+    bool should_inject = (strstr(path, "BlastDoor") == 0) && (strstr(path, "mobile_assertion_agent") == 0) && (strstr(path, "WebKit") == 0) && (strstr(path, "Safari") == 0);
 
     if (!should_inject) {
         ret = orig_spawnp(pid, path, file_actions, attrp, argv, envp);
