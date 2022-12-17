@@ -34,10 +34,10 @@
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698579290EC91700408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
-		9E6B6745294C11FE00E6BE37 /* CHPTweakInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3D7294BEB6700E740FB /* CHPTweakInfo.h */; };
-		9E6B6746294C11FE00E6BE37 /* CHPTweakInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3CA294BEB6700E740FB /* CHPTweakInfo.m */; };
-		9E6B6747294C11FE00E6BE37 /* CHPTweakList.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3D3294BEB6700E740FB /* CHPTweakList.h */; };
-		9E6B6748294C11FE00E6BE37 /* CHPTweakList.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3CE294BEB6700E740FB /* CHPTweakList.m */; };
+		9E6B6745294C11FE00E6BE37 /* TweakInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3D7294BEB6700E740FB /* TweakInfo.h */; };
+		9E6B6746294C11FE00E6BE37 /* TweakInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3CA294BEB6700E740FB /* TweakInfo.m */; };
+		9E6B6747294C11FE00E6BE37 /* TweakList.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EABB3D3294BEB6700E740FB /* TweakList.h */; };
+		9E6B6748294C11FE00E6BE37 /* TweakList.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EABB3CE294BEB6700E740FB /* TweakList.m */; };
 		9E75EF7929492C5800C7AFEC /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
 		9E78FBF42916BDD500B3B50B /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBF12916BDD500B3B50B /* trampoline.c */; };
@@ -71,6 +71,7 @@
 		9EA0CC7D293AE89A0000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
+		9EAD2805294D28A700291A70 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAD2804294D28A700291A70 /* main.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 		9EF86E20294A757B004A96C4 /* pspawn.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF86E1F294A757B004A96C4 /* pspawn.m */; };
@@ -144,6 +145,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EAD27FB294D283900291A70 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -194,10 +204,12 @@
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
-		9EABB3CA294BEB6700E740FB /* CHPTweakInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPTweakInfo.m; path = "launchd-hook/CHPTweakInfo.m"; sourceTree = SOURCE_ROOT; };
-		9EABB3CE294BEB6700E740FB /* CHPTweakList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHPTweakList.m; path = "launchd-hook/CHPTweakList.m"; sourceTree = SOURCE_ROOT; };
-		9EABB3D3294BEB6700E740FB /* CHPTweakList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPTweakList.h; path = "launchd-hook/CHPTweakList.h"; sourceTree = SOURCE_ROOT; };
-		9EABB3D7294BEB6700E740FB /* CHPTweakInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHPTweakInfo.h; path = "launchd-hook/CHPTweakInfo.h"; sourceTree = SOURCE_ROOT; };
+		9EABB3CA294BEB6700E740FB /* TweakInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TweakInfo.m; path = "launchd-hook/TweakInfo.m"; sourceTree = SOURCE_ROOT; };
+		9EABB3CE294BEB6700E740FB /* TweakList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TweakList.m; path = "launchd-hook/TweakList.m"; sourceTree = SOURCE_ROOT; };
+		9EABB3D3294BEB6700E740FB /* TweakList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TweakList.h; path = "launchd-hook/TweakList.h"; sourceTree = SOURCE_ROOT; };
+		9EABB3D7294BEB6700E740FB /* TweakInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TweakInfo.h; path = "launchd-hook/TweakInfo.h"; sourceTree = SOURCE_ROOT; };
+		9EAD27FD294D283900291A70 /* unload */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = unload; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EAD2804294D28A700291A70 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
 		9EF86E1F294A757B004A96C4 /* pspawn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = pspawn.m; sourceTree = "<group>"; };
@@ -261,6 +273,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EAD27FA294D283900291A70 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -309,6 +328,7 @@
 		9E381C3B293D1C88004D36B2 /* loader */ = {
 			isa = PBXGroup;
 			children = (
+				9E9FA76B294BD98A00D18D18 /* taskforpid.xml */,
 				9E381C3C293D1C88004D36B2 /* main.swift */,
 				9ED080C929417AA900A81AF1 /* launchd.swift */,
 				9E7750FD2947DE3000747209 /* pac.h */,
@@ -369,11 +389,10 @@
 		9E7751082947E13500747209 /* launchd-hook */ = {
 			isa = PBXGroup;
 			children = (
-				9EABB3D7294BEB6700E740FB /* CHPTweakInfo.h */,
-				9EABB3CA294BEB6700E740FB /* CHPTweakInfo.m */,
-				9EABB3D3294BEB6700E740FB /* CHPTweakList.h */,
-				9EABB3CE294BEB6700E740FB /* CHPTweakList.m */,
-				9E9FA76B294BD98A00D18D18 /* taskforpid.xml */,
+				9EABB3D7294BEB6700E740FB /* TweakInfo.h */,
+				9EABB3CA294BEB6700E740FB /* TweakInfo.m */,
+				9EABB3D3294BEB6700E740FB /* TweakList.h */,
+				9EABB3CE294BEB6700E740FB /* TweakList.m */,
 				9EF86E1F294A757B004A96C4 /* pspawn.m */,
 			);
 			path = "launchd-hook";
@@ -426,8 +445,9 @@
 				9E19B22D2918011800F8C4C7 /* Package.swift */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E19B23A291812EA00F8C4C7 /* ellekitc */,
-				9E381C3B293D1C88004D36B2 /* loader */,
 				9EA0D1BE291C5D5B0061B187 /* injector */,
+				9E381C3B293D1C88004D36B2 /* loader */,
+				9EAD27FE294D283A00291A70 /* unload */,
 				9E7751082947E13500747209 /* launchd-hook */,
 				9E78FBFE29172D5600B3B50B /* launcher */,
 				9E78FBEB2916BDB900B3B50B /* trampoline */,
@@ -448,6 +468,7 @@
 				9E2D4F4E2938389B00EF6619 /* test */,
 				9E381C3A293D1C87004D36B2 /* loader */,
 				9E7751042947E0E100747209 /* libpspawn.dylib */,
+				9EAD27FD294D283900291A70 /* unload */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -484,6 +505,14 @@
 			path = injector;
 			sourceTree = "<group>";
 		};
+		9EAD27FE294D283A00291A70 /* unload */ = {
+			isa = PBXGroup;
+			children = (
+				9EAD2804294D28A700291A70 /* main.swift */,
+			);
+			path = unload;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -491,8 +520,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E6B6745294C11FE00E6BE37 /* CHPTweakInfo.h in Headers */,
-				9E6B6747294C11FE00E6BE37 /* CHPTweakList.h in Headers */,
+				9E6B6745294C11FE00E6BE37 /* TweakInfo.h in Headers */,
+				9E6B6747294C11FE00E6BE37 /* TweakList.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,6 +685,23 @@
 			productReference = 9EA0D1BA291C5D500061B187 /* libinjector.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9EAD27FC294D283900291A70 /* unload */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EAD2801294D283A00291A70 /* Build configuration list for PBXNativeTarget "unload" */;
+			buildPhases = (
+				9EAD27F9294D283900291A70 /* Sources */,
+				9EAD27FA294D283900291A70 /* Frameworks */,
+				9EAD27FB294D283900291A70 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = unload;
+			productName = unload;
+			productReference = 9EAD27FD294D283900291A70 /* unload */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -692,6 +738,10 @@
 						CreatedOnToolsVersion = 14.1;
 						LastSwiftMigration = 1410;
 					};
+					9EAD27FC294D283900291A70 = {
+						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1410;
+					};
 				};
 			};
 			buildConfigurationList = 9E92AA82290D47540018604C /* Build configuration list for PBXProject "ellekit" */;
@@ -715,6 +765,7 @@
 				9E2D4F4D2938389B00EF6619 /* test */,
 				9E381C39293D1C87004D36B2 /* loader */,
 				9E7751032947E0E100747209 /* pspawn */,
+				9EAD27FC294D283900291A70 /* unload */,
 			);
 		};
 /* End PBXProject section */
@@ -762,9 +813,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E6B6746294C11FE00E6BE37 /* CHPTweakInfo.m in Sources */,
+				9E6B6746294C11FE00E6BE37 /* TweakInfo.m in Sources */,
 				9EF86E20294A757B004A96C4 /* pspawn.m in Sources */,
-				9E6B6748294C11FE00E6BE37 /* CHPTweakList.m in Sources */,
+				9E6B6748294C11FE00E6BE37 /* TweakList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +900,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EAD27F9294D283900291A70 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EAD2805294D28A700291A70 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -903,6 +962,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -932,6 +992,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -958,6 +1019,7 @@
 					arm64e,
 					arm64,
 				);
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -972,7 +1034,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -986,6 +1048,7 @@
 					arm64e,
 					arm64,
 				);
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1000,7 +1063,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1226,6 +1289,7 @@
 					arm64e,
 				);
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1256,6 +1320,7 @@
 					arm64e,
 				);
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1286,6 +1351,7 @@
 					arm64,
 					x86_64,
 				);
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1316,6 +1382,7 @@
 					arm64,
 					x86_64,
 				);
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1409,6 +1476,53 @@
 			};
 			name = Release;
 		};
+		9EAD2802294D283A00291A70 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9EAD2803294D283A00291A70 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1489,6 +1603,15 @@
 			buildConfigurations = (
 				9EA0D1BB291C5D500061B187 /* Debug */,
 				9EA0D1BC291C5D500061B187 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9EAD2801294D283A00291A70 /* Build configuration list for PBXNativeTarget "unload" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EAD2802294D283A00291A70 /* Debug */,
+				9EAD2803294D283A00291A70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
