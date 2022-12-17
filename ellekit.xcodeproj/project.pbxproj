@@ -46,6 +46,8 @@
 		9E78FC0029172D5600B3B50B /* launcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FBFF29172D5600B3B50B /* launcherApp.swift */; };
 		9E78FC0229172D5600B3B50B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E78FC0129172D5600B3B50B /* ContentView.swift */; };
 		9E78FC0429172D5600B3B50B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E78FC0329172D5600B3B50B /* Assets.xcassets */; };
+		9E822588294D53DD0030B333 /* macho_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E822586294D53DD0030B333 /* macho_parser.h */; };
+		9E822589294D53DD0030B333 /* macho_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E822587294D53DD0030B333 /* macho_parser.c */; };
 		9E823CF12942CFC80037659B /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
 		9E823CF22942CFC80037659B /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E823CF32942CFC80037659B /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
@@ -191,6 +193,8 @@
 		9E78FC0129172D5600B3B50B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9E78FC0329172D5600B3B50B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E78FC0829172D5600B3B50B /* launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = launcher.entitlements; sourceTree = "<group>"; };
+		9E822586294D53DD0030B333 /* macho_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macho_parser.h; sourceTree = "<group>"; };
+		9E822587294D53DD0030B333 /* macho_parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = macho_parser.c; sourceTree = "<group>"; };
 		9E92AA87290D47540018604C /* libellekit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libellekit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E92AA8A290D47540018604C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		9E92AA96290D4A040018604C /* MobileSubstrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileSubstrate.swift; sourceTree = "<group>"; };
@@ -393,6 +397,8 @@
 				9EABB3CA294BEB6700E740FB /* TweakInfo.m */,
 				9EABB3D3294BEB6700E740FB /* TweakList.h */,
 				9EABB3CE294BEB6700E740FB /* TweakList.m */,
+				9E822586294D53DD0030B333 /* macho_parser.h */,
+				9E822587294D53DD0030B333 /* macho_parser.c */,
 				9EF86E1F294A757B004A96C4 /* pspawn.m */,
 			);
 			path = "launchd-hook";
@@ -520,6 +526,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E822588294D53DD0030B333 /* macho_parser.h in Headers */,
 				9E6B6745294C11FE00E6BE37 /* TweakInfo.h in Headers */,
 				9E6B6747294C11FE00E6BE37 /* TweakList.h in Headers */,
 			);
@@ -816,6 +823,7 @@
 				9E6B6746294C11FE00E6BE37 /* TweakInfo.m in Sources */,
 				9EF86E20294A757B004A96C4 /* pspawn.m in Sources */,
 				9E6B6748294C11FE00E6BE37 /* TweakList.m in Sources */,
+				9E822589294D53DD0030B333 /* macho_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -928,6 +936,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -944,6 +953,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -966,6 +976,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -996,6 +1007,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1025,6 +1037,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/launchd-hook",
@@ -1054,6 +1067,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/launchd-hook",
@@ -1077,6 +1091,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1096,6 +1111,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1120,6 +1136,7 @@
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1149,6 +1166,7 @@
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1292,6 +1310,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1323,6 +1342,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1356,6 +1376,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1387,6 +1408,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1421,6 +1443,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1458,6 +1481,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1487,6 +1511,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1511,6 +1536,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

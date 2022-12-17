@@ -23,7 +23,7 @@ assert(mach_vm_protect(task, tweak_str_addr, UInt64(vm_page_size), 0, VM_PROT_RE
 
 class retain {
     #if os(macOS)
-    static var str_c = ("/usr/local/lib/pspawn.dylib" as NSString).utf8String
+    static var str_c = ("/Library/TweakInject/pspawn.dylib" as NSString).utf8String
     #else
     static var str_c = ("/usr/lib/pspawn.dylib" as NSString).utf8String
     #endif
@@ -150,7 +150,7 @@ print("[+] loader: set thread state")
 DispatchQueue.global().async {
     thread_resume(thread)
     print("[+] loader: resumed thread state. waiting for launchd...")
-    sleep(3)
+    sleep(5)
     print("[+] loader: closed thread. done!")
     thread_suspend(thread)
     exit(0)

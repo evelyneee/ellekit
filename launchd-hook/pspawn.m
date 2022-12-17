@@ -69,28 +69,10 @@ append_to_env(const char* path, char **env, bool launchd)
         if (strstr(env[i], "DYLD_INSERT_LIBRARIES=") == 0) {
             newenv[i] = env[i];
         } else {
-            NSString* pathString = [NSString stringWithUTF8String:path];
-            NSArray* tweakList = [tweaks tweakListForExecutableAtPath:pathString];
-            
-            if ([tweakList count] == 0) return env;
-
-            NSMutableArray* tweakPaths = [[NSMutableArray alloc] init];
-            
-            [tweakList enumerateObjectsUsingBlock:^(TweakInfo* obj, NSUInteger idx, BOOL* stop) {
-                NSString* name = [obj dylib];
-                [tweakPaths addObject:name];
-            }];
-                        
-            NSString* paths = [tweakPaths componentsJoinedByString:@":"];
-            NSString* env = [@"DYLD_INSERT_LIBRARIES=" stringByAppendingString:paths];
-            
-            void* strbuf = malloc(1024);
-            
-            strcpy(strbuf, (char*)[env UTF8String]);
-            
+            os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "already got env for path %s, %s", path, env[i]);
+            void* strbuf = malloc(100);
+            strcpy(strbuf, "DYLD_NEVER_INSERT_LIBRARIES=null");
             newenv[i] = strbuf;
-            
-            return newenv;
         }
     }
 
@@ -100,7 +82,7 @@ append_to_env(const char* path, char **env, bool launchd)
     } else {
         NSArray* tweakList = [tweaks tweakListForExecutableAtPath:[NSString stringWithUTF8String:path]];
         
-        if ([tweakList count] == 0) return env;
+        if ([tweakList count] == 0) return newenv;
 
         NSMutableArray* tweakPaths = [[NSMutableArray alloc] init];
         [tweakList enumerateObjectsUsingBlock:^(TweakInfo* obj, NSUInteger idx, BOOL* stop) {
@@ -110,6 +92,9 @@ append_to_env(const char* path, char **env, bool launchd)
         
         NSString* paths = [tweakPaths componentsJoinedByString:@":"];
         NSString* env = [@"DYLD_INSERT_LIBRARIES=" stringByAppendingString:paths];
+        
+        os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "modifying env for path %s to %s", path, [env UTF8String]);
+        
         void* strbuf = malloc(1024);
         strcpy(strbuf, (char*)[env UTF8String]);
         newenv[env_size] = strbuf;
@@ -128,8 +113,8 @@ int posix_spawn_hook(
     char *const argv[restrict],
     char *const envp[restrict]
 ) {
-    puts("called hooked posix_spawn!");
-        
+    os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "called hook with path %s", path);
+
     int ret;
     char** new_envp;
         
@@ -141,7 +126,7 @@ int posix_spawn_hook(
     } else if (strstr(path, "launchd") != 0 || strstr(path, "xpcproxy") != 0)  {
         new_envp = append_to_env(path, (char**)envp, 1);
     } else {
-        new_envp = append_to_env(path, (char**)argv, 0);
+        new_envp = append_to_env(path, (char**)envp, 0);
     }
     
     ret = orig_spawn(pid, path, file_actions, attrp, argv, new_envp);
@@ -157,8 +142,8 @@ int posix_spawnp_hook(
     char *const argv[restrict],
     char *const envp[restrict])
 {
-    puts("called hooked posix_spawnp!");
-            
+    os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "[p] called hook with path %s", path);
+
     int ret;
     char** new_envp;
     

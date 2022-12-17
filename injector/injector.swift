@@ -7,7 +7,7 @@ import os.log
 #if os(iOS) || os(tvOS) || os(watchOS)
 let path = "/Library/MobileSubstrate/DynamicLibraries/"
 #elseif os(macOS)
-let path = (("~/.tweaks/" as NSString).expandingTildeInPath as String)
+let path = "/Library/TweakInject/"
 #endif
 
 let logger = Logger(subsystem: "red.charlotte.ellekit", category: "injector")

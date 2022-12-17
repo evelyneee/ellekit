@@ -15,3 +15,5 @@ mach_vm_protect(mach_port_name_t task, mach_vm_address_t address, mach_vm_size_t
 
 extern kern_return_t
 mach_vm_write(vm_map_t target_task, mach_vm_address_t address, vm_offset_t data, mach_msg_type_number_t dataCnt);
+
+extern char** get_segment_bundles(const char* macho_path);
