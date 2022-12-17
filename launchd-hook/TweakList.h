@@ -18,42 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "CHPTweakInfo.h"
 #include <Foundation/Foundation.h>
 
-@implementation CHPTweakInfo
+@class DaemonInfo;
+@class TweakInfo;
 
-- (instancetype)initWithDylibPath:(NSString*)dylibPath plistPath:(NSString*)plistPath
-{
-	self = [super init];
-
-	self.dylib = dylibPath;
-
-	NSDictionary* plist = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-
-	NSDictionary* filter = [plist objectForKey:@"Filter"];
-
-	if(filter)
-	{
-		self.filterBundles = [filter objectForKey:@"Bundles"];
-		self.filterExecutables = [filter objectForKey:@"Executables"];
-
-		//If a plist filters classes, treat it as Security (not very accurate, but better safe than sorry)
-		NSArray* classes = [filter objectForKey:@"Classes"];
-		if(classes && classes.count > 0 && ![self.filterBundles containsObject:@"com.apple.Security"])
-		{
-			if(!self.filterBundles)
-			{
-				self.filterBundles = @[@"com.apple.Security"];
-			}
-			else
-			{
-				self.filterBundles = [self.filterBundles arrayByAddingObject:@"com.apple.Security"];
-			}
-		}
-	}
-
-	return self;
-}
-
+@interface TweakList : NSObject
+@property (nonatomic) NSArray* tweakList;
++ (instancetype)sharedInstance;
+- (void)updateTweakList;
+- (NSArray*)tweakListForExecutableAtPath:(NSString*)executablePath;
 @end

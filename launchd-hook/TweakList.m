@@ -18,19 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "CHPTweakList.h"
-#import "CHPTweakInfo.h"
+#import "TweakList.h"
+#import "TweakInfo.h"
 
-@implementation CHPTweakList
+@implementation TweakList
 
 + (instancetype)sharedInstance
 {
-	static CHPTweakList* sharedInstance = nil;
+	static TweakList* sharedInstance = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^
 	{
 		//Initialise instance
-		sharedInstance = [[CHPTweakList alloc] init];
+		sharedInstance = [[TweakList alloc] init];
 	});
 	return sharedInstance;
 }
@@ -49,7 +49,7 @@
 {
 	NSMutableArray* tweakListM = [NSMutableArray new];
 #if TARGET_OS_OSX
-    NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[@"~/.tweaks/" stringByExpandingTildeInPath]].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
+    NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:@"/Library/TweakInject/"].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
 #elif ROOTLESS // iOS/macOS rootless
     NSArray* dynamicLibraries = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:@"/var/jb/usr/lib/TweakInject/"].URLByResolvingSymlinksInPath includingPropertiesForKeys:nil options:0 error:nil];
 #else
@@ -63,7 +63,7 @@
 			NSURL* dylibURL = [[URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"dylib"];
 			if([dylibURL checkResourceIsReachableAndReturnError:nil])
 			{
-				CHPTweakInfo* tweakInfo = [[CHPTweakInfo alloc] initWithDylibPath:dylibURL.path plistPath:URL.path];
+				TweakInfo* tweakInfo = [[TweakInfo alloc] initWithDylibPath:dylibURL.path plistPath:URL.path];
 				[tweakListM addObject:tweakInfo];
 			}
 		}
@@ -76,17 +76,18 @@
 
 - (NSArray*)tweakListForExecutableAtPath:(NSString*)executablePath
 {
-	if(!executablePath) return nil;
-
-#if TARGET_OS_OSX
-    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
-#else
+	if(!executablePath) return @[];
+    if ([executablePath containsString:@"*"]) return @[];
+#if TARGET_OS_IOS
     NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent].bundleIdentifier;
+#else
+    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
 #endif
+    if (!bundleID) return @[];
 	NSString* executableName = executablePath.lastPathComponent;
 
 	NSMutableArray* tweakListForExecutable = [NSMutableArray new];
-	[self.tweakList enumerateObjectsUsingBlock:^(CHPTweakInfo* tweakInfo, NSUInteger idx, BOOL* stop)
+	[self.tweakList enumerateObjectsUsingBlock:^(TweakInfo* tweakInfo, NSUInteger idx, BOOL* stop)
 	{
 		if(bundleID)
 		{
@@ -97,6 +98,11 @@
             }
 #if TARGET_OS_IOS
             else if ([tweakInfo.filterBundles containsObject:@"com.apple.UIKit"] && [executablePath containsString:@".app"]) {
+                [tweakListForExecutable addObject:tweakInfo];
+                return;
+            }
+#elif TARGET_OS_OSX
+            else if ([tweakInfo.filterBundles containsObject:@"com.apple.AppKit"] && [executablePath containsString:@".app"]) {
                 [tweakListForExecutable addObject:tweakInfo];
                 return;
             }

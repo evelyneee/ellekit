@@ -20,7 +20,7 @@
 
 #include <Foundation/Foundation.h>
 
-@interface CHPTweakInfo : NSObject
+@interface TweakInfo : NSObject
 @property (nonatomic) NSString* dylib;
 @property (nonatomic) NSArray* filterBundles;
 @property (nonatomic) NSArray* filterExecutables;
