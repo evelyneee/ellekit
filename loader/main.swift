@@ -1,8 +1,13 @@
 
 import Foundation
 
+guard safe_boot() == 0 else {
+    print("[-] not injecting, this is macOS safe mode");
+    exit(1)
+}
+
 guard getuid() == 0 else {
-    print("ellekit: [loader] can't get launchd's task port without root permissions");
+    print("[-] can't get launchd's task port without root permissions");
     exit(1)
 }
 
@@ -111,7 +116,7 @@ guard thread_create(task, &thread) == KERN_SUCCESS else {
     exit(1)
 }
 
-print("[*] loader: started thread")
+print("[+] loader: started thread")
 
 let convert = withUnsafeMutablePointer(to: &state, {
     $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<__darwin_arm_thread_state64>.size, { statePtr in

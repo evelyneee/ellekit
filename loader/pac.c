@@ -30,6 +30,26 @@ void* strip_pointer(void* ptr) {
 #endif
 }
 
+// MARK: - Safe boot
+
+#include <sys/sysctl.h>
+
+#if TARGET_OS_OSX
+int safe_boot(void) {
+    size_t size = 0;
+    sysctlbyname("kern.bootargs", NULL, &size, NULL, 0);
+    char* bootargs = malloc(size);
+    sysctlbyname("kern.bootargs", bootargs, &size, NULL, 0);
+    return strstr(bootargs, "-x") != 0;
+}
+#else
+int safe_boot(void) {
+    return 0;
+}
+#endif
+
+// MARK: - Mach-O
+
 #include <stdio.h>
 #include <mach-o/loader.h>
 #include <stdlib.h>

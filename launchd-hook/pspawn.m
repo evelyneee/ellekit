@@ -20,6 +20,8 @@
 #include "TweakList.h"
 #include <os/log.h>
 
+#include <sys/sysctl.h>
+
 int (*orig_spawn)(pid_t *restrict pid, const char *restrict path,
                     const posix_spawn_file_actions_t *file_actions,
                     const posix_spawnattr_t *restrict attrp, char *const argv[restrict],
@@ -48,6 +50,20 @@ pid_t (*orig_waitpid)(pid_t pid, int *stat_loc, int options);
 
 TweakList* tweaks;
 os_log_t logger;
+
+#if TARGET_OS_OSX
+int safe_boot(void) {
+    size_t size = 0;
+    sysctlbyname("kern.bootargs", NULL, &size, NULL, 0);
+    char* bootargs = malloc(size);
+    sysctlbyname("kern.bootargs", bootargs, &size, NULL, 0);
+    return strstr(bootargs, "-x") != 0;
+}
+#else
+int safe_boot(void) {
+    return 0;
+}
+#endif
 
 char **
 remove_dyld_env(const char* path, char **env)
@@ -226,6 +242,13 @@ static int (*MSHookFunction)(void*, void*, void**);
 
 __attribute__((constructor))
 static void hook_entry(void) {
+    
+#if TARGET_OS_OSX
+    if (safe_boot()) { // check for macOS safe mode, if it's on, don't inject anything and bail out..
+        return;
+    }
+#endif
+    
     void* ekhandle = dlopen(SUBSTRATE_PATH, RTLD_NOW);
     MSHookFunction = dlsym(ekhandle, "MSHookFunction");
     tweaks = [TweakList sharedInstance];
