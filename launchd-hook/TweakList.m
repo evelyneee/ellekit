@@ -76,14 +76,16 @@
 
 - (NSArray*)tweakListForExecutableAtPath:(NSString*)executablePath
 {
-	if(!executablePath) return @[];
-    if ([executablePath containsString:@"*"]) return @[];
-#if TARGET_OS_IOS
-    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent].bundleIdentifier;
-#else
-    NSString* bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
-#endif
-    if (!bundleID) return @[];
+	if(!executablePath) return nil;
+
+    NSString* bundleID;
+    
+    if ([executablePath containsString:@".app/Contents/MacOS/"]) {
+        bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent].bundleIdentifier;
+    } else {
+        bundleID = [NSBundle bundleWithPath:executablePath.stringByDeletingLastPathComponent].bundleIdentifier;
+    }
+    
 	NSString* executableName = executablePath.lastPathComponent;
 
 	NSMutableArray* tweakListForExecutable = [NSMutableArray new];

@@ -16,8 +16,9 @@
 
 #include <Foundation/Foundation.h>
 
-#include "CHPTweakInfo.h"
-#include "CHPTweakList.h"
+#include "TweakInfo.h"
+#include "TweakList.h"
+#include <os/log.h>
 
 int (*orig_spawn)(pid_t *restrict pid, const char *restrict path,
                     const posix_spawn_file_actions_t *file_actions,
@@ -31,10 +32,10 @@ int (*orig_spawnp)(pid_t *restrict pid, const char *restrict path,
 
 pid_t (*orig_waitpid)(pid_t pid, int *stat_loc, int options);
 
-#if TARGET_OS_OSX
-#define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/usr/local/lib/pspawn.dylib"
+#if TARGET_OS_OSX // ElleKit Mac paths
+#define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/Library/TweakInject/pspawn.dylib"
 #define INJECTOR_ENV "DYLD_INSERT_LIBRARIES=/usr/local/lib/libinjector.dylib"
-#define SUBSTRATE_PATH "/usr/local/lib/libsubstrate.dylib"
+#define SUBSTRATE_PATH "/Library/Frameworks/ellekit.dylib"
 #elif ROOTLESS // iOS/macOS rootless
 #define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/var/jb/usr/lib/pspawn.dylib"
 #define INJECTOR_ENV "DYLD_INSERT_LIBRARIES=/var/jb/usr/lib/libinjector.dylib"
@@ -45,11 +46,13 @@ pid_t (*orig_waitpid)(pid_t pid, int *stat_loc, int options);
 #define SUBSTRATE_PATH "/usr/lib/libsubstrate.dylib"
 #endif
 
-CHPTweakList* tweaks;
+TweakList* tweaks;
+os_log_t logger;
 
 char **
-append_to_env(const char* path, char **env, char** argv, bool launchd)
+append_to_env(const char* path, char **env, bool launchd)
 {
+    
     // Determines the size of the array by counting the number of strings
     // until it reaches a null pointer.
     int env_size = 0;
@@ -63,33 +66,57 @@ append_to_env(const char* path, char **env, char** argv, bool launchd)
 
     // Copies the strings from the old array to the new array.
     for (int i = 0; i < env_size; i++) {
-        newenv[i] = env[i];
+        if (strstr(env[i], "DYLD_INSERT_LIBRARIES=") == 0) {
+            newenv[i] = env[i];
+        } else {
+            NSString* pathString = [NSString stringWithUTF8String:path];
+            NSArray* tweakList = [tweaks tweakListForExecutableAtPath:pathString];
+            
+            if ([tweakList count] == 0) return env;
+
+            NSMutableArray* tweakPaths = [[NSMutableArray alloc] init];
+            
+            [tweakList enumerateObjectsUsingBlock:^(TweakInfo* obj, NSUInteger idx, BOOL* stop) {
+                NSString* name = [obj dylib];
+                [tweakPaths addObject:name];
+            }];
+                        
+            NSString* paths = [tweakPaths componentsJoinedByString:@":"];
+            NSString* env = [@"DYLD_INSERT_LIBRARIES=" stringByAppendingString:paths];
+            
+            void* strbuf = malloc(1024);
+            
+            strcpy(strbuf, (char*)[env UTF8String]);
+            
+            newenv[i] = strbuf;
+            
+            return newenv;
+        }
     }
 
     // Appends the new string to the new array.
     if (launchd) { // userspace reboot handler or xpcproxy hook
         newenv[env_size] = PSPAWN_ENV;
     } else {
-        NSArray* tweakList = [tweaks tweakListForExecutableAtPath:[NSString
-    stringWithUTF8String:path]];
-        NSLog(@"%@", tweakList);
+        NSArray* tweakList = [tweaks tweakListForExecutableAtPath:[NSString stringWithUTF8String:path]];
+        
+        if ([tweakList count] == 0) return env;
+
         NSMutableArray* tweakPaths = [[NSMutableArray alloc] init];
-        [tweakList enumerateObjectsUsingBlock:^(CHPTweakInfo* obj, NSUInteger
-    idx, BOOL* stop) {
+        [tweakList enumerateObjectsUsingBlock:^(TweakInfo* obj, NSUInteger idx, BOOL* stop) {
             NSString* name = [obj dylib];
             [tweakPaths addObject:name];
         }];
-        if ([tweakPaths count] == 0) return env;
+        
         NSString* paths = [tweakPaths componentsJoinedByString:@":"];
-        NSString* env = [@"DYLD_INSERT_LIBRARIES="
-    stringByAppendingString:paths];
+        NSString* env = [@"DYLD_INSERT_LIBRARIES=" stringByAppendingString:paths];
         void* strbuf = malloc(1024);
-        newenv[env_size] = (char*)[env UTF8String];
+        strcpy(strbuf, (char*)[env UTF8String]);
+        newenv[env_size] = strbuf;
     }
     
     // Adds a null pointer to the end of the array to mark the end of the list.
-    newenv[env_size + 1] = NULL;
-    
+    newenv[env_size + 1] = NULL;    
     return newenv;
 }
 
@@ -102,19 +129,19 @@ int posix_spawn_hook(
     char *const envp[restrict]
 ) {
     puts("called hooked posix_spawn!");
-    
+        
     int ret;
     char** new_envp;
         
-    bool should_inject = (strstr(path, "BlastDoor") == 0) && (strcmp(path, "/usr/libexec/mobile_assertion_agent") != 0);
+    bool should_inject = (strstr(path, "BlastDoor") == 0) && (strstr(path, "mobile_assertion_agent") == 0) && (strstr(path, "WebKit") == 0) && (strstr(path, "Safari") == 0);
     
     if (!should_inject) {
         ret = orig_spawn(pid, path, file_actions, attrp, argv, envp);
         return ret;
     } else if (strstr(path, "launchd") != 0 || strstr(path, "xpcproxy") != 0)  {
-        new_envp = append_to_env(path, (char**)envp, (char**)envp, 1);
+        new_envp = append_to_env(path, (char**)envp, 1);
     } else {
-        new_envp = append_to_env(path, (char**)envp, (char**)argv, 0);
+        new_envp = append_to_env(path, (char**)argv, 0);
     }
     
     ret = orig_spawn(pid, path, file_actions, attrp, argv, new_envp);
@@ -131,19 +158,19 @@ int posix_spawnp_hook(
     char *const envp[restrict])
 {
     puts("called hooked posix_spawnp!");
-        
+            
     int ret;
     char** new_envp;
     
     bool should_inject = (strstr(path, "BlastDoor") == 0) && (strstr(path, "mobile_assertion_agent") == 0);
-    
+
     if (!should_inject) {
         ret = orig_spawnp(pid, path, file_actions, attrp, argv, envp);
         return ret;
     } else if (strstr(path, "launchd") != 0 || strstr(path, "xpcproxy") != 0)  {
-        new_envp = append_to_env(path, (char**)envp, (char**)argv, 1);
+        new_envp = append_to_env(path, (char**)envp, 1);
     } else {
-        new_envp = append_to_env(path, (char**)envp, (char**)argv, 0);
+        new_envp = append_to_env(path, (char**)envp, 0);
     }
     
     ret = orig_spawnp(pid, path, file_actions, attrp, argv, new_envp);
@@ -171,7 +198,7 @@ int sandbox_check_hook(pid_t pid, const char *op, int type, ...) {
     va_end(ap);
     if (!strcmp(op, "file-read-data") || !strcmp(op, "file-write-data")) {
         const char *name = (void *) blah[0];
-        if (!strstr(name, "/Library/MobileSubstrate") || !strstr(name, "/.tweaks/")) {
+        if (!strstr(name, "/Library/MobileSubstrate") || !strstr(name, "TweakInject")) {
             /* always allow looking up dylibs */
             return 0;
         }
@@ -188,7 +215,11 @@ __attribute__((constructor))
 static void hook_entry(void) {
     void* ekhandle = dlopen(SUBSTRATE_PATH, RTLD_NOW);
     MSHookFunction = dlsym(ekhandle, "MSHookFunction");
-    tweaks = [CHPTweakList sharedInstance];
+    tweaks = [TweakList sharedInstance];
+    
+    logger = os_log_create("red.charlotte.ellekit", "pspawn");
+    os_log_with_type(logger, OS_LOG_TYPE_DEFAULT, "Starting posix_spawn hook");
+    
     MSHookFunction(&posix_spawn, &posix_spawn_hook, (void*)&orig_spawn);
     MSHookFunction(&posix_spawnp, &posix_spawnp_hook, (void*)&orig_spawnp);
     // MSHookFunction(dlsym(RTLD_DEFAULT, "sandbox_check"), &sandbox_check_hook, (void*)&sandbox_check_orig);
