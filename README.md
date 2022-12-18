@@ -24,6 +24,9 @@
 Use the Substrate API [header](https://github.com/theos/headers/blob/master/substrate.h) or the [libhooker](https://libhooker.com) API. 
 You can also use the Swift functions directly
 
+### How to load ElleKit on startup
+See [here](./launchd-plist/LAUNCHDAEMON.md) for a guide on how to install a LaunchDaemon that loads ElleKit on startup.
+
 ### Building
 
 To build a dynamic library, use Xcode 14. To build the library, run `xcodebuild -target ellekit-mac` for a Mac library or `xcodebuild -target ellekit` for an iOS library.
