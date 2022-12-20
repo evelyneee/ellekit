@@ -35,13 +35,12 @@ int (*orig_spawnp)(pid_t *restrict pid, const char *restrict path,
 pid_t (*orig_waitpid)(pid_t pid, int *stat_loc, int options);
 
 char* PSPAWN_ENV;
-char* SUBSTRATE_PATH;
 
 // thanks rjb
 char* rootifyPath(const char* path) {
     if (access(path, F_OK) == 0) {
         char* ret = NULL;
-        asprintf(&ret, "/usr/%s", path);
+        asprintf(&ret, "/%s", path);
         return ret;
     }
     char* ret = NULL;
@@ -55,7 +54,7 @@ const char* getSubstratePath(void) {
 #if TARGET_OS_OSX
     return "/Library/Frameworks/ellekit.dylib";
 #else
-    return rootifyPath("lib/libsubstrate.dylib");
+    return rootifyPath("usr/lib/libellekit.dylib");
 #endif
 }
 
@@ -271,7 +270,18 @@ static void hook_entry(void) {
     PSPAWN_ENV = env;
         
     void* ekhandle = dlopen(getSubstratePath(), RTLD_NOW);
-    MSHookFunction = dlsym(ekhandle, "MSHookFunction");
+    
+    if (!ekhandle) {
+        return;
+    }
+    
+    void* hookFunction = dlsym(ekhandle, "MSHookFunction");
+    
+    if (!hookFunction) {
+        return;
+    }
+    
+    MSHookFunction = hookFunction;
     tweaks = [TweakList sharedInstance];
     
     logger = os_log_create("red.charlotte.ellekit", "pspawn");
