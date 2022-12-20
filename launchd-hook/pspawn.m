@@ -34,19 +34,36 @@ int (*orig_spawnp)(pid_t *restrict pid, const char *restrict path,
 
 pid_t (*orig_waitpid)(pid_t pid, int *stat_loc, int options);
 
-#if TARGET_OS_OSX // ElleKit Mac paths
-#define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/Library/TweakInject/pspawn.dylib"
-#define INJECTOR_ENV "DYLD_INSERT_LIBRARIES=/usr/local/lib/libinjector.dylib"
-#define SUBSTRATE_PATH "/Library/Frameworks/ellekit.dylib"
-#elif ROOTLESS // iOS/macOS rootless
-#define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/var/jb/usr/lib/pspawn.dylib"
-#define INJECTOR_ENV "DYLD_INSERT_LIBRARIES=/var/jb/usr/lib/libinjector.dylib"
-#define SUBSTRATE_PATH "/var/jb/usr/lib/libsubstrate.dylib"
+char* PSPAWN_ENV;
+char* SUBSTRATE_PATH;
+
+// thanks rjb
+char* rootifyPath(const char* path) {
+    if (access(path, F_OK) == 0) {
+        char* ret = NULL;
+        asprintf(&ret, "/usr/%s", path);
+        return ret;
+    }
+    char* ret = NULL;
+    asprintf(&ret, "/var/jb/%s", path);
+    char* real = malloc(0x4000);
+    realpath(ret, real);
+    return real;
+}
+
+const char* getSubstratePath(void) {
+#if TARGET_OS_OSX
+    return "/Library/Frameworks/ellekit.dylib";
 #else
-#define PSPAWN_ENV "DYLD_INSERT_LIBRARIES=/usr/lib/pspawn.dylib"
-#define INJECTOR_ENV "DYLD_INSERT_LIBRARIES=/usr/lib/libinjector.dylib"
-#define SUBSTRATE_PATH "/usr/lib/libsubstrate.dylib"
+    return rootifyPath("lib/libsubstrate.dylib");
 #endif
+}
+
+const char* getPayloadPath(void) {
+    Dl_info info;
+    dladdr(&getPayloadPath, &info);
+    return info.dli_fname;
+}
 
 TweakList* tweaks;
 os_log_t logger;
@@ -249,7 +266,11 @@ static void hook_entry(void) {
     }
 #endif
     
-    void* ekhandle = dlopen(SUBSTRATE_PATH, RTLD_NOW);
+    char* env = NULL;
+    asprintf(&env, "DYLD_INSERT_LIBRARIES=%s", getPayloadPath());
+    PSPAWN_ENV = env;
+        
+    void* ekhandle = dlopen(getSubstratePath(), RTLD_NOW);
     MSHookFunction = dlsym(ekhandle, "MSHookFunction");
     tweaks = [TweakList sharedInstance];
     

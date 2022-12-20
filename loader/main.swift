@@ -26,12 +26,28 @@ assert(mach_vm_allocate(task, &tweak_str_addr, UInt64(vm_page_size), VM_FLAGS_AN
 assert(mach_vm_protect(task, tweak_str_addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY) == KERN_SUCCESS)
 
 class retain {
-    #if os(macOS)
-    static var str_c = ("/Library/TweakInject/pspawn.dylib" as NSString).utf8String
-    #else
-    static var str_c = ("/usr/lib/pspawn.dylib" as NSString).utf8String
-    #endif
+    
+    static func getPath() -> String {
+        #if os(macOS)
+        return "/Library/TweakInject/pspawn.dylib"
+        #else
+        if access("/usr/lib/ellekit/pspawn.dylib", F_OK) == 0 {
+            return "/usr/lib/ellekit/pspawn.dylib"
+        } else {
+            return (("/var/jb/lib/ellekit/pspawn.dylib" as NSString).resolvingSymlinksInPath)
+        }
+        #endif
+    }
+    
+    static var str_c = (getPath() as NSString).utf8String
 }
+
+guard access(retain.str_c, F_OK) == 0 else {
+    print("[-] the path \(retain.getPath()) doesn't exit, so we can't load it")
+    fatalError()
+}
+
+print("[i] using path", retain.getPath())
 
 assert(mach_vm_write(task, tweak_str_addr, UInt(bitPattern: retain.str_c), mach_msg_type_number_t(vm_page_size)) == KERN_SUCCESS)
 
@@ -83,7 +99,7 @@ var thread_start_routine: [UInt8] {
     ])
     movz(.x1, 0)
     #if _ptrauth(_arm64e)
-    bytes([0xe2, 0x23, 0xc1, 0xda]) // paciza x2
+    paciza(.x2)
     #endif
     movz(.x3, 0)
     movk(.x14, pthread_create_addr % 65536)

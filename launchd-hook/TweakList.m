@@ -63,8 +63,10 @@
 			NSURL* dylibURL = [[URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"dylib"];
 			if([dylibURL checkResourceIsReachableAndReturnError:nil])
 			{
-				TweakInfo* tweakInfo = [[TweakInfo alloc] initWithDylibPath:dylibURL.path plistPath:URL.path];
-				[tweakListM addObject:tweakInfo];
+                if (![[dylibURL path] containsString:@"MobileSafety"]) {
+                    TweakInfo* tweakInfo = [[TweakInfo alloc] initWithDylibPath:dylibURL.path plistPath:URL.path];
+                    [tweakListM addObject:tweakInfo];
+                }
 			}
 		}
 	}

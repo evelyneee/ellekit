@@ -46,7 +46,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         if exceptionHandler == nil {
              exceptionHandler = .init()
         }
-        code = [0x20, 0x00, 0x20, 0xD4]
+        code = [0x20, 0x00, 0x20, 0xD4] // brk #1
     } else { // fastest and simplest branch
         print("[*] ellekit: Small branch")
         @InstructionBuilder

@@ -29,6 +29,9 @@
 		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E489EBF292978E400F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
+		9E4DE2D7294FEF7200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
+		9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
+		9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E698576290DFB5000408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
@@ -179,6 +182,7 @@
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
@@ -365,6 +369,7 @@
 				9E92AA9A290D4A040018604C /* Branches.swift */,
 				9E92AA97290D4A040018604C /* Execute.swift */,
 				9E92AA99290D4A040018604C /* Math.swift */,
+				9E4DE2D6294FEF7200889C2A /* ptrauth.swift */,
 				9E2D4F5C293A9F2300EF6619 /* Rebind.swift */,
 				9E92AA98290D4A040018604C /* Register.swift */,
 			);
@@ -803,6 +808,7 @@
 			files = (
 				9E7750FF2947DE3000747209 /* pac.c in Sources */,
 				9E823CF72942CFCF0037659B /* Bits.swift in Sources */,
+				9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */,
 				9E6403C4293D353400142198 /* main.swift in Sources */,
 				9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */,
 				9E75EF7929492C5800C7AFEC /* PAC.swift in Sources */,
@@ -869,6 +875,7 @@
 				9E19B24929188EDA00F8C4C7 /* Method.swift in Sources */,
 				9E489EBF292978E400F81BBD /* Slide.swift in Sources */,
 				9E48019C2910A04E007E433F /* Objective-C.swift in Sources */,
+				9E4DE2D7294FEF7200889C2A /* ptrauth.swift in Sources */,
 				9E48019929109B83007E433F /* Bits.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -893,6 +900,7 @@
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
 				9E92AAB1290D4E7A0018604C /* Register.swift in Sources */,
 				9E4801AB2913E2E9007E433F /* Exception.swift in Sources */,
+				9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */,
 				9E69857A290ECAE500408E14 /* Sizing.swift in Sources */,
 				9E48019D2910A076007E433F /* Objective-C.swift in Sources */,
 				9E48019A29109B96007E433F /* Bits.swift in Sources */,
@@ -981,9 +989,10 @@
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-D ROOTLESS";
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = loader/pac.h;
@@ -1012,9 +1021,10 @@
 				INFOPLIST_FILE = loader/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-D ROOTLESS";
 				PRODUCT_BUNDLE_IDENTIFIER = loader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = loader/pac.h;
@@ -1044,10 +1054,11 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-D ROOTLESS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1074,10 +1085,11 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_SWIFT_FLAGS = "-D ROOTLESS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
