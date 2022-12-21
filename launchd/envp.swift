@@ -13,8 +13,15 @@ struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
+    var enableLogging = false
+    
     func write(_ string: String) {
-        let log = NSURL.fileURL(withPath: "/Users/charlotte/Desktop/log.txt")
+        guard enableLogging else { return }
+        #if os(iOS)
+        let log = NSURL.fileURL(withPath: "/private/var/mobile/log.txt")
+        #else
+        let log = NSURL.fileURL(withPath: "/var/root/log.txt")
+        #endif
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()
             handle.write((string+"\n").data(using: .utf8)!)

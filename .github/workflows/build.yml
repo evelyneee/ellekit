@@ -32,32 +32,19 @@ jobs:
       - name: Select Xcode version (14.1)
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app
-          
-      - name: Build library (mac)
-        run: |
-          ${{ env.build_cmd }} ellekit-mac
-          
-          mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/libellekit-mac.dylib ${{ github.workspace }}/product
-          
-      - name: Upload library (mac) to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ellekit-library-mac
-          path: ${{ github.workspace }}/product/libellekit-mac.dylib
       
-      - name: Build library (ios)
+      - name: Build library
         run: |
           ${{ env.build_cmd }} ellekit
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release-iphoneos/libellekit.a ${{ github.workspace }}/product/libellekit-ios.a
+          cp -R ${{ github.workspace }}/build/Release/libellekit.dylib ${{ github.workspace }}/product/libellekit.dylib
           
-      - name: Upload library (ios) to artifacts
+      - name: Upload library to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ellekit-library-ios
-          path: ${{ github.workspace }}/product/libellekit-ios.a
+          name: ellekit-library
+          path: ${{ github.workspace }}/product/libellekit.dylib
       
       - name: Build injector
         run: |
@@ -85,42 +72,16 @@ jobs:
           name: loader
           path: ${{ github.workspace }}/product/loader
           
-      - name: Build loader for iOS
+      - name: Build launchd hook
         run: |
-          ${{ env.build_cmd }} loader -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
+          ${{ env.build_cmd }} launchd
           
           mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/loader ${{ github.workspace }}/product/loader-ios
+          cp -R ${{ github.workspace }}/build/Release/liblaunchd.dylib ${{ github.workspace }}/product/pspawn.dylib
           
-      - name: Upload loader to artifacts for iOS
-        uses: actions/upload-artifact@v3
-        with:
-          name: loader-ios
-          path: ${{ github.workspace }}/product/loader-ios
-          
-      - name: Build pspawn lib
-        run: |
-          ${{ env.build_cmd }} pspawn
-          
-          mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/pspawn.dylib
-          
-      - name: Upload pspawn lib to artifacts
+      - name: Upload launchd hook to artifacts
         uses: actions/upload-artifact@v3
         with:
           name: pspawn
           path: ${{ github.workspace }}/product/pspawn.dylib
-          
-      - name: Build pspawn lib for iOS
-        run: |
-          ${{ env.build_cmd }} pspawn -destination "arch=arm64e,platform=iOS" -destination "arch=arm64,platform=iOS"
-          
-          mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/libpspawn.dylib ${{ github.workspace }}/product/ios-pspawn.dylib
-          
-      - name: Upload iOS pspawn lib to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ios-pspawn
-          path: ${{ github.workspace }}/product/ios-pspawn.dylib
     

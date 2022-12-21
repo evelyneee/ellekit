@@ -57,13 +57,17 @@ func spawn_replacement(
     let path = String(cString: path)
     
     TextLog.shared.write("executing \(path)")
-    logger.notice("executing \(path)")
+    if #available(iOS 14.0, *) {
+        logger.notice("executing \(path)")
+    }
             
     var envp = envp?.array ?? []
     
     TextLog.shared.write("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
-        
-    logger.notice("env is \(envp.joined())")
+    
+    if #available(iOS 14.0, *) {
+        logger.notice("env is \(envp.joined())")
+    }
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
     let shouldInject = !path.contains("BlastDoor") && !path.contains("mobile_assertion_agent") && !path.contains("WebKit") && !path.contains("Safari")
@@ -86,16 +90,23 @@ func spawn_replacement(
             let tweaks = tweaks
                 .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") }
                 .map(\.path)
-            let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ",")
-            logger.notice("adding env \(env)")
-            envp.append(env)
+            if !tweaks.isEmpty {
+                let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
+                if #available(iOS 14.0, *) {
+                    logger.notice("adding env \(env)")
+                }
+                envp.append(env)
+            }
         }
     } else {
         TextLog.shared.write("no tweaks \(path)")
     }
     
     TextLog.shared.write("---------- \n new env is \n\(envp.joined(separator: "\n"))\n ----------")
-    logger.notice("new env is \(envp.joined())")
+    
+    if #available(iOS 14.0, *) {
+        logger.notice("new env is \(envp.joined())")
+    }
     
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
         
