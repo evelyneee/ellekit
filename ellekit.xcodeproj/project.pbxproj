@@ -24,29 +24,29 @@
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E6FBB292953F0F3007B28FC /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
+		9E6FBB2A2953F0F3007B28FC /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
+		9E6FBB2B2953F0F3007B28FC /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
+		9E6FBB2C2953F0F3007B28FC /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
+		9E6FBB2D2953F0F3007B28FC /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
+		9E6FBB2E2953F0F3007B28FC /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
+		9E6FBB302953F0F3007B28FC /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
+		9E6FBB312953F0F3007B28FC /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
+		9E6FBB322953F0F3007B28FC /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9E6FBB342953F0F3007B28FC /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
+		9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81029529688008E8BB4 /* Rebinds.swift */; };
+		9E6FBB362953F0F3007B28FC /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
+		9E6FBB372953F0F3007B28FC /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
+		9E6FBB382953F0F3007B28FC /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E6FBB392953F0F3007B28FC /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
+		9E6FBB3A2953F0F3007B28FC /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
+		9E6FBB3B2953F0F3007B28FC /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9E75EF7929492C5800C7AFEC /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E7750FF2947DE3000747209 /* pac.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E7750FE2947DE3000747209 /* pac.c */; };
 		9E7DE7E9295293D2008E8BB4 /* entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE7E8295293D2008E8BB4 /* entry.swift */; };
 		9E7DE7EB295293E0008E8BB4 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE7EA295293E0008E8BB4 /* load.s */; };
-		9E7DE7F62952941E008E8BB4 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
-		9E7DE7F72952941E008E8BB4 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
-		9E7DE7F82952941E008E8BB4 /* Orig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019E2911EB20007E433F /* Orig.swift */; };
-		9E7DE7F92952941E008E8BB4 /* Hook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AAA3290D4A1C0018604C /* Hook.swift */; };
-		9E7DE8022952942B008E8BB4 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA99290D4A040018604C /* Math.swift */; };
-		9E7DE8032952942B008E8BB4 /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
-		9E7DE8042952942B008E8BB4 /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
-		9E7DE8052952942B008E8BB4 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
-		9E7DE8062952942B008E8BB4 /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
-		9E7DE8072952942B008E8BB4 /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
-		9E7DE8082952942B008E8BB4 /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
-		9E7DE8092952942B008E8BB4 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
 		9E7DE80A29529436008E8BB4 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E7DE80B29529436008E8BB4 /* ellekit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E19B2392918118300F8C4C7 /* ellekit.h */; };
-		9E7DE80C29529441008E8BB4 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
-		9E7DE80D29529445008E8BB4 /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
-		9E7DE80E29529451008E8BB4 /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
-		9E7DE80F29529474008E8BB4 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
-		9E7DE81129529688008E8BB4 /* Rebinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81029529688008E8BB4 /* Rebinds.swift */; };
 		9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE812295296A9008E8BB4 /* Implementations.swift */; };
 		9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81429529888008E8BB4 /* Tweak.swift */; };
 		9E823CF12942CFC80037659B /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
@@ -65,6 +65,8 @@
 		9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
+		9E97335A2953D6FD0036F339 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E9733582953D6FD0036F339 /* fishhook.c */; };
+		9E97335B2953D6FD0036F339 /* fishhook.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9733592953D6FD0036F339 /* fishhook.h */; };
 		9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0CC7C293AE89A0000E9AA /* Global.swift */; };
 		9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0D1C1291C5D7F0061B187 /* injector.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
@@ -158,6 +160,8 @@
 		9E92AA9A290D4A040018604C /* Branches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branches.swift; sourceTree = "<group>"; };
 		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		9E92AAA9290D4E680018604C /* libellekit.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libellekit.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E9733582953D6FD0036F339 /* fishhook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fishhook.c; sourceTree = "<group>"; };
+		9E9733592953D6FD0036F339 /* fishhook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fishhook.h; sourceTree = "<group>"; };
 		9E9FA76B294BD98A00D18D18 /* taskforpid.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = taskforpid.xml; sourceTree = "<group>"; };
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -341,6 +345,7 @@
 		9E7DE7E6295293BB008E8BB4 /* launchd */ = {
 			isa = PBXGroup;
 			children = (
+				9E9733572953D6DA0036F339 /* fishhook */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,
 				9E7DE812295296A9008E8BB4 /* Implementations.swift */,
@@ -397,6 +402,15 @@
 			path = ellekit;
 			sourceTree = "<group>";
 		};
+		9E9733572953D6DA0036F339 /* fishhook */ = {
+			isa = PBXGroup;
+			children = (
+				9E9733582953D6FD0036F339 /* fishhook.c */,
+				9E9733592953D6FD0036F339 /* fishhook.h */,
+			);
+			path = fishhook;
+			sourceTree = "<group>";
+		};
 		9EA0CC7B293AE8880000E9AA /* Threading */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E7DE80B29529436008E8BB4 /* ellekit.h in Headers */,
+				9E97335B2953D6FD0036F339 /* fishhook.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,29 +630,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E7DE8042952942B008E8BB4 /* Execute.swift in Sources */,
+				9E6FBB382953F0F3007B28FC /* Sizing.swift in Sources */,
+				9E6FBB342953F0F3007B28FC /* PAC.swift in Sources */,
 				9E7DE7E9295293D2008E8BB4 /* entry.swift in Sources */,
-				9E7DE8062952942B008E8BB4 /* ptrauth.swift in Sources */,
-				9E7DE81129529688008E8BB4 /* Rebinds.swift in Sources */,
 				9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */,
-				9E7DE8072952942B008E8BB4 /* Branches.swift in Sources */,
-				9E7DE8092952942B008E8BB4 /* Register.swift in Sources */,
-				9E7DE7F82952941E008E8BB4 /* Orig.swift in Sources */,
-				9E7DE80F29529474008E8BB4 /* Globals.swift in Sources */,
+				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
+				9E6FBB2D2953F0F3007B28FC /* Orig.swift in Sources */,
 				9E7DE7EB295293E0008E8BB4 /* load.s in Sources */,
-				9E7DE8052952942B008E8BB4 /* General.swift in Sources */,
-				9E7DE80C29529441008E8BB4 /* Global.swift in Sources */,
+				9E6FBB392953F0F3007B28FC /* Bits.swift in Sources */,
 				9E82D898295383A5008A8F0A /* envp.swift in Sources */,
 				9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */,
-				9E7DE8032952942B008E8BB4 /* Rebind.swift in Sources */,
-				9E7DE80E29529451008E8BB4 /* PAC.swift in Sources */,
-				9E7DE8082952942B008E8BB4 /* Exception.swift in Sources */,
-				9E7DE8022952942B008E8BB4 /* Math.swift in Sources */,
-				9E7DE7F62952941E008E8BB4 /* Sizing.swift in Sources */,
-				9E7DE7F92952941E008E8BB4 /* Hook.swift in Sources */,
-				9E7DE80D29529445008E8BB4 /* Bits.swift in Sources */,
 				9E7DE80A29529436008E8BB4 /* ellekitc.c in Sources */,
-				9E7DE7F72952941E008E8BB4 /* Slide.swift in Sources */,
+				9E6FBB372953F0F3007B28FC /* Execute.swift in Sources */,
+				9E6FBB3A2953F0F3007B28FC /* Globals.swift in Sources */,
+				9E6FBB312953F0F3007B28FC /* Slide.swift in Sources */,
+				9E6FBB302953F0F3007B28FC /* Hook.swift in Sources */,
+				9E6FBB292953F0F3007B28FC /* Register.swift in Sources */,
+				9E6FBB3B2953F0F3007B28FC /* Global.swift in Sources */,
+				9E6FBB2E2953F0F3007B28FC /* General.swift in Sources */,
+				9E6FBB2C2953F0F3007B28FC /* Exception.swift in Sources */,
+				9E6FBB322953F0F3007B28FC /* Branches.swift in Sources */,
+				9E6FBB362953F0F3007B28FC /* Math.swift in Sources */,
+				9E97335A2953D6FD0036F339 /* fishhook.c in Sources */,
+				9E6FBB2A2953F0F3007B28FC /* ptrauth.swift in Sources */,
+				9E6FBB2B2953F0F3007B28FC /* Rebind.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

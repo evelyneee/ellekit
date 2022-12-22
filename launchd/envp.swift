@@ -13,14 +13,14 @@ struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
-    var enableLogging = false
+    var enableLogging = true
     
     func write(_ string: String) {
-        guard enableLogging else { return }
+        guard enableLogging else { return print(string) }
         #if os(iOS)
         let log = NSURL.fileURL(withPath: "/private/var/mobile/log.txt")
         #else
-        let log = NSURL.fileURL(withPath: "/var/root/log.txt")
+        let log = NSURL.fileURL(withPath: "/Users/charlotte/log.txt")
         #endif
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()

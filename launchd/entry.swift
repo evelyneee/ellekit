@@ -24,16 +24,15 @@ func loadDLaddrPath() -> String? {
     guard let name = info.dli_fname else { return nil }
     let str = String(cString: name)
     guard access(str, F_OK) == 0 else { return nil }
-    print("got dladdr path", str)
     TextLog.shared.write("got dladdr path "+str)
     return str
 }
 
 import Foundation
+import os.log
 
 @_cdecl("launchd_entry")
 func entry() {
-    enforceThreadSafety = true
     TextLog.shared.write("hello world "+ProcessInfo.processInfo.processName)
     loadPath()
     do {

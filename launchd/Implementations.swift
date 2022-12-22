@@ -11,8 +11,8 @@ extension String {
 func posix_spawn_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
@@ -24,8 +24,8 @@ func posix_spawn_replacement(
 func posix_spawnp_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
@@ -48,13 +48,15 @@ func spawn_replacement(
     _ p: Bool,
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
         
     let path = String(cString: path)
+        
+    print("called replacement")
     
     TextLog.shared.write("executing \(path)")
     if #available(iOS 14.0, *) {
@@ -62,7 +64,7 @@ func spawn_replacement(
     }
             
     var envp = envp?.array ?? []
-    
+        
     TextLog.shared.write("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
     
     if #available(iOS 14.0, *) {
@@ -102,23 +104,39 @@ func spawn_replacement(
         TextLog.shared.write("no tweaks \(path)")
     }
     
-    TextLog.shared.write("---------- \n new env is \n\(envp.joined(separator: "\n"))\n ----------")
+    TextLog.shared.write("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
     
     if #available(iOS 14.0, *) {
         logger.notice("new env is \(envp.joined())")
     }
     
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
-        
+    
     envp_c.append(nil)
     
+    TextLog.shared.write("calling back orig now")
     return envp_c.withUnsafeBufferPointer { buf in
-        if p {
-            let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
-            return ret
+        if Rebinds.shared.usedFishhook {
+            print("calling fishhook orig")
+            if p {
+                let ret = posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                TextLog.shared.write("orig returned \(ret)")
+                return ret
+            } else {
+                let ret = posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                TextLog.shared.write("orig returned \(ret)")
+                return ret
+            }
         } else {
-            let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
-            return ret
+            if p {
+                let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                TextLog.shared.write("orig returned \(ret)")
+                return ret
+            } else {
+                let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                TextLog.shared.write("orig returned \(ret)")
+                return ret
+            }
         }
     }
 }

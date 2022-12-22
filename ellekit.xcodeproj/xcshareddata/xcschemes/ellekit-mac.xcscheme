@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9E92AAA8290D4E680018604C"
-               BuildableName = "libellekit-mac.dylib"
-               BlueprintName = "ellekit-mac"
+               BuildableName = "libellekit.dylib"
+               BlueprintName = "ellekit"
                ReferencedContainer = "container:ellekit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9E92AAA8290D4E680018604C"
-            BuildableName = "libellekit-mac.dylib"
-            BlueprintName = "ellekit-mac"
+            BuildableName = "libellekit.dylib"
+            BlueprintName = "ellekit"
             ReferencedContainer = "container:ellekit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
