@@ -55,8 +55,6 @@ func spawn_replacement(
 ) -> Int32 {
         
     let path = String(cString: path)
-        
-    print("called replacement")
     
     TextLog.shared.write("executing \(path)")
     if #available(iOS 14.0, *) {

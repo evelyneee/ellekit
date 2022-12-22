@@ -32,7 +32,7 @@ class Rebinds {
     var usedFishhook = false
     
     func performHooks() {
-        if ProcessInfo.processInfo.processName.contains("launchd") { // only use fishhook in launchd
+        if true { // only use fishhook in launchd
             self.usedFishhook = true
                         
             var rebindinds = [
