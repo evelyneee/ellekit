@@ -19,9 +19,7 @@ let package = Package(
         .target(
             name: "ellekitc",
             dependencies: [],
-            path: "ellekitc",
-            cSettings: [.unsafeFlags(["-arch", "arm64e", "-arch", "arm64", "-arch", "x86_64"])],
-            linkerSettings: [.unsafeFlags(["-arch", "arm64e", "-arch", "arm64", "-arch", "x86_64"])]
+            path: "ellekitc"
         ),
         .target(
             name: "ellekit",

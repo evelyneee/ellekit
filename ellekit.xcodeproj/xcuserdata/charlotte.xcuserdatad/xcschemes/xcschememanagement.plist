@@ -22,12 +22,17 @@
 		<key>launchd.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>6</integer>
 		</dict>
 		<key>loader.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>safemode.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 		<key>test.xcscheme_^#shared#^_</key>
 		<dict>
@@ -38,6 +43,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>9E381C39293D1C87004D36B2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9E6FBB5829554734007B28FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
