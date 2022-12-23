@@ -20,7 +20,7 @@ public func entry() {
         try FileManager.default.contentsOfDirectory(atPath: path)
             .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }
             .compactMap {
-                path+"/"+$0.components(separatedBy: ".").dropLast().joined(separator: ".") // remove extension
+                path+$0.components(separatedBy: ".").dropLast().joined(separator: ".") // remove extension
             }
             .removeDuplicates()
             .sorted { $0 < $1 }

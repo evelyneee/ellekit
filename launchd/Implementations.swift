@@ -8,7 +8,7 @@ extension String {
 }
 
 @_cdecl("posix_spawn_replacement")
-func posix_spawn_replacement(
+public func posix_spawn_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
     _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
@@ -21,7 +21,7 @@ func posix_spawn_replacement(
 }
 
 @_cdecl("posix_spawnp_replacement")
-func posix_spawnp_replacement(
+public func posix_spawnp_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
     _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
