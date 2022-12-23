@@ -32,7 +32,7 @@ import Foundation
 import os.log
 
 @_cdecl("launchd_entry")
-func entry() {
+public func entry() {
     TextLog.shared.write("hello world "+ProcessInfo.processInfo.processName)
     loadPath()
     do {
