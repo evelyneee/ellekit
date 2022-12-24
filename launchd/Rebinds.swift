@@ -56,9 +56,7 @@ class Rebinds {
     }
     
     func performHooks() {
-        if ProcessInfo.processInfo.processName.contains("launchd") { // only use fishhook in launchd
-            performUsingFishhook()
-        } else if let orig = hook(self.posix_spawn, self.posix_spawn_replacement),
+        if let orig = hook(self.posix_spawn, self.posix_spawn_replacement),
                   let origp = hook(self.posix_spawnp, self.posix_spawnp_replacement) {
             self.usedFishhook = false
             self.posix_spawn_orig_ptr = orig
@@ -67,6 +65,7 @@ class Rebinds {
                 TextLog.shared.write("orig is not nil now \(orig) \(porig)")
             }
         } else {
+            TextLog.shared.write("ellekit isn't working. using fallback (fishhook)")
             performUsingFishhook()
         }
     }
