@@ -1,20 +1,22 @@
 
 var selfPath: String = "/usr/lib/system/libdyld.dylib"
+var safeModePath: String = "/usr/lib/system/libdyld.dylib"
 
 func loadPath() {
     if let path = loadDLaddrPath() {
         selfPath = path
-        return
-    }
-    #if os(macOS)
-    selfPath = "/Library/TweakInject/pspawn.dylib"
-    #else
-    if access("/usr/lib/ellekit/pspawn.dylib", F_OK) == 0 {
-        selfPath = "/usr/lib/ellekit/pspawn.dylib"
     } else {
-        selfPath = (("/var/jb/usr/lib/ellekit/pspawn.dylib" as NSString).resolvingSymlinksInPath)
+        #if os(macOS)
+        selfPath = "/Library/TweakInject/pspawn.dylib"
+        #else
+        if access("/usr/lib/ellekit/pspawn.dylib", F_OK) == 0 {
+            selfPath = "/usr/lib/ellekit/pspawn.dylib"
+        } else {
+            selfPath = (("/var/jb/usr/lib/ellekit/pspawn.dylib" as NSString).resolvingSymlinksInPath)
+        }
+        #endif
     }
-    #endif
+    safeModePath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("MobileSafety.dylib")
 }
 
 func loadDLaddrPath() -> String? {

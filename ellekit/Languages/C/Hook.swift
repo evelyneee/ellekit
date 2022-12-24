@@ -64,7 +64,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
     )
 
-    code.withUnsafeBufferPointer { buf in
+    let ret = code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
@@ -75,6 +75,11 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
             }
         }
         #endif
+        return result
+    }
+    
+    if ret != 0 {
+        return nil
     }
 
     return orig.0?.makeCallable()
@@ -137,7 +142,10 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     if enforceThreadSafety {
         stopAllThreads()
     }
-    mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions)
+    let krt1 = mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions)
+    guard krt1 == KERN_SUCCESS else {
+        return Int(krt1)
+    }
 
     memcpy(address, code, Int(size))
 

@@ -31,36 +31,43 @@ class Rebinds {
     
     var usedFishhook = false
     
+    func performUsingFishhook() {
+        self.usedFishhook = true
+                    
+        var rebindinds = [
+            rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
+            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil)
+        ]
+        
+        let index = (0..<_dyld_image_count())
+            .filter {
+                String(cString: _dyld_get_image_name($0))
+                    .contains( ProcessInfo.processInfo.processName)
+            }
+            .first ?? 1
+        
+        TextLog.shared.write("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
+        
+        rebind_symbols_image(
+            unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
+            _dyld_get_image_vmaddr_slide(index),
+            &rebindinds, 2
+        )
+    }
+    
     func performHooks() {
-        if true { // only use fishhook in launchd
-            self.usedFishhook = true
-                        
-            var rebindinds = [
-                rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
-                rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil)
-            ]
-            
-            let index = (0..<_dyld_image_count())
-                .filter {
-                    String(cString: _dyld_get_image_name($0))
-                        .contains( ProcessInfo.processInfo.processName)
-                }
-                .first ?? 1
-            
-            TextLog.shared.write("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
-            
-            rebind_symbols_image(
-                unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
-                _dyld_get_image_vmaddr_slide(index),
-                &rebindinds, 2
-            )
-        } else {
+        if ProcessInfo.processInfo.processName.contains("launchd") { // only use fishhook in launchd
+            performUsingFishhook()
+        } else if let orig = hook(self.posix_spawn, self.posix_spawn_replacement),
+                  let origp = hook(self.posix_spawnp, self.posix_spawnp_replacement) {
             self.usedFishhook = false
-            self.posix_spawn_orig_ptr = hook(self.posix_spawn, self.posix_spawn_replacement)
-            self.posix_spawnp_orig_ptr = hook(self.posix_spawnp, self.posix_spawnp_replacement)
+            self.posix_spawn_orig_ptr = orig
+            self.posix_spawnp_orig_ptr = origp
             if let orig = self.posix_spawn_orig_ptr, let porig = self.posix_spawnp_orig_ptr {
                 TextLog.shared.write("orig is not nil now \(orig) \(porig)")
             }
+        } else {
+            performUsingFishhook()
         }
     }
 }

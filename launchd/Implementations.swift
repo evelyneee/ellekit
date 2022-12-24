@@ -70,12 +70,26 @@ func spawn_replacement(
     }
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
-    let shouldInject = !path.contains("BlastDoor") && !path.contains("mobile_assertion_agent") && !path.contains("WebKit") && !path.contains("Safari")
+    
+    let shouldInject = !path.contains("BlastDoor") &&
+        !path.contains("mobile_assertion_agent") &&
+        !path.contains("WebKit") &&
+        !path.contains("Safari")
+    
+    let safeMode = access("/private/var/mobile/.eksafemode", F_OK) == 0
     
     if launchd {
+        
         TextLog.shared.write("launchd \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+selfPath)
-    } else if shouldInject {
+        
+    } else if safeMode && path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard" {
+        
+        TextLog.shared.write("Safe Mode \(path)")
+        envp.append("DYLD_INSERT_LIBRARIES="+safeModePath)
+        
+    } else if shouldInject && !safeMode {
+        
         TextLog.shared.write("injecting tweaks \(path)")
         var parsedPath: String? = nil
         if path.contains(".app/Contents/MacOS/") {
@@ -98,8 +112,11 @@ func spawn_replacement(
                 envp.append(env)
             }
         }
+        
     } else {
+        
         TextLog.shared.write("no tweaks \(path)")
+        
     }
     
     TextLog.shared.write("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")

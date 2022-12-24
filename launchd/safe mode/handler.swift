@@ -5,15 +5,7 @@ import Darwin
 import ellekitc
 #endif
 
-#if arch(x86_64)
-let ARM_THREAD_STATE64_COUNT = 0
-#else
-let ARM_THREAD_STATE64_COUNT = MemoryLayout<arm_thread_state64_t>.size/MemoryLayout<UInt32>.size
-#endif
-
-var closeExceptionPort = false
-
-public final class ExceptionHandler {
+public final class PIDExceptionHandler {
 
     let port: mach_port_t
     let targetTask: mach_port_t
@@ -58,7 +50,7 @@ public final class ExceptionHandler {
         }
     }
 
-    static func portLoop(_ `self`: ExceptionHandler?) {
+    static func portLoop(_ `self`: PIDExceptionHandler?) {
 
         guard let `self` else {
             print("[-] ellekit: exception handler deallocated.")
@@ -121,6 +113,8 @@ public final class ExceptionHandler {
                 
         mach_port_deallocate(mach_task_self_, self.port)
         mach_port_destroy(mach_task_self_, self.port)
+        
+        FileManager.default.createFile(atPath: "/private/var/mobile/.eksafemode", contents: Data())
         
         kill(pid, 9)
     }
