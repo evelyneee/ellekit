@@ -1,7 +1,16 @@
 // my playground!
 
 import Foundation
-import ellekit_mac
+import ellekit
+
+let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")
+let image = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")
+
+try ellekit.findSymbol(image: image!)
+
+print(image?.pointee)
+
+exit(0)
 
 EKEnableThreadSafety(1)
 

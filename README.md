@@ -77,3 +77,8 @@ add x16, x16, 4
 // Call the target function
 br x16
 ```
+
+### Credits
+
+- Linus Henze, for the Fugu14 MachO parser
+- Capt, for the help with PAC

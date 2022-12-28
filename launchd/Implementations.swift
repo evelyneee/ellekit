@@ -84,7 +84,7 @@ func spawn_replacement(
         envp.append("DYLD_INSERT_LIBRARIES="+selfPath)
         
     } else if safeMode && path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard" {
-        
+
         TextLog.shared.write("Safe Mode \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+safeModePath)
         
@@ -132,10 +132,10 @@ func spawn_replacement(
     TextLog.shared.write("calling back orig now")
     return envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
-            print("calling fishhook orig")
+            TextLog.shared.write("calling fishhook orig")
             if p {
                 let ret = posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("orig returned \(ret)")
+                TextLog.shared.write("origp returned \(ret)")
                 return ret
             } else {
                 let ret = posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
@@ -145,7 +145,7 @@ func spawn_replacement(
         } else {
             if p {
                 let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("orig returned \(ret)")
+                TextLog.shared.write("origp returned \(ret)")
                 return ret
             } else {
                 let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)

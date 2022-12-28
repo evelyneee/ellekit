@@ -22,12 +22,17 @@
 		<key>launchd.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>8</integer>
 		</dict>
 		<key>loader.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>ptrauth-shim.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 		<key>safemode-ui.xcscheme_^#shared#^_</key>
 		<dict>
@@ -73,6 +78,11 @@
 			<true/>
 		</dict>
 		<key>9E92AAA8290D4E680018604C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9E96A5C1295924A4000EDC43</key>
 		<dict>
 			<key>primary</key>
 			<true/>

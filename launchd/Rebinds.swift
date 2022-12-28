@@ -31,7 +31,7 @@ class Rebinds {
     
     var usedFishhook = false
     
-    func performUsingFishhook() {
+    func rebind() {
         self.usedFishhook = true
                     
         var rebindinds = [
@@ -48,16 +48,18 @@ class Rebinds {
         
         TextLog.shared.write("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
         
-        rebind_symbols_image(
-            unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
-            _dyld_get_image_vmaddr_slide(index),
-            &rebindinds, 2
-        )
+        _ = rebindinds.withUnsafeMutableBufferPointer { buf in
+            rebind_symbols_image(
+                unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
+                _dyld_get_image_vmaddr_slide(index),
+                buf.baseAddress, 2
+            )
+        }
     }
     
-    func performHooks() {
-        if let orig = hook(self.posix_spawn, self.posix_spawn_replacement),
-                  let origp = hook(self.posix_spawnp, self.posix_spawnp_replacement) {
+    func hook() { 
+        if let orig = pspawn.hook(self.posix_spawn, self.posix_spawn_replacement),
+           let origp = pspawn.hook(self.posix_spawnp, self.posix_spawnp_replacement) {
             self.usedFishhook = false
             self.posix_spawn_orig_ptr = orig
             self.posix_spawnp_orig_ptr = origp
@@ -65,8 +67,17 @@ class Rebinds {
                 TextLog.shared.write("orig is not nil now \(orig) \(porig)")
             }
         } else {
-            TextLog.shared.write("ellekit isn't working. using fallback (fishhook)")
-            performUsingFishhook()
+            TextLog.shared.write("hook failed. shoot")
+            rebind()
         }
+    }
+    
+    func performHooks() {
+        #if os(macOS)
+        hook()
+        #else
+        TextLog.shared.write("ellekit isn't working. using fallback (fishhook)")
+        rebind()
+        #endif
     }
 }
