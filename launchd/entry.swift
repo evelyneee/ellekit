@@ -16,7 +16,7 @@ func loadPath() {
         }
         #endif
     }
-    safeModePath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("MobileSafety.dylib")
+    safeModePath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/MobileSafety.dylib")
 }
 
 func loadDLaddrPath() -> String? {
@@ -35,7 +35,6 @@ import os.log
 
 @_cdecl("launchd_entry")
 public func entry() {
-    TextLog.shared.write("hello world "+ProcessInfo.processInfo.processName)
     loadPath()
     do {
         try loadTweaks()

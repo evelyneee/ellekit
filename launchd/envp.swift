@@ -13,7 +13,7 @@ struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
-    var enableLogging = true
+    var enableLogging = false
     
     func write(_ string: String) {
         guard enableLogging else { return print(string) }

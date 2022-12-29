@@ -25,6 +25,7 @@ class Tweak {
             .Bundles
             .map { $0.lowercased() }
         self.bundles = filter
+        TextLog.shared.write("\(self.path) : \(self.bundles)")
     }
     
     var path: String
@@ -38,7 +39,7 @@ func getTweaksPath() -> String {
     if access("/usr/lib/TweakInject/", F_OK) == 0 {
         return "/usr/lib/TweakInject/"
     } else {
-        return (("/var/jb/usr/lib/TweakInject/" as NSString).resolvingSymlinksInPath)
+        return (("/var/jb/usr/lib/TweakInject/" as NSString).resolvingSymlinksInPath)+"/"
     }
     #endif
 }
@@ -54,6 +55,7 @@ func loadTweaks() throws {
         }
         .removeDuplicates()
         .sorted { $0 < $1 }
+    TextLog.shared.write("tweaks: \(loaded)")
     tweaks = loaded.compactMap { try? Tweak.init(tweak: $0) }
 }
 

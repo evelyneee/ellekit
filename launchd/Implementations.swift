@@ -76,19 +76,19 @@ func spawn_replacement(
         !path.contains("WebKit") &&
         !path.contains("Safari")
     
-    let safeMode = access("/private/var/mobile/.eksafemode", F_OK) == 0
+    let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
     if launchd {
         
         TextLog.shared.write("launchd \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+selfPath)
         
-    } else if safeMode && path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard" {
+    } else if safeMode && path.contains("SpringBoard.app") {
 
         TextLog.shared.write("Safe Mode \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+safeModePath)
         
-    } else if shouldInject && !safeMode {
+    } else if shouldInject {
         
         TextLog.shared.write("injecting tweaks \(path)")
         var parsedPath: String? = nil
@@ -101,14 +101,14 @@ func spawn_replacement(
         }
         
         if let parsedPath, let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
+            TextLog.shared.write("found bundle \(path) \(bundleID)")
             let tweaks = tweaks
                 .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") }
                 .map(\.path)
+            TextLog.shared.write("got tweaks \(bundleID) \(tweaks)")
             if !tweaks.isEmpty {
                 let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
-                if #available(iOS 14.0, *) {
-                    logger.notice("adding env \(env)")
-                }
+                TextLog.shared.write("adding env \(env)")
                 envp.append(env)
             }
         }

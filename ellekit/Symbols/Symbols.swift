@@ -22,14 +22,19 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer) throws {
             let symtab_command_pointer = command.assumingMemoryBound(to: symtab_command.self)
             let symtab_command = symtab_command_pointer.pointee
             
-            let strTab = machHeaderPointer.advanced(by: Int(symtab_command.stroff))
-            print(String(cString: strTab.assumingMemoryBound(to: CChar.self)))
+            print(symtab_command)
             
-            var cur = machHeaderPointer.advanced(by: Int(symtab_command.symoff))
+            var strTab = machHeaderPointer.advanced(by: Int(symtab_command.stroff))
+            
+            var sym = machHeaderPointer.advanced(by: Int(symtab_command.symoff))
+            
             for _ in 0..<symtab_command.nsyms {
-                let strOff = command.assumingMemoryBound(to: UInt32.self).pointee
+
+                let strOff = sym.assumingMemoryBound(to: UInt32.self).pointee
                 
-                cur = cur.advanced(by: 16)
+                print(sym.assumingMemoryBound(to: nlist_64.self).pointee.n_value)
+                
+                sym = sym.advanced(by: 16)
             }
         }
     }
