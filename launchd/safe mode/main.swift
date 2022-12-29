@@ -37,16 +37,16 @@ func findPID(_ name: String) -> pid_t? {
     return nil
 }
 
+class SafeMode {
+    static var handler: PIDExceptionHandler? = nil
+}
+
 func spawnSafeMode() {
     guard let target = findPID("SpringBoard") else {
         fatalError("Couldn't get SB PID")
     }
-
-    print(target)
-
-    let handler = PIDExceptionHandler(target)!
-
-    dispatchMain()
+    
+    SafeMode.handler = PIDExceptionHandler(target)!
 }
 
 #endif

@@ -42,4 +42,8 @@ public func entry() {
         TextLog.shared.write("\(error)")
     }
     Rebinds.shared.performHooks()
+    
+    #if os(iOS)
+    spawnSafeMode()
+    #endif
 }
