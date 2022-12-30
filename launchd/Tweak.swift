@@ -10,7 +10,8 @@ import Foundation
 struct Filter: Codable {
     var Filter: CoreFilter
     struct CoreFilter: Codable {
-        var Bundles: [String]
+        var Bundles: [String]?
+        var Executables: [String]?
     }
     var UnloadAfter: Bool?
 }
@@ -20,16 +21,22 @@ class Tweak {
         self.path = tweak+".dylib"
         let filterData = try Data(contentsOf: NSURL.fileURL(withPath: tweak+".plist"))
         let filterRoot = try PropertyListDecoder().decode(Filter.self, from: filterData)
-        let filter = filterRoot
+        let bundles = filterRoot
             .Filter
-            .Bundles
-            .map { $0.lowercased() }
-        self.bundles = filter
+            .Bundles?
+            .map { $0.lowercased() } ?? []
+        let executables = filterRoot
+            .Filter
+            .Executables?
+            .map { $0.lowercased() } ?? []
+        self.bundles = bundles
+        self.executables = executables
         TextLog.shared.write("\(self.path) : \(self.bundles)")
     }
     
     var path: String
     var bundles: [String]
+    var executables: [String]
 }
 
 func getTweaksPath() -> String {

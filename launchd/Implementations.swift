@@ -111,6 +111,18 @@ func spawn_replacement(
                 TextLog.shared.write("adding env \(env)")
                 envp.append(env)
             }
+        } else {
+            let executableName = (path as NSString).lastPathComponent
+            TextLog.shared.write("using exec name \(path) \(executableName)")
+            let tweaks = tweaks
+                .filter { $0.executables.contains(executableName.lowercased()) }
+                .map(\.path)
+            TextLog.shared.write("got tweaks \(executableName) \(tweaks)")
+            if !tweaks.isEmpty {
+                let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
+                TextLog.shared.write("adding env \(env)")
+                envp.append(env)
+            }
         }
         
     } else {
