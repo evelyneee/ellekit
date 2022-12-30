@@ -103,7 +103,7 @@ func spawn_replacement(
         if let parsedPath, let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
             TextLog.shared.write("found bundle \(path) \(bundleID)")
             let tweaks = tweaks
-                .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") || $0.bundles.contains("com.apple.foundation") }
+                .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") || $0.bundles.contains("com.apple.foundation") || $0.bundles.contains("com.apple.security") }
                 .map(\.path)
             TextLog.shared.write("got tweaks \(bundleID) \(tweaks)")
             if !tweaks.isEmpty {
