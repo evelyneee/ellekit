@@ -50,7 +50,6 @@ jobs:
         run: |
           ${{ env.build_cmd }} injector
           
-          mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/build/Release/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
           
       - name: Upload injector to artifacts
@@ -63,7 +62,6 @@ jobs:
         run: |
           ${{ env.build_cmd }} loader
           
-          mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/build/Release/loader ${{ github.workspace }}/product/loader
           
       - name: Upload loader to artifacts
@@ -75,9 +73,8 @@ jobs:
       - name: Build launchd hook
         run: |
           ${{ env.build_cmd }} launchd
-          
-          mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/liblaunchd.dylib ${{ github.workspace }}/product/pspawn.dylib
+    
+          cp -R ${{ github.workspace }}/build/Release/pspawn.dylib ${{ github.workspace }}/product/pspawn.dylib
           
       - name: Upload launchd hook to artifacts
         uses: actions/upload-artifact@v3
