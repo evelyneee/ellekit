@@ -78,6 +78,8 @@ func spawn_replacement(
     
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
+    let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
+    
     if launchd {
         
         TextLog.shared.write("launchd \(path)")
@@ -126,8 +128,10 @@ func spawn_replacement(
         }
         
     } else {
-        
         TextLog.shared.write("no tweaks \(path)")
+    }
+    
+    if springboard {
         
     }
     
@@ -141,7 +145,6 @@ func spawn_replacement(
     
     envp_c.append(nil)
     
-    TextLog.shared.write("calling back orig now")
     return envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
             TextLog.shared.write("calling fishhook orig")

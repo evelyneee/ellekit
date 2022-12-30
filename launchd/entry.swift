@@ -43,10 +43,12 @@ public func entry() {
     }
     Rebinds.shared.performHooks()
     
-    #if os(iOS)
-    if ProcessInfo.processInfo.processName.contains("launchd") {
-        spawnSafeMode()
-    }
-    #endif
+    #warning("TODO: Enable and fix safe mode")
+    
+//    #if os(iOS)
+//    if ProcessInfo.processInfo.processName.contains("launchd") {
+//        spawnSafeMode()
+//    }
+//    #endif
     
 }
