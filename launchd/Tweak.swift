@@ -55,7 +55,6 @@ func loadTweaks() throws {
         }
         .removeDuplicates()
         .sorted { $0 < $1 }
-    TextLog.shared.write("tweaks: \(loaded)")
     tweaks = loaded.compactMap { try? Tweak.init(tweak: $0) }
 }
 
