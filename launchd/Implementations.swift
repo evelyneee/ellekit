@@ -57,17 +57,10 @@ func spawn_replacement(
     let path = String(cString: path)
     
     TextLog.shared.write("executing \(path)")
-    if #available(iOS 14.0, *) {
-        logger.notice("executing \(path)")
-    }
-            
+    
     var envp = envp?.array ?? []
         
     TextLog.shared.write("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
-    
-    if #available(iOS 14.0, *) {
-        logger.notice("env is \(envp.joined())")
-    }
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
     
@@ -131,21 +124,13 @@ func spawn_replacement(
         TextLog.shared.write("no tweaks \(path)")
     }
     
-    if springboard {
-        
-    }
-    
     TextLog.shared.write("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
-    
-    if #available(iOS 14.0, *) {
-        logger.notice("new env is \(envp.joined())")
-    }
     
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
     
     envp_c.append(nil)
     
-    return envp_c.withUnsafeBufferPointer { buf in
+    let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
             TextLog.shared.write("calling fishhook orig")
             if p {
@@ -169,4 +154,12 @@ func spawn_replacement(
             }
         }
     }
+    
+    #if os(iOS)
+    if springboard && ret == 0 && ProcessInfo.processInfo.processName.contains("launchd") {
+        spawnSafeMode(pid.pointee)
+    }
+    #endif
+    
+    return ret
 }

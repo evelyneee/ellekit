@@ -137,24 +137,31 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
 @discardableResult
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
-    let newPermissions = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
     let enforceThreadSafety = enforceThreadSafety
     if enforceThreadSafety {
         stopAllThreads()
     }
-    let krt1 = mach_vm_protect(mach_task_self_, mach_vm_address_t(UInt(bitPattern: address)), mach_vm_size_t(size), 0, newPermissions)
+    let krt1 = mach_vm_protect(
+        mach_task_self_,
+        mach_vm_address_t(UInt(bitPattern: address)),
+        mach_vm_size_t(size),
+        0,
+        VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
+    )
+    
     guard krt1 == KERN_SUCCESS else {
         return Int(krt1)
     }
 
     memcpy(address, code, Int(size))
-
-    let originalPerms = VM_PROT_READ | VM_PROT_EXECUTE
-    let err2 = mach_vm_protect(mach_task_self_,
-                               mach_vm_address_t(UInt(bitPattern: address)),
-                               mach_vm_size_t(size),
-                               0,
-                               originalPerms)
+    
+    let err2 = mach_vm_protect(
+        mach_task_self_,
+        mach_vm_address_t(UInt(bitPattern: address)),
+        mach_vm_size_t(size),
+        0,
+        VM_PROT_READ | VM_PROT_EXECUTE
+    )
 
     // flush page cache so we don't hit cached unpatched functions
     sys_icache_invalidate(address, Int(vm_page_size))

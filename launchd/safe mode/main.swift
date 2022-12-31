@@ -41,13 +41,10 @@ class SafeMode {
     static var handler: PIDExceptionHandler? = nil
 }
 
-func spawnSafeMode() {
-    guard let target = findPID("SpringBoard") else {
-        TextLog.shared.write("Couldn't get SB PID")
-        return
+func spawnSafeMode(_ pid: pid_t) {
+    if let handler = PIDExceptionHandler(pid) {
+        SafeMode.handler = handler
     }
-    
-    SafeMode.handler = PIDExceptionHandler(target)!
 }
 
 #endif

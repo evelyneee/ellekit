@@ -42,9 +42,6 @@ public func entry() {
         TextLog.shared.write("\(error)")
     }
     Rebinds.shared.performHooks()
-    
-    #warning("TODO: Enable and fix safe mode")
-    
 //    #if os(iOS)
 //    if ProcessInfo.processInfo.processName.contains("launchd") {
 //        spawnSafeMode()
