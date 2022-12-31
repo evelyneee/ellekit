@@ -26,7 +26,7 @@ func loadDLaddrPath() -> String? {
     guard let name = info.dli_fname else { return nil }
     let str = String(cString: name)
     guard access(str, F_OK) == 0 else { return nil }
-    TextLog.shared.write("got dladdr path "+str)
+    tprint("got dladdr path "+str)
     return str
 }
 
@@ -39,7 +39,7 @@ public func entry() {
     do {
         try loadTweaks()
     } catch {
-        TextLog.shared.write("\(error)")
+        tprint("\(error)")
     }
     Rebinds.shared.performHooks()
 //    #if os(iOS)

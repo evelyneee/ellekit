@@ -31,7 +31,7 @@ class Tweak {
             .map { $0.lowercased() } ?? []
         self.bundles = bundles
         self.executables = executables
-        TextLog.shared.write("\(self.path) : \(self.bundles) : \(self.executables)")
+        tprint("\(self.path) : \(self.bundles) : \(self.executables)")
     }
     
     var path: String

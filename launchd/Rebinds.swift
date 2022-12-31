@@ -46,7 +46,7 @@ class Rebinds {
             }
             .first ?? 1
         
-        TextLog.shared.write("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
+        tprint("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
         
         _ = rebindinds.withUnsafeMutableBufferPointer { buf in
             rebind_symbols_image(
@@ -64,10 +64,10 @@ class Rebinds {
             self.posix_spawn_orig_ptr = orig
             self.posix_spawnp_orig_ptr = origp
             if let orig = self.posix_spawn_orig_ptr, let porig = self.posix_spawnp_orig_ptr {
-                TextLog.shared.write("orig is not nil now \(orig) \(porig)")
+                tprint("orig is not nil now \(orig) \(porig)")
             }
         } else {
-            TextLog.shared.write("hook failed. shoot")
+            tprint("hook failed. shoot")
             rebind()
         }
     }
@@ -76,7 +76,7 @@ class Rebinds {
         #if os(macOS)
         hook()
         #else
-        TextLog.shared.write("using fishhook for launchd/proxy hooks")
+        tprint("using fishhook for launchd/proxy hooks")
         rebind()
         #endif
     }

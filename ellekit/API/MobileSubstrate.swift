@@ -43,9 +43,6 @@ public func MSHookIvar(_ class: AnyClass, _ name: String) -> UnsafeMutableRawPoi
     if let ptr {
         return .init(ptr)
     } else {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            logger.error("ellekit: Couldn't get ivar so bailing out.")
-        }
         return nil
     }
 }

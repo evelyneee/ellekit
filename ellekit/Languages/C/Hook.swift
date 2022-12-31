@@ -70,9 +70,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
         #else
         if result != 0 {
-            if #available(iOS 14.0, macOS 11.0, *) {
-                logger.error("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
-            }
+            print("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
         }
         #endif
         return result
@@ -127,9 +125,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
         #else
         if result != 0 {
-            if #available(iOS 14.0, macOS 11.0, *) {
-                logger.error("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
-            }
+            print("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
         }
         #endif
     }

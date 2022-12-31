@@ -56,11 +56,11 @@ func spawn_replacement(
         
     let path = String(cString: path)
     
-    TextLog.shared.write("executing \(path)")
+    tprint("executing \(path)")
     
     var envp = envp?.array ?? []
         
-    TextLog.shared.write("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
+    tprint("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
     
@@ -78,23 +78,23 @@ func spawn_replacement(
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     
     if springboard {
-        TextLog.shared.write("Spawning SpringBoard (time to refresh tweaks)")
+        tprint("Spawning SpringBoard (time to refresh tweaks)")
         try? loadTweaks()
     }
     
     if launchd {
         
-        TextLog.shared.write("launchd \(path)")
+        tprint("launchd \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+selfPath)
         
     } else if safeMode && path.contains("SpringBoard.app") {
 
-        TextLog.shared.write("Safe Mode \(path)")
+        tprint("Safe Mode \(path)")
         envp.append("DYLD_INSERT_LIBRARIES="+safeModePath)
         
     } else if shouldInject {
         
-        TextLog.shared.write("injecting tweaks \(path)")
+        tprint("injecting tweaks \(path)")
         
         let parsedPath: String?
         if path.contains(".app/Contents/MacOS/") {
@@ -109,35 +109,35 @@ func spawn_replacement(
         }
         
         if let parsedPath, let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
-            TextLog.shared.write("found bundle \(path) \(bundleID)")
+            tprint("found bundle \(path) \(bundleID)")
             let tweaks = tweaks
                 .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") || $0.bundles.contains("com.apple.foundation") || $0.bundles.contains("com.apple.security") }
                 .map(\.path)
-            TextLog.shared.write("got tweaks \(bundleID) \(tweaks)")
+            tprint("got tweaks \(bundleID) \(tweaks)")
             if !tweaks.isEmpty {
                 let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
-                TextLog.shared.write("adding env \(env)")
+                tprint("adding env \(env)")
                 envp.append(env)
             }
         } else {
             let executableName = (path as NSString).lastPathComponent
-            TextLog.shared.write("using exec name \(path) \(executableName)")
+            tprint("using exec name \(path) \(executableName)")
             let tweaks = tweaks
                 .filter { $0.executables.contains(executableName.lowercased()) }
                 .map(\.path)
-            TextLog.shared.write("got tweaks \(executableName) \(tweaks)")
+            tprint("got tweaks \(executableName) \(tweaks)")
             if !tweaks.isEmpty {
                 let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
-                TextLog.shared.write("adding env \(env)")
+                tprint("adding env \(env)")
                 envp.append(env)
             }
         }
         
     } else {
-        TextLog.shared.write("no tweaks \(path)")
+        tprint("no tweaks \(path)")
     }
     
-    TextLog.shared.write("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
+    tprint("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
     
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
     
@@ -168,24 +168,24 @@ func spawn_replacement(
     
     let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
-            TextLog.shared.write("calling fishhook orig")
+            tprint("calling fishhook orig")
             if p {
                 let ret = posix_spawnp(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("origp returned \(ret)")
+                tprint("origp returned \(ret)")
                 return ret
             } else {
                 let ret = posix_spawn(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("orig returned \(ret)")
+                tprint("orig returned \(ret)")
                 return ret
             }
         } else {
             if p {
                 let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("origp returned \(ret)")
+                tprint("origp returned \(ret)")
                 return ret
             } else {
                 let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
-                TextLog.shared.write("orig returned \(ret)")
+                tprint("orig returned \(ret)")
                 return ret
             }
         }

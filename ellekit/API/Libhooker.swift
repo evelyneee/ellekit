@@ -46,26 +46,17 @@ public func LHExecMemory(_ page: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
     var addr: mach_vm_address_t = 0
     let krt1 = mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)
     guard krt1 == KERN_SUCCESS else {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            logger.error("ellekit: couldn't allocate base memory")
-        }
         print("[-] couldn't allocate base memory:", mach_error_string(krt1) ?? "")
         return 0
     }
     let krt2 = mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE)
     guard krt2 == KERN_SUCCESS else {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            logger.error("ellekit: couldn't set memory to rw*")
-        }
         print("[-] couldn't set memory to rw*:", mach_error_string(krt1) ?? "")
         return 0
     }
     memcpy(UnsafeMutableRawPointer(bitPattern: UInt(addr)), data, size)
     let krt3 = mach_vm_protect(mach_task_self_, addr, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
     guard krt3 == KERN_SUCCESS else {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            logger.error("ellekit: couldn't set memory to r*x")
-        }
         print("[-] couldn't set memory to r*x:", mach_error_string(krt1) ?? "")
         return 0
     }

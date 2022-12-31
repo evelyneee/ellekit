@@ -9,13 +9,10 @@ let path = "/Library/MobileSubstrate/DynamicLibraries/"
 let path = "/Library/TweakInject/"
 #endif
 
-let logger = Logger(subsystem: "red.charlotte.ellekit", category: "injector")
-
 // big wip don't complain!
 @_cdecl("injector_entry")
 public func entry() {
-    logger.notice("[ellekit] injector: out here")
-    print("hi stdout c:")
+    print("[ellekit] injector: out here")
     do {
         try FileManager.default.contentsOfDirectory(atPath: path)
             .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }
@@ -49,16 +46,16 @@ func openTweak(_ tweak: String) throws {
 
     if let bundleID = Bundle.main.bundleIdentifier {
         if filter.contains(bundleID.lowercased()) {
-            logger.notice("[ellekit] injector: loaded \(tweak+".dylib")")
+            print("[ellekit] injector: loaded \(tweak+".dylib")")
             let handle = dlopen(tweak + ".dylib", RTLD_NOW)
             if handle == nil {
-                logger.notice("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
+                print("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
             }
             if filterRoot.UnloadAfter == true {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
                     dlclose(handle)
                     dlclose(handle)
-                    logger.notice("[ellekit] injector: closed \(tweak+".dylib")")
+                    print("[ellekit] injector: closed \(tweak+".dylib")")
                 })
             }
             return
@@ -66,16 +63,16 @@ func openTweak(_ tweak: String) throws {
     }
 
     if filter.contains("*") {
-        logger.notice("[ellekit] injector: loading with wildcard filter: \(tweak+".dylib")")
+        print("[ellekit] injector: loading with wildcard filter: \(tweak+".dylib")")
         let handle = dlopen(tweak + ".dylib", RTLD_NOW)
         if handle == nil {
-            logger.notice("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
+            print("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
         }
         if filterRoot.UnloadAfter == true {
             DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
                 dlclose(handle)
                 dlclose(handle)
-                logger.notice("[ellekit] injector: closed \(tweak+".dylib")")
+                print("[ellekit] injector: closed \(tweak+".dylib")")
             })
         }
         return

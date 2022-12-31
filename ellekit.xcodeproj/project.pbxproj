@@ -24,6 +24,10 @@
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
+		9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
+		9E6EBF922960EAF000D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
+		9E6EBF932960EAF300D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
+		9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81029529688008E8BB4 /* Rebinds.swift */; };
 		9E70D387295FCA5B00B284F6 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
 		9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
@@ -157,6 +161,7 @@
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
+		9E6EBF8F2960EA9000D0D186 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		9E6FBB642955478A007B28FC /* handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handler.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
@@ -340,6 +345,14 @@
 			path = C;
 			sourceTree = "<group>";
 		};
+		9E6EBF8E2960EA7E00D0D186 /* logger */ = {
+			isa = PBXGroup;
+			children = (
+				9E6EBF8F2960EA9000D0D186 /* Logger.swift */,
+			);
+			path = logger;
+			sourceTree = "<group>";
+		};
 		9E6FBB5A29554734007B28FC /* safe mode ui */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,6 +412,7 @@
 				9E4801B329144B7A007E433F /* README.md */,
 				9E19B24C2919D82900F8C4C7 /* Usage.md */,
 				9E19B22D2918011800F8C4C7 /* Package.swift */,
+				9E6EBF8E2960EA7E00D0D186 /* logger */,
 				9E92AA89290D47540018604C /* ellekit */,
 				9E19B23A291812EA00F8C4C7 /* ellekitc */,
 				9E381C3B293D1C88004D36B2 /* loader */,
@@ -752,6 +766,7 @@
 				9E70D396295FCA5B00B284F6 /* Orig.swift in Sources */,
 				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
 				9E7DE7EB295293E0008E8BB4 /* load.s in Sources */,
+				9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */,
 				9E70D38D295FCA5B00B284F6 /* ptrauth.swift in Sources */,
 				9E70D394295FCA5B00B284F6 /* Global.swift in Sources */,
 				9E70D392295FCA5B00B284F6 /* Bits.swift in Sources */,
@@ -784,6 +799,7 @@
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
+				9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */,
 				9E96A604295BC0E3000EDC43 /* Image.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,
@@ -813,6 +829,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EA0D1C2291C5D7F0061B187 /* injector.swift in Sources */,
+				9E6EBF922960EAF000D0D186 /* Logger.swift in Sources */,
 				9ECE28DE292026B10038D993 /* load.s in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -822,6 +839,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EA498AC295663240099A3ED /* PAC.swift in Sources */,
+				9E6EBF932960EAF300D0D186 /* Logger.swift in Sources */,
 				9EA498A829565DD00099A3ED /* tweak.swift in Sources */,
 				9EA498A729565DD00099A3ED /* load.s in Sources */,
 				9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */,
