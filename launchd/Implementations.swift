@@ -71,6 +71,10 @@ func spawn_replacement(
     
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
+    // check if we're spawning springboard
+    // usually launchd spawns springboard directly, without going through xpcproxy
+    // since we cache tweaks, a respring will forcefully refresh it
+    // we also spawn safe mode after
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     
     if springboard {
