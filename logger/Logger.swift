@@ -57,7 +57,6 @@ public func tprint(
     line: Int = #line, // line number
     separator: String = " "
 ) {
-    #if DEBUG
     let file = ENABLE_FILE_EXTENSION_LOGGING ?
         file.components(separatedBy: "/").last ?? "ElleKit" :
         file.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? "ElleKit"
@@ -74,7 +73,6 @@ public func tprint(
         out.append(separator)
     }
     TextLog.shared.write("[\(file)\(line)] \(out)")
-    #endif
 }
 
 // this is meant to override the print function globally in scope
@@ -113,7 +111,6 @@ public func print(
 }
 
 private func log<T>(items: [T], file: String, line: String? = nil, separator: String = " ") {
-    #if DEBUG
     var out = String()
     for item in items {
         if type(of: item) is AnyClass {
@@ -125,6 +122,7 @@ private func log<T>(items: [T], file: String, line: String? = nil, separator: St
         }
         out.append(separator)
     }
-    logger.log("[\(file)\(line ?? "")] \(out)")
-    #endif
+    if #available(iOS 14.0, tvOS 14.0, watchOS 8.0, macOS 11.0, *) {
+        logger.log("[\(file)\(line ?? "")] \(out)")
+    }
 }

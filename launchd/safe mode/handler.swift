@@ -1,18 +1,17 @@
+
+#if os(iOS)
+
 import Foundation
 import Darwin
-
-#if SWIFT_PACKAGE
-import ellekitc
-#endif
 
 public final class PIDExceptionHandler {
 
     let port: mach_port_t
     let thread = DispatchQueue(label: "ellekit_exc_port_safemode", attributes: .concurrent)
 
-    static var current: PIDExceptionHandler? = nil
+    public static var current: PIDExceptionHandler? = nil
     
-    public init?(_ pid: pid_t) {
+    public init?() {
         
         var targetPort = mach_port_t()
 
@@ -100,3 +99,4 @@ public final class PIDExceptionHandler {
         kill(pid, 9)
     }
 }
+#endif
