@@ -73,6 +73,11 @@ func spawn_replacement(
     
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     
+    if springboard {
+        TextLog.shared.write("Spawning SpringBoard (time to refresh tweaks)")
+        try? loadTweaks()
+    }
+    
     if launchd {
         
         TextLog.shared.write("launchd \(path)")

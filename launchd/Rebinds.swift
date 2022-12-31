@@ -57,8 +57,7 @@ class Rebinds {
         }
     }
     
-    #if false
-    func hook() { 
+    func hook() {
         if let orig = pspawn.hook(self.posix_spawn, self.posix_spawn_replacement),
            let origp = pspawn.hook(self.posix_spawnp, self.posix_spawnp_replacement) {
             self.usedFishhook = false
@@ -72,14 +71,13 @@ class Rebinds {
             rebind()
         }
     }
-    #endif
     
     func performHooks() {
-//        #if os(macOS)
-//        hook()
-//        #else
-//        TextLog.shared.write("ellekit isn't working. using fallback (fishhook)")
+        #if os(macOS)
+        hook()
+        #else
+        TextLog.shared.write("using fishhook for launchd/proxy hooks")
         rebind()
-//        #endif
+        #endif
     }
 }
