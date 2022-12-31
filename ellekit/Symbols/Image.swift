@@ -2,7 +2,7 @@
 import Foundation
 
 public func openImage(image path: String) throws -> UnsafePointer<mach_header>? {
-    if #available(macOS 11.0, *) {
+    if #available(iOS 14.0, tvOS 14.0, watchOS 8.0, macOS 11.0, *) {
         if _dyld_shared_cache_contains_path(path) {
             print("[i] ellekit: image is in the shared cache")
             
