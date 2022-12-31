@@ -26,13 +26,11 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer) throws {
             
             var strTab = machHeaderPointer.advanced(by: Int(symtab_command.stroff))
             
-            var sym = machHeaderPointer.advanced(by: Int(symtab_command.symoff))
+            var sym = UnsafeMutableRawPointer(mutating: symtab_command_pointer).advanced(by: Int(symtab_command.symoff))
             
             for _ in 0..<symtab_command.nsyms {
-
-                let strOff = sym.assumingMemoryBound(to: UInt32.self).pointee
                 
-                print(sym.assumingMemoryBound(to: nlist_64.self).pointee.n_value)
+                print(sym.assumingMemoryBound(to: nlist_64.self).pointee)
                 
                 sym = sym.advanced(by: 16)
             }

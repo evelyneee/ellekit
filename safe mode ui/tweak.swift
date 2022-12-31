@@ -38,13 +38,16 @@ extension UIViewController {
         Remove the tweak and restart SpringBoard to resume tweak injection.
         """
         DispatchQueue.main.async(execute: {
-            let alertWindow = UIApplication.shared.keyWindow!
+            guard let alertWindow = UIApplication.shared.keyWindow else { return }
+            
             alertWindow.rootViewController = alertWindow.rootViewController?.top
         
             let alert2 = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            
             let defaultAction2 = UIAlertAction(title: "OK", style: .default, handler: { action in
                 try? FileManager.default.removeItem(atPath: "/private/var/mobile/.eksafemode")
             })
+            
             alert2.addAction(defaultAction2)
         
             alertWindow.makeKeyAndVisible()

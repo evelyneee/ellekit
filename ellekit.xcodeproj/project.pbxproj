@@ -77,7 +77,6 @@
 		9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9EA498AC295663240099A3ED /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
-		9EA498AF295670DD0099A3ED /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6FBB5B29554734007B28FC /* main.swift */; };
 		9EA498B0295670E20099A3ED /* handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6FBB642955478A007B28FC /* handler.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
@@ -158,7 +157,6 @@
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
-		9E6FBB5B29554734007B28FC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9E6FBB642955478A007B28FC /* handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handler.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
@@ -491,7 +489,6 @@
 		9EA498AE2956700B0099A3ED /* safe mode */ = {
 			isa = PBXGroup;
 			children = (
-				9E6FBB5B29554734007B28FC /* main.swift */,
 				9E6FBB642955478A007B28FC /* handler.swift */,
 			);
 			path = "safe mode";
@@ -767,7 +764,6 @@
 				9E70D389295FCA5B00B284F6 /* PAC.swift in Sources */,
 				9E70D38A295FCA5B00B284F6 /* Branches.swift in Sources */,
 				9E7DE80A29529436008E8BB4 /* ellekitc.c in Sources */,
-				9EA498AF295670DD0099A3ED /* main.swift in Sources */,
 				9E70D391295FCA5B00B284F6 /* Math.swift in Sources */,
 				9E97335A2953D6FD0036F339 /* fishhook.c in Sources */,
 				9E70D38F295FCA5B00B284F6 /* General.swift in Sources */,

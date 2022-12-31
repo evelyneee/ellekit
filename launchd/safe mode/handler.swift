@@ -8,35 +8,16 @@ import ellekitc
 public final class PIDExceptionHandler {
 
     let port: mach_port_t
-    let targetTask: mach_port_t
-    let thread = DispatchQueue(label: "ellekit_exc_port", attributes: .concurrent)
+    let thread = DispatchQueue(label: "ellekit_exc_port_safemode", attributes: .concurrent)
 
+    static var current: PIDExceptionHandler? = nil
+    
     public init?(_ pid: pid_t) {
-        
-        var port: mach_port_t = 0
-        
-        let ret = task_for_pid(mach_task_self_, pid, &port)
-        
-        guard ret == KERN_SUCCESS else {
-            return nil
-        }
-        
-        print("got task", port)
-        
-        self.targetTask = port
         
         var targetPort = mach_port_t()
 
         mach_port_allocate(mach_task_self_, MACH_PORT_RIGHT_RECEIVE, &targetPort)
         mach_port_insert_right(mach_task_self_, targetPort, targetPort, mach_msg_type_name_t(MACH_MSG_TYPE_MAKE_SEND))
-
-        task_set_exception_ports(
-            port,
-            exception_mask_t(EXC_MASK_SOFTWARE | EXC_MASK_BREAKPOINT),
-            targetPort,
-            EXCEPTION_DEFAULT,
-            ARM_THREAD_STATE64
-        )
 
         self.port = targetPort
 

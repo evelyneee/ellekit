@@ -95,13 +95,17 @@ func spawn_replacement(
     } else if shouldInject {
         
         TextLog.shared.write("injecting tweaks \(path)")
-        var parsedPath: String? = nil
+        
+        let parsedPath: String?
         if path.contains(".app/Contents/MacOS/") {
-            // remove the binary, then MacOS, then Contents
+            // this is in every app path
+            // remove the binary path component, then MacOS, then Contents
             parsedPath = path.components(separatedBy: "/").dropLast(3).joined(separator: "/")
         } else if path.contains(".app") {
-            // Remove the binary
+            // Remove the binary path component
             parsedPath = path.components(separatedBy: "/").dropLast().joined(separator: "/")
+        } else {
+            parsedPath = path
         }
         
         if let parsedPath, let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
@@ -139,36 +143,53 @@ func spawn_replacement(
     
     envp_c.append(nil)
     
+    var new_spawnattr = spawnattr
+    
+    #if os(iOS)
+    if springboard && ret == 0 {
+        if let handler = PIDExceptionHandler(pid) {
+            PIDExceptionHandler.current = handler
+        }
+        
+        if new_spawnattr == nil {
+            posix_spawnattr_init(&new_spawnattr)
+        }
+        
+        posix_spawnattr_setexceptionports_np(
+            new_spawnattr.pointee,
+            exception_mask_t(EXC_MASK_BREAKPOINT),
+            handler.port,
+            EXCEPTION_DEFAULT,
+            ARM_THREAD_STATE64
+        )
+    }
+    #endif
+
+    
     let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
             TextLog.shared.write("calling fishhook orig")
             if p {
-                let ret = posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = posix_spawnp(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
                 TextLog.shared.write("origp returned \(ret)")
                 return ret
             } else {
-                let ret = posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = posix_spawn(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
                 TextLog.shared.write("orig returned \(ret)")
                 return ret
             }
         } else {
             if p {
-                let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
                 TextLog.shared.write("origp returned \(ret)")
                 return ret
             } else {
-                let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, new_spawnattr, argv, buf.baseAddress)
                 TextLog.shared.write("orig returned \(ret)")
                 return ret
             }
         }
     }
-    
-    #if os(iOS)
-    if springboard && ret == 0 && ProcessInfo.processInfo.processName.contains("launchd") {
-        spawnSafeMode(pid.pointee)
-    }
-    #endif
     
     return ret
 }
