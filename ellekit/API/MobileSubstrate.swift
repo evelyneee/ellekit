@@ -1,13 +1,19 @@
 import ObjectiveC
 
 @_cdecl("MSGetImageByName")
-public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeMutableRawPointer {
-    dlopen(name, RTLD_NOW)
+public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeRawPointer? {
+    if let image = try? ellekit.openImage(image: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        return .init(image)
+    }
+    return nil
 }
 
 @_cdecl("MSFindSymbol")
-public func MSFindSymbol(_ image: UnsafeMutableRawPointer, _ name: UnsafeRawPointer) -> UnsafeMutableRawPointer {
-    dlsym(image, name)
+public func MSFindSymbol(_ image: UnsafeRawPointer, _ name: UnsafeRawPointer) -> UnsafeRawPointer? {
+    if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        return .init(symbol)
+    }
+    return nil
 }
 
 @_cdecl("MSHookFunction")

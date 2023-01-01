@@ -11,14 +11,6 @@
 
 extern void sys_icache_invalidate(void *start, size_t length);
 
-struct dyld_interpose_tuple {
-    const void* replacement;
-    const void* replacee;
-};
-
-extern const struct mach_header __dso_handle;
-extern void dyld_dynamic_interpose(const struct mach_header* mh, const struct dyld_interpose_tuple array[], size_t count);
-
 // MARK: - Libhooker
 
 struct LHFunctionHook {

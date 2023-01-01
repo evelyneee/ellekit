@@ -10,7 +10,7 @@ public func openImage(image path: String) throws -> UnsafePointer<mach_header>? 
         }
     }
     
-    dlopen(path, RTLD_LAZY)
+    dlopen(path, RTLD_LAZY | RTLD_LOCAL)
     
     let index = (0..<_dyld_image_count())
         .filter {

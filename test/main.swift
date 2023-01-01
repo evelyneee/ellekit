@@ -3,14 +3,33 @@
 import Foundation
 import ellekit
 
+func calculateTime(block : (() -> Void)) {
+        let start = DispatchTime.now()
+        block()
+        let end = DispatchTime.now()
+        let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000
+        print("Time: \(timeInterval) seconds")
+    }
+
 let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")
-let image = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")
+let image = try ellekit.openImage(image: "/usr/local/lib/pspawn.dylib")
 
-try ellekit.findSymbol(image: image!)
+print("opened")
 
-print(image?.pointee)
+let symbol = try ellekit.findSymbol(image: image!, symbol: "_MSHookFunction")
+
+print("FOUND SYMBOL \(symbol)")
+
+print(try? ellekit.headerBundleIDs(image: image!))
+
+unsafeBitCast(symbol, to: (@convention (c) (Int) -> Void).self)(1)
 
 exit(0)
+
+
+
+
 
 EKEnableThreadSafety(1)
 

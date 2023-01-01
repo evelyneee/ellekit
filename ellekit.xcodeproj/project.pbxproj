@@ -30,6 +30,7 @@
 		9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6EBF952960F8A200D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6EBF982960FB5100D0D186 /* handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6FBB642955478A007B28FC /* handler.swift */; };
+		9E6EBF9A296136A300D0D186 /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81029529688008E8BB4 /* Rebinds.swift */; };
 		9E70D387295FCA5B00B284F6 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA98290D4A040018604C /* Register.swift */; };
 		9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
@@ -163,6 +164,7 @@
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E6EBF8F2960EA9000D0D186 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		9E6EBF99296136A300D0D186 /* Load Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Load Commands.swift"; sourceTree = "<group>"; };
 		9E6FBB642955478A007B28FC /* handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handler.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
@@ -446,7 +448,7 @@
 			isa = PBXGroup;
 			children = (
 				9E4801AC2913EB83007E433F /* Globals.swift */,
-				9E96A5C9295A352F000EDC43 /* Symbols */,
+				9E96A5C9295A352F000EDC43 /* Mach-O */,
 				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
 				9E78FBE52916BD3700B3B50B /* Languages */,
 				9E48019729109B77007E433F /* Misc */,
@@ -466,13 +468,14 @@
 			path = "ptrauth shim";
 			sourceTree = "<group>";
 		};
-		9E96A5C9295A352F000EDC43 /* Symbols */ = {
+		9E96A5C9295A352F000EDC43 /* Mach-O */ = {
 			isa = PBXGroup;
 			children = (
 				9E96A603295BC0E3000EDC43 /* Image.swift */,
 				9E96A5CA295A3548000EDC43 /* Symbols.swift */,
+				9E6EBF99296136A300D0D186 /* Load Commands.swift */,
 			);
-			path = Symbols;
+			path = "Mach-O";
 			sourceTree = "<group>";
 		};
 		9E9733572953D6DA0036F339 /* fishhook */ = {
@@ -800,6 +803,7 @@
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
+				9E6EBF9A296136A300D0D186 /* Load Commands.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
 				9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */,
 				9E96A604295BC0E3000EDC43 /* Image.swift in Sources */,
