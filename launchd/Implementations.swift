@@ -49,7 +49,7 @@ func spawn_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
     _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>?,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
@@ -143,7 +143,7 @@ func spawn_replacement(
     
     envp_c.append(nil)
     
-    var new_spawnattr = spawnattr.pointee
+    var new_spawnattr = spawnattr?.pointee
     
     #if os(iOS)
     if springboard {

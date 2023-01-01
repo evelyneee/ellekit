@@ -13,7 +13,7 @@ func calculateTime(block : (() -> Void)) {
     }
 
 let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")
-let image = try ellekit.openImage(image: "/usr/local/lib/pspawn.dylib")
+let image = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")
 
 print("opened")
 
@@ -21,9 +21,12 @@ let symbol = try ellekit.findSymbol(image: image!, symbol: "_MSHookFunction")
 
 print("FOUND SYMBOL \(symbol)")
 
-print(try? ellekit.headerBundleIDs(image: image!))
+let imageData = try Data(contentsOf: URL(fileURLWithPath: "/Applications/Accord.app/Contents/MacOS/Accord"))
 
-unsafeBitCast(symbol, to: (@convention (c) (Int) -> Void).self)(1)
+let ptr = imageData.withUnsafeBytes { ptr in
+    print(ptr.baseAddress?.assumingMemoryBound(to: mach_header.self).pointee)
+    print(try? ellekit.headerBundleIDs(image: ptr.baseAddress!))
+}
 
 exit(0)
 

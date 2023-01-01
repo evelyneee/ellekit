@@ -43,6 +43,8 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
                 
                 sym = sym.advanced(by: MemoryLayout<nlist_64>.stride)
             }
+            
+            command = command.advanced(by: Int(load_command.cmdsize))
         } else {
             command = command.advanced(by: Int(load_command.cmdsize))
         }
