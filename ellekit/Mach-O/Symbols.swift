@@ -7,6 +7,34 @@ enum SymbolErr: Error {
 }
 
 public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolName: String) throws -> UnsafeRawPointer? {
+    
+    var machHeaderPointer = machHeaderPointer
+    
+    if machHeaderPointer.assumingMemoryBound(to: mach_header.self).pointee.magic == FAT_CIGAM {
+        // we have a fat binary
+        // get our current cpu subtype
+        let nslices = machHeaderPointer
+            .advanced(by: 0x4)
+            .assumingMemoryBound(to: UInt32.self)
+            .pointee.bigEndian
+        
+        for i in 0..<nslices {
+            let slice = machHeaderPointer
+                .advanced(by: 8 + (Int(i) * 20))
+                .assumingMemoryBound(to: fat_arch.self)
+                .pointee
+            #if arch(arm64)
+            if slice.cputype.bigEndian == CPU_TYPE_ARM64 { // hope that there's no arm64e subtype
+                machHeaderPointer = machHeaderPointer.advanced(by: Int(slice.offset.bigEndian))
+            }
+            #else
+            if slice.cputype.bigEndian == CPU_TYPE_X86_64 {
+                machHeaderPointer = machHeaderPointer.advanced(by: Int(slice.offset.bigEndian))
+            }
+            #endif
+        }
+    }
+    
     let machHeader = machHeaderPointer.assumingMemoryBound(to: mach_header.self).pointee
     
     // Read the load commands

@@ -3,6 +3,10 @@
 import Foundation
 import ellekit
 
+ellekit.loadSharedCache("")
+
+exit(0)
+
 func calculateTime(block : (() -> Void)) {
         let start = DispatchTime.now()
         block()
@@ -12,12 +16,11 @@ func calculateTime(block : (() -> Void)) {
         print("Time: \(timeInterval) seconds")
     }
 
-let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")
-let image = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")
+let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")!
 
 print("opened")
 
-let symbol = try ellekit.findSymbol(image: image!, symbol: "_MSHookFunction")
+let symbol = try ellekit.findSymbol(image: mapping, symbol: "_dlopen")
 
 print("FOUND SYMBOL \(symbol)")
 

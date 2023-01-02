@@ -98,3 +98,11 @@ struct arm_thread_state64
     __uint32_t __pad;   /* Same size for 32-bit or 64-bit clients */
 #endif
 };
+
+#include <unistd.h>
+
+int shared_region_check(uint64_t* address) {
+    return syscall(294, address);
+}
+
+#include "dyld.h"

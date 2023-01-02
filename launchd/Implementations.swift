@@ -142,25 +142,24 @@ func spawn_replacement(
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
     
     envp_c.append(nil)
-    
-    var new_spawnattr = spawnattr?.pointee
-    
+            
     #if os(iOS)
     if springboard {
-        if let handler = PIDExceptionHandler() {
+        if let handler = PIDExceptionHandler(),
+            let spawnattr = spawnattr {
             PIDExceptionHandler.current = handler
-            
-            if new_spawnattr == nil {
-                posix_spawnattr_init(&new_spawnattr)
-            }
+
+            tprint(handler, "created handler")
             
             posix_spawnattr_setexceptionports_np(
-                &new_spawnattr,
+                UnsafeMutablePointer(mutating: spawnattr),
                 exception_mask_t(EXC_MASK_BREAKPOINT),
                 handler.port,
                 EXCEPTION_DEFAULT,
                 ARM_THREAD_STATE64
             )
+            
+            tprint("set handler to spawn_attr")
         }
     }
     #endif
@@ -170,21 +169,21 @@ func spawn_replacement(
         if Rebinds.shared.usedFishhook {
             tprint("calling fishhook orig")
             if p {
-                let ret = posix_spawnp(pid, path, file_actions, &new_spawnattr, argv, buf.baseAddress)
+                let ret = posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("origp returned \(ret)")
                 return ret
             } else {
-                let ret = posix_spawn(pid, path, file_actions, &new_spawnattr, argv, buf.baseAddress)
+                let ret = posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("orig returned \(ret)")
                 return ret
             }
         } else {
             if p {
-                let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, &new_spawnattr, argv, buf.baseAddress)
+                let ret = Rebinds.shared.posix_spawnp_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("origp returned \(ret)")
                 return ret
             } else {
-                let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, &new_spawnattr, argv, buf.baseAddress)
+                let ret = Rebinds.shared.posix_spawn_orig(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("orig returned \(ret)")
                 return ret
             }
