@@ -1,31 +1,23 @@
 
 import Foundation
 
-private func loadCacheBaseHeader() -> (UnsafeMutableRawPointer?, dyld_cache_header?) {
-    var start_address: UInt64 = 0
-    shared_region_check(&start_address)
-    let cache_base_header_pointer = UnsafeMutableRawPointer(bitPattern: Int(start_address))
-
-    let cache_base_header = cache_base_header_pointer?
-        .assumingMemoryBound(to: dyld_cache_header.self)
-        .pointee
+@available(macOS 10.15.4, *)
+private func loadBaseHeader() throws -> UnsafeMutableRawPointer? {
     
-    let cache_base_magic = String(cString: cache_base_header_pointer!.assumingMemoryBound(to: CChar.self))
+    let path = "/System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e"
     
-    print(cache_base_magic)
+    let fd = open(path, O_RDONLY)
+        
+    var header_ptr: UnsafeMutableRawPointer = malloc(0x4000)
     
-    return (cache_base_header_pointer, cache_base_header)
+    pread(fd, header_ptr, MemoryLayout<dyld_cache_header>.size, 0)
+    
+    print(header_ptr.assumingMemoryBound(to: dyld_cache_header.self).pointee)
+        
+    return nil
 }
 
-public func loadSharedCache(_ path: String) {
-    
-    let (cache_base_header_pointer, cache_base_header) = loadCacheBaseHeader()
-    
-    guard let header = cache_base_header, let header_pointer = cache_base_header_pointer else { return }
-    
-    print(header_pointer.advanced(by: Int(header.localSymbolsOffset)))
-    
-    print(header)
-    
-    exit(0)
+@available(macOS 10.15.4, *)
+public func loadSharedCache(_ path: String) throws {
+    try loadBaseHeader()
 }

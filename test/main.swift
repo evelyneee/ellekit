@@ -3,7 +3,7 @@
 import Foundation
 import ellekit
 
-ellekit.loadSharedCache("")
+let cache = try ellekit.loadSharedCache("")
 
 exit(0)
 

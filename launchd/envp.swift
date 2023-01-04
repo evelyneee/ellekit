@@ -23,10 +23,8 @@ extension EnvPointer {
 
         // Copies the strings from the old array to the new array.
         for i in 0..<self.count {
-            if (strstr(self[i], "DYLD_INSERT_LIBRARIES=") == nil), let key = self[i] {
+            if let key = self[i] {
                 newenv.append(String(cString: key))
-            } else {
-                newenv.append("DYLD_NEVER_INSERT_LIBRARIES=null")
             }
         }
         

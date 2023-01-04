@@ -59,6 +59,8 @@ func spawn_replacement(
     tprint("executing \(path)")
     
     var envp = envp?.array ?? []
+    
+    let firstEnvIndex = envp.firstIndex(where: { $0.hasPrefix("DYLD_INSERT_LIBRARIES=") })
         
     tprint("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
         
@@ -70,6 +72,14 @@ func spawn_replacement(
         !path.contains("Safari")
     
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
+    
+    func addDYLDEnv(_ envKey: String) {
+        if let firstEnvIndex {
+            let previousEnvKey = envp[firstEnvIndex].dropFirst("DYLD_INSERT_LIBRARIES=".count) // gives us the path
+            envp[firstEnvIndex] = "DYLD_INSERT_LIBRARIES="+envKey + ":" + previousEnvKey
+        }
+        envp.append("DYLD_INSERT_LIBRARIES="+envKey)
+    }
     
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
@@ -85,12 +95,12 @@ func spawn_replacement(
     if launchd {
         
         tprint("launchd \(path)")
-        envp.append("DYLD_INSERT_LIBRARIES="+selfPath)
+        addDYLDEnv(selfPath)
         
     } else if safeMode && path.contains("SpringBoard.app") {
 
         tprint("Safe Mode \(path)")
-        envp.append("DYLD_INSERT_LIBRARIES="+safeModePath)
+        addDYLDEnv(safeModePath)
         
     } else if shouldInject {
         
@@ -115,9 +125,9 @@ func spawn_replacement(
                 .map(\.path)
             tprint("got tweaks \(bundleID) \(tweaks)")
             if !tweaks.isEmpty {
-                let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
+                let env = tweaks.joined(separator: ":")
                 tprint("adding env \(env)")
-                envp.append(env)
+                addDYLDEnv(env)
             }
         } else {
             let executableName = (path as NSString).lastPathComponent
@@ -127,9 +137,9 @@ func spawn_replacement(
                 .map(\.path)
             tprint("got tweaks \(executableName) \(tweaks)")
             if !tweaks.isEmpty {
-                let env = "DYLD_INSERT_LIBRARIES="+tweaks.joined(separator: ":")
+                let env = tweaks.joined(separator: ":")
                 tprint("adding env \(env)")
-                envp.append(env)
+                addDYLDEnv(env)
             }
         }
         
