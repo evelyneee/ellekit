@@ -87,6 +87,8 @@
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
+		9ED5277F29673BC9009319AA /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
+		9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,7 +148,6 @@
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		9E19B2392918118300F8C4C7 /* ellekit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ellekit.h; sourceTree = "<group>"; };
 		9E19B240291814CB00F8C4C7 /* ellekitc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ellekitc.c; sourceTree = "<group>"; };
-		9E19B24829188EDA00F8C4C7 /* Method.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Method.swift; sourceTree = "<group>"; };
 		9E19B24C2919D82900F8C4C7 /* Usage.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Usage.md; sourceTree = "<group>"; };
 		9E2D4F4E2938389B00EF6619 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E2D4F502938389B00EF6619 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -205,6 +206,8 @@
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
+		9ED5277E29673BC9009319AA /* button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = button.swift; sourceTree = "<group>"; };
+		9ED5278129673C0F009319AA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +247,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9ED5278029673C0A009319AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -265,14 +276,6 @@
 			path = include;
 			sourceTree = "<group>";
 		};
-		9E19B24729188EC000F8C4C7 /* Swift */ = {
-			isa = PBXGroup;
-			children = (
-				9E19B24829188EDA00F8C4C7 /* Method.swift */,
-			);
-			path = Swift;
-			sourceTree = "<group>";
-		};
 		9E2D4F4F2938389B00EF6619 /* test */ = {
 			isa = PBXGroup;
 			children = (
@@ -284,6 +287,7 @@
 		9E2D4F552938391C00EF6619 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9ED5278129673C0F009319AA /* IOKit.framework */,
 				9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */,
 				9E080FA2294AA5A000EDC301 /* lib */,
 			);
@@ -389,7 +393,6 @@
 			isa = PBXGroup;
 			children = (
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
-				9E19B24729188EC000F8C4C7 /* Swift */,
 				9E4801A02911EB29007E433F /* C */,
 			);
 			path = Languages;
@@ -411,6 +414,7 @@
 				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E9733572953D6DA0036F339 /* fishhook */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
+				9ED5277E29673BC9009319AA /* button.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,
 				9E7DE812295296A9008E8BB4 /* Implementations.swift */,
 				9E7DE81029529688008E8BB4 /* Rebinds.swift */,
@@ -459,15 +463,15 @@
 		9E92AA89290D47540018604C /* ellekit */ = {
 			isa = PBXGroup;
 			children = (
-				9E6EBF9D29622F9200D0D186 /* dyld */,
 				9E4801AC2913EB83007E433F /* Globals.swift */,
-				9E96A5C9295A352F000EDC43 /* Mach-O */,
-				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
-				9E78FBE52916BD3700B3B50B /* Languages */,
-				9E48019729109B77007E433F /* Misc */,
-				9EA0CC7B293AE8880000E9AA /* Threading */,
 				9E48019629109B61007E433F /* Assembler */,
 				9E48019329109739007E433F /* API */,
+				9E78FBE52916BD3700B3B50B /* Languages */,
+				9E96A5C9295A352F000EDC43 /* Mach-O */,
+				9E6EBF9D29622F9200D0D186 /* dyld */,
+				9E78FBE42916BD2B00B3B50B /* ExceptionHandler */,
+				9E48019729109B77007E433F /* Misc */,
+				9EA0CC7B293AE8880000E9AA /* Threading */,
 				9E48018C290FE5C3007E433F /* PAC */,
 			);
 			path = ellekit;
@@ -603,6 +607,7 @@
 			buildPhases = (
 				9E7DE7DE295293B5008E8BB4 /* Headers */,
 				9E7DE7DF295293B5008E8BB4 /* Sources */,
+				9ED5278029673C0A009319AA /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -777,6 +782,7 @@
 			files = (
 				9E7DE7E9295293D2008E8BB4 /* entry.swift in Sources */,
 				9E70D387295FCA5B00B284F6 /* Register.swift in Sources */,
+				9ED5277F29673BC9009319AA /* button.swift in Sources */,
 				9E70D393295FCA5B00B284F6 /* Hook.swift in Sources */,
 				9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */,
 				9E70D395295FCA5B00B284F6 /* Rebind.swift in Sources */,

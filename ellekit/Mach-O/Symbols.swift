@@ -3,7 +3,7 @@ import Foundation
 
 enum SymbolErr: Error {
     case noSymbol
-    case badAddress
+    case noAddress
 }
 
 public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolName: String) throws -> UnsafeRawPointer? {
@@ -52,7 +52,7 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
             
             var sym = UnsafeMutableRawPointer(mutating: symtab_command_pointer).advanced(by: Int(symtab_command.symoff))
                         
-            for _ in 0..<(symtab_command.nsyms - 100) { // idk why but the last symbols are always invalid
+            for _ in 0..<(symtab_command.nsyms) { // idk why but the last symbols are always invalid
                                 
                 let symbol = sym.assumingMemoryBound(to: nlist_64.self).pointee
                                 
@@ -62,9 +62,19 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
                 // Get the symbol's name from the string table
                 let name = strTab.advanced(by: Int(strIndex)).assumingMemoryBound(to: CChar.self)
                             
-                print(String(cString: name))
+                guard symbol.n_type != 115 else {
+                    continue
+                }
                 
-                if String(cString: name) == symbolName && symbol.n_value != 0 {
+                let nName = String(cString: name)
+                
+                print(nName)
+                
+                if nName == symbolName {
+                    
+                    guard symbol.n_value != 0 else {
+                        throw SymbolErr.noAddress
+                    }
                     
                     return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value))))
                 }

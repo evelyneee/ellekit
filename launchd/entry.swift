@@ -35,6 +35,11 @@ import os.log
 
 @_cdecl("launchd_entry")
 public func entry() {
+    
+    if checkVolumeUp() {
+        return
+    }
+    
     loadPath()
     do {
         try loadTweaks()

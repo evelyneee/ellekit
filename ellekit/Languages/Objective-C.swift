@@ -1,5 +1,7 @@
 import Foundation
 
+#warning("TODO: Unhook API")
+
 @inlinable
 public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
 

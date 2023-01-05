@@ -44,6 +44,26 @@ func count(of cStringArray: UnsafePointer<UnsafePointer<CChar>?>?) -> Int {
     return count
 }
 
+func findBundleID(path: String) -> String? {
+    let parsedPath: String
+    if path.contains(".app/Contents/MacOS/") {
+        // this is in every app path
+        // remove the binary path component, then MacOS, then Contents
+        parsedPath = path.components(separatedBy: "/").dropLast(3).joined(separator: "/")
+    } else if path.contains(".app") {
+        // Remove the binary path component
+        parsedPath = path.components(separatedBy: "/").dropLast().joined(separator: "/")
+    } else {
+        parsedPath = path
+    }
+         
+    if let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
+        return bundleID
+    }
+    
+    return nil
+}
+
 func spawn_replacement(
     _ p: Bool,
     _ pid: UnsafeMutablePointer<pid_t>,
@@ -66,12 +86,28 @@ func spawn_replacement(
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
     
-    let shouldInject = !path.contains("BlastDoor") &&
-        !path.contains("mobile_assertion_agent") &&
-        !path.contains("WebKit") &&
-        !path.contains("Safari")
+    let blacklisted = [
+        "BlastDoor",
+        "mobile_assertion_agent",
+        "WebKit",
+        "Safari"
+    ]
+    .map { path.contains($0) }
+    .contains(true)
     
-    let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
+    
+    // check if we're spawning springboard
+    // usually launchd spawns springboard directly, without going through xpcproxy
+    // since we cache tweaks, a respring will forcefully refresh it
+    // we also spawn safe mode after
+    let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
+    
+    var safeMode = false
+    
+    if springboard {
+        safeMode = checkVolumeUp()
+        tprint("Safe mode status:", safeMode)
+    }
     
     func addDYLDEnv(_ envKey: String) {
         if let firstEnvIndex {
@@ -80,12 +116,6 @@ func spawn_replacement(
         }
         envp.append("DYLD_INSERT_LIBRARIES="+envKey)
     }
-    
-    // check if we're spawning springboard
-    // usually launchd spawns springboard directly, without going through xpcproxy
-    // since we cache tweaks, a respring will forcefully refresh it
-    // we also spawn safe mode after
-    let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     
     if springboard {
         tprint("Spawning SpringBoard (time to refresh tweaks)")
@@ -97,38 +127,39 @@ func spawn_replacement(
         tprint("launchd \(path)")
         addDYLDEnv(selfPath)
         
-    } else if safeMode && path.contains("SpringBoard.app") {
+    } else if safeMode && springboard {
 
         tprint("Safe Mode \(path)")
         addDYLDEnv(safeModePath)
         
-    } else if shouldInject {
+    } else if !blacklisted {
         
         tprint("injecting tweaks \(path)")
         
-        let parsedPath: String?
-        if path.contains(".app/Contents/MacOS/") {
-            // this is in every app path
-            // remove the binary path component, then MacOS, then Contents
-            parsedPath = path.components(separatedBy: "/").dropLast(3).joined(separator: "/")
-        } else if path.contains(".app") {
-            // Remove the binary path component
-            parsedPath = path.components(separatedBy: "/").dropLast().joined(separator: "/")
-        } else {
-            parsedPath = path
-        }
-        
-        if let parsedPath, let bundleID = Bundle(path: parsedPath)?.bundleIdentifier?.lowercased() {
+        if let bundleID = findBundleID(path: path) {
+            
             tprint("found bundle \(path) \(bundleID)")
+            #warning("TODO: Stop hardcoding these frameworks")
+            
             let tweaks = tweaks
-                .filter { $0.bundles.contains(bundleID) || $0.bundles.contains("com.apple.uikit") || $0.bundles.contains("com.apple.foundation") || $0.bundles.contains("com.apple.security") }
-                .map(\.path)
+                .compactMap {
+                    if $0.bundles.contains(bundleID) ||
+                        $0.bundles.contains("com.apple.uikit") ||
+                        $0.bundles.contains("com.apple.foundation") ||
+                        $0.bundles.contains("com.apple.security") {
+                        return $0.path
+                    }
+                    return nil
+                }
+            
             tprint("got tweaks \(bundleID) \(tweaks)")
+            
             if !tweaks.isEmpty {
                 let env = tweaks.joined(separator: ":")
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }
+            
         } else {
             let executableName = (path as NSString).lastPathComponent
             tprint("using exec name \(path) \(executableName)")
@@ -153,7 +184,7 @@ func spawn_replacement(
     
     envp_c.append(nil)
             
-    #if os(iOS)
+    #if false // unused now. use volume up
     if springboard {
         if let handler = PIDExceptionHandler(),
             let spawnattr = spawnattr {

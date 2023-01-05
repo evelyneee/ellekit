@@ -33,7 +33,7 @@ public final class PIDExceptionHandler {
     static func portLoop(_ `self`: PIDExceptionHandler?) {
 
         guard let `self` else {
-            print("[-] ellekit: exception handler deallocated.")
+            tprint("[-] ellekit: exception handler deallocated.")
             return
         }
 
@@ -59,7 +59,7 @@ public final class PIDExceptionHandler {
         let req = UnsafeMutableRawPointer(msg_header)
             .withMemoryRebound(to: __Request__exception_raise_t.self, capacity: Int(vm_page_size)) { $0.pointee }
         
-        print("got exception")
+        tprint("got exception")
         
         var reply = __Reply__exception_raise_t()
         reply.Head.msgh_bits = req.Head.msgh_bits & UInt32(MACH_MSGH_BITS_REMOTE_MASK)
@@ -85,8 +85,8 @@ public final class PIDExceptionHandler {
             print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
         }
         
-        print("stopping")
-                
+        tprint("got exception")
+
         var pid: Int32 = 0
         
         pid_for_task(req.task.name, &pid)

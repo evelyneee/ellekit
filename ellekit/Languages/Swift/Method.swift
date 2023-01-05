@@ -1,5 +1,0 @@
-import Foundation
-
-func getMethodPointer() {
-
-}

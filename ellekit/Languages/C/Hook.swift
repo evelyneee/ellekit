@@ -105,7 +105,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }
-        code = [0x20, 0x00, 0x20, 0xD4] // process crash!
+        code = [0x20, 0x00, 0x20, 0xD4] // process crash! (brk #1)
     } else {
         print("[*] ellekit: Small branch")
         @InstructionBuilder

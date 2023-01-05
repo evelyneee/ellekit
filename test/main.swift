@@ -1,11 +1,51 @@
 // my playground!
+// this file goes in layers depending on what i'm working on.
+// the layers end with an exit call
 
 import Foundation
 import ellekit
 
-let cache = try ellekit.loadSharedCache("")
+typealias AnyClosureType = @convention(swift) () -> Any
+typealias ThinAnyClosureType = @convention(c) () -> Any
+
+func mangle(_ name: String) -> String {
+    return "\(name.utf8.count)\(name)"
+}
+
+private func mangleFunction(name: String,
+                               owner: Any.Type,
+                               args: String = "ypXpSgzt") {
+    let module = _typeName(owner).components(separatedBy: ".")[0]
+    let symbol = "$s\(mangle(module))\(mangle(name))5value3outyx_\(args)lF"
+    print(symbol)
+}
+
+func mangledName(for type: Any) -> String? {
+    var info = Dl_info()
+    if dladdr(unsafeBitCast(type, to: UnsafeMutableRawPointer.self), &info) != 0,
+        let metaTypeSymbol = info.dli_sname {
+        print(String(cString: metaTypeSymbol))
+    }
+    return nil
+}
+
+func peekFunc<A, R>(_ f: @escaping (A) -> R) -> (fp: Int, ctx: Int) {
+  typealias IntInt = (Int, Int)
+  let (_, lo) = unsafeBitCast(f, to: IntInt.self)
+  let offset = MemoryLayout<Int>.size == 8 ? 16 : 12
+  let ptr = UnsafePointer<Int>(bitPattern: lo + offset)!
+  return (ptr.pointee, ptr.successor().pointee)
+}
+
+var info = Dl_info()
+
+dladdr(UnsafeRawPointer(bitPattern: peekFunc(String.hasPrefix).fp), &info)
+
+print(info.dli_saddr)
 
 exit(0)
+
+let cache = try ellekit.loadSharedCache("")
 
 func calculateTime(block : (() -> Void)) {
         let start = DispatchTime.now()
@@ -16,7 +56,7 @@ func calculateTime(block : (() -> Void)) {
         print("Time: \(timeInterval) seconds")
     }
 
-let mapping = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")!
+let mapping = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")!
 
 print("opened")
 
@@ -32,10 +72,6 @@ let ptr = imageData.withUnsafeBytes { ptr in
 }
 
 exit(0)
-
-
-
-
 
 EKEnableThreadSafety(1)
 

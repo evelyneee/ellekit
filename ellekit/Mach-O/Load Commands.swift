@@ -1,7 +1,7 @@
 
 import Foundation
 
-public func headerBundleIDs(image machHeaderPointer: UnsafeRawPointer) throws -> [String] {
+public func headerLinkedPaths(image machHeaderPointer: UnsafeRawPointer) throws -> [String] {
     var machHeaderPointer = machHeaderPointer
     
     if machHeaderPointer.assumingMemoryBound(to: mach_header.self).pointee.magic == FAT_CIGAM {
@@ -56,11 +56,22 @@ public func headerBundleIDs(image machHeaderPointer: UnsafeRawPointer) throws ->
         command = command.advanced(by: Int(load_command.cmdsize))
     }
     
+    return allPaths
+}
+
+public func headerBundleIDs(image machHeaderPointer: UnsafeRawPointer) throws -> [String] {
+
+    let allPaths = try headerLinkedPaths(image: machHeaderPointer)
+    
+    print(allPaths)
+    
     let allBundleIDs = allPaths
-        .filter { $0.contains(".framework") }
-        .map { ($0 as NSString).deletingLastPathComponent }
-        .compactMap { Bundle.init(path:$0) }
-        .compactMap { $0.bundleIdentifier }
+        .compactMap {
+            if $0.contains(".framework") {
+                return Bundle(path: ($0 as NSString).deletingLastPathComponent)?.bundleIdentifier
+            }
+            return nil
+        }
     
     print(allBundleIDs)
     
