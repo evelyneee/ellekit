@@ -31,7 +31,7 @@ private struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
-    private var enableLogging = false
+    private var enableLogging = true
     
     func write(_ string: String) {
         guard enableLogging else { return print(string) }

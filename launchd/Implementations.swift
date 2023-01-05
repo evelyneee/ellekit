@@ -105,6 +105,7 @@ func spawn_replacement(
     var safeMode = false
     
     if springboard {
+        tprint("Testing safe mode")
         safeMode = checkVolumeUp()
         tprint("Safe mode status:", safeMode)
     }

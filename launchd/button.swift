@@ -43,9 +43,16 @@ func checkVolumeUp() -> Bool {
             {
                 let v9 = _IOHIDEventSystemClientCopyEventForService(client, ValueAtIndex, 3, KeyboardEvent, 0);
                 let clicked = IOHIDEventGetIntegerValue(v9, 196610) != 0;
+                tprint("got keyboard event result")
                 return clicked
+            } else {
+                tprint("failed to get keyboard event")
             }
+        } else {
+            tprint("failed to get services")
         }
+    } else {
+        tprint("failed to init client")
     }
-    return false
+    return true
 }
