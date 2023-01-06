@@ -22,8 +22,12 @@ public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuild
 
 public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
 
-    let target = stockTarget.makeReadable()
+    var target = stockTarget.makeReadable()
     let replacement = stockReplacement.makeReadable()
+    
+    if let newTarget = hooks[target] {
+        target = newTarget
+    }
 
     let targetSize = findFunctionSize(target) ?? 6
 

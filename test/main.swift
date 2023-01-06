@@ -5,6 +5,16 @@
 import Foundation
 import ellekit
 
+let libdyld = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")!
+
+print("opened", libdyld)
+
+let symbol2 = try ellekit.findSymbol(image: libdyld, symbol: "_dlopen")
+
+print(symbol2)
+exit(1)
+
+
 typealias AnyClosureType = @convention(swift) () -> Any
 typealias ThinAnyClosureType = @convention(c) () -> Any
 

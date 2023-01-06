@@ -62,10 +62,10 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
                 // Get the symbol's name from the string table
                 let name = strTab.advanced(by: Int(strIndex)).assumingMemoryBound(to: CChar.self)
                             
-                guard symbol.n_type != 115 else {
+                guard symbol.n_type != 115 && symbol.n_type != 17 else {
                     continue
                 }
-                
+                                
                 let nName = String(cString: name)
                 
                 print(nName)

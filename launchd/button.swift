@@ -24,13 +24,25 @@ func IOHIDEventGetIntegerValue(_:UnsafeMutableRawPointer!, _:UInt32) -> CFIndex
 func IOHIDEventSystemClientSetMatching(_ client: UnsafeMutableRawPointer, _ dict: CFDictionary) -> Void
 
 @_silgen_name("_IOHIDEventSystemClientCopyEventForService")
-func _IOHIDEventSystemClientCopyEventForService(_ client: UnsafeMutableRawPointer, _:UnsafeRawPointer?, _:UInt32?, _:UnsafeMutableRawPointer, _:UInt32) -> UnsafeMutableRawPointer?
+func _IOHIDEventSystemClientCopyEventForService(
+    _ client: UnsafeMutableRawPointer,
+    _:UnsafeRawPointer?,
+    _:UInt32?,
+    _:UnsafeMutableRawPointer,
+    _:UInt32
+) -> UnsafeMutableRawPointer?
 
 @_silgen_name("IOHIDEventSystemClientCopyServices")
 func IOHIDEventSystemClientCopyServices(_ client: UnsafeMutableRawPointer) -> CFArray?
 
 @_silgen_name("IOHIDEventSystemOpen")
-func IOHIDEventSystemOpen(_:UnsafeMutableRawPointer!, _:UInt32, _:UInt32, _:UInt32, _:UInt32)
+func IOHIDEventSystemOpen(
+    _:UnsafeMutableRawPointer!,
+    _:UInt32,
+    _:UInt32,
+    _:UInt32,
+    _:UInt32
+)
 
 @_silgen_name("IOHIDEventSystemCopyEvent")
 func IOHIDEventSystemCopyEvent(
@@ -60,18 +72,17 @@ func alternativeButtonCheck() -> Bool {
     );
     
     if let keyboardEvent {
-      let v9 = IOHIDEventSystemCopyEvent(client, 3, keyboardEvent, 0);
-      if let v9 {
-        return IOHIDEventGetIntegerValue(v9, 0x30002) != 0;
-      } else {
-          tprint("couldn't get system event")
-          return IOHIDEventGetIntegerValue(keyboardEvent, 0x30002) != 0 // better than nothing lol
-      }
+        let v9 = IOHIDEventSystemCopyEvent(client, 3, keyboardEvent, 0);
+        if let v9 {
+            return IOHIDEventGetIntegerValue(v9, 0x30002) != 0;
+        } else {
+            tprint("couldn't get system event")
+        }
     } else {
         tprint("couldn't get kb event")
     }
     tprint("couldn't use alternative....... wtf")
-    return true
+    return false
   }
 
 // reverse engineered from substrate......
@@ -109,12 +120,15 @@ func checkVolumeUp() -> Bool {
                 let v9 = _IOHIDEventSystemClientCopyEventForService(
                     sharedClient,
                     ValueAtIndex,
-                    3,
+                    3, // keyboard event
                     KeyboardEvent,
                     0
                 );
                 tprint("successfully got event")
-                let clicked = IOHIDEventGetIntegerValue(v9, 0x30002) != 0;
+                let clicked = IOHIDEventGetIntegerValue(
+                    v9,
+                    0x30002 // keyboard down event
+                ) != 0;
                 tprint("successfully got event state \(clicked)")
                 return clicked
             }
