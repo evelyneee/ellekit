@@ -176,10 +176,9 @@ DispatchQueue.global().async {
     thread_resume(thread)
     print("[+] loader: resumed thread state. waiting for launchd...")
     sleep(3)
-    print("[+] loader: closed thread. rebooting userspace")
+    print("[+] loader: closed thread")
     thread_suspend(thread)
-    sleep(1)
-    reboot3(usermode_reboot_flag)
+    print("[i] run `launchctl reboot userspace` to load your tweaks")
 }
 
 dispatchMain()
