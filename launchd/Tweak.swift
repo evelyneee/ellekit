@@ -1,9 +1,6 @@
-//
-//  Tweak.swift
-//  launchd
-//
-//  Created by charlotte on 2022-12-20.
-//
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
 
 import Foundation
 

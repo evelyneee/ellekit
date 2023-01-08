@@ -42,6 +42,10 @@ public func LHPatchMemory(_ hooks: UnsafePointer<LHMemoryPatch>, _ count: Int) -
 }
 
 @_cdecl("LHExecMemory")
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 public func LHExecMemory(_ page: UnsafeMutablePointer<UnsafeMutableRawPointer?>, _ data: UnsafeMutableRawPointer, _ size: size_t) -> Int {
     var addr: mach_vm_address_t = 0
     let krt1 = mach_vm_allocate(mach_task_self_, &addr, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)

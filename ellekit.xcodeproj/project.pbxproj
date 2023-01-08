@@ -412,8 +412,8 @@
 		9E7DE7E6295293BB008E8BB4 /* launchd */ = {
 			isa = PBXGroup;
 			children = (
-				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E9733572953D6DA0036F339 /* fishhook */,
+				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
 				9ED5277E29673BC9009319AA /* button.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,

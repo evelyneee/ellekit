@@ -1,4 +1,7 @@
 
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 import Foundation
 import ObjectiveC
 import UIKit
@@ -6,6 +9,7 @@ import os.log
 
 var orig: UnsafeMutableRawPointer? = nil
 
+// Thanks to Amy While (@elihwyma) for this piece of code
 extension UIViewController {
     var top: UIViewController? {
         if let controller = self as? UINavigationController {

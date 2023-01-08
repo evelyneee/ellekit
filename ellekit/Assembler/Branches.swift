@@ -1,3 +1,7 @@
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 func disassembleBranchImm(_ opcode: UInt64) -> Int {
     var imm = (opcode & 0x3FFFFFF) << 2
     if (opcode & 0x2000000) == 1 {

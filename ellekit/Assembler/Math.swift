@@ -1,3 +1,7 @@
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 import Foundation
 
 private func encodeImm(_ base: Int, _ rd: Register, _ rn: Register, _ imm: Int, _ lsl: Int) -> Int {

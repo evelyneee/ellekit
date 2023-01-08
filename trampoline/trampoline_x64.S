@@ -1,3 +1,7 @@
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 #if defined(__x86_64__)
 .intel_syntax noprefix
 

@@ -1,3 +1,7 @@
+
+// This file is licensed under the BSD-3 Clause License
+// Copyright 2022 © Charlotte Belanger
+
 func reverse<T: FixedWidthInteger>(_ base: T) -> T {
     ((base>>24)&0xff) | ((base<<8)&0xff0000) | ((base>>8)&0xff00) | ((base<<24)&0xff000000)
 }
