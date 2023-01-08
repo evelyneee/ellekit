@@ -85,6 +85,7 @@
 		9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9EA498AC295663240099A3ED /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 		9ED5277F29673BC9009319AA /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
@@ -804,6 +805,7 @@
 				9E70D38A295FCA5B00B284F6 /* Branches.swift in Sources */,
 				9E7DE80A29529436008E8BB4 /* ellekitc.c in Sources */,
 				9E70D391295FCA5B00B284F6 /* Math.swift in Sources */,
+				9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */,
 				9E97335A2953D6FD0036F339 /* fishhook.c in Sources */,
 				9E6EBF982960FB5100D0D186 /* handler.swift in Sources */,
 				9E70D38F295FCA5B00B284F6 /* General.swift in Sources */,

@@ -5,13 +5,12 @@
 import Foundation
 import ellekit
 
-let libdyld = try ellekit.openImage(image: "/usr/lib/system/libdyld.dylib")!
+calculateTime(block: {
+    print(
+        try? ellekit.headerBundleIDs(file: "/Applications/Accord.app/Contents/MacOS/Accord")
+    )
+})
 
-print("opened", libdyld)
-
-let symbol2 = try ellekit.findSymbol(image: libdyld, symbol: "_dlopen")
-
-print(symbol2)
 exit(1)
 
 
@@ -78,7 +77,6 @@ let imageData = try Data(contentsOf: URL(fileURLWithPath: "/Applications/Accord.
 
 let ptr = imageData.withUnsafeBytes { ptr in
     print(ptr.baseAddress?.assumingMemoryBound(to: mach_header.self).pointee)
-    print(try? ellekit.headerBundleIDs(image: ptr.baseAddress!))
 }
 
 exit(0)

@@ -44,6 +44,13 @@ func IOHIDEventSystemOpen(
     _:UInt32
 )
 
+@_silgen_name("IOHIDEventSystemCopyMatchingServices")
+func IOHIDEventSystemCopyMatchingServices(
+    _ client: UnsafeMutableRawPointer,
+    _ dict: CFDictionary,
+    _:UInt32,_:UInt32,_:UInt32
+) -> CFArray?
+
 @_silgen_name("IOHIDEventSystemCopyEvent")
 func IOHIDEventSystemCopyEvent(
     _:UnsafeMutableRawPointer!,
@@ -51,6 +58,9 @@ func IOHIDEventSystemCopyEvent(
     _:UnsafeMutableRawPointer!,
     _:UInt32
 ) -> UnsafeMutableRawPointer?
+
+@_silgen_name("IOHIDEventSystemCopyServices")
+func IOHIDEventSystemCopyServices(_ client: UnsafeMutableRawPointer, _ dict: CFDictionary) -> CFArray?
 
 var sharedClient: UnsafeMutableRawPointer? = nil
 
@@ -62,10 +72,13 @@ func alternativeButtonCheck() -> Bool {
     }
         
     sleep(1)
+    
+    IOHIDEventSystemOpen(nil, 0, 0, 0, 0)
+    
     #warning("TODO: remove sleep call")
         
     let keyboardEvent = IOHIDEventCreateKeyboardEvent(
-        nil,
+        kCFAllocatorDefault,
         mach_absolute_time(),
         0x0c, 0xe9,
         false, 0
@@ -77,18 +90,20 @@ func alternativeButtonCheck() -> Bool {
             return IOHIDEventGetIntegerValue(v9, 0x30002) != 0;
         } else {
             tprint("couldn't get system event")
-        }
+      }
     } else {
         tprint("couldn't get kb event")
     }
     tprint("couldn't use alternative....... wtf")
     return false
   }
+/*
 
 // reverse engineered from substrate......
 func checkVolumeUp() -> Bool {
     if sharedClient == nil {
-        sharedClient = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
+        sharedClient = IOHIDEventSystemCreate(kCFAllocatorDefault);
+        sleep(1)
         if let sharedClient {
             var valuePtr = 11;
             let value_page = CFNumberCreate(kCFAllocatorDefault, CFNumberType.sInt32Type, &valuePtr);
@@ -138,4 +153,67 @@ func checkVolumeUp() -> Bool {
     }
     tprint("trying alternative")
     return alternativeButtonCheck()
+}
+
+*/
+
+func checkVolumeUp() -> Bool {
+    // Create and open an event system.
+    guard let system = IOHIDEventSystemCreate(nil) else {
+        tprint("failed to get system")
+        return false
+    }
+    
+    tprint("got system")
+
+    // Set the PrimaryUsagePage and PrimaryUsage for the Ambient Light Sensor Service
+    let page = 11 as CFNumber
+    let usage = 1 as CFNumber
+    
+    let dict = [
+        "PrimaryUsagePage" as CFString : page,
+        "PrimaryUsage" as CFString : usage
+    ] as CFDictionary
+  
+    // Get all services matching the above criteria
+    let services = IOHIDEventSystemCopyServices(system, dict)
+  
+    guard let services, CFArrayGetCount(services) >= 1 else {
+        tprint("failed to get services")
+        return false
+    }
+    
+    tprint("got services")
+    
+    // Get the service
+    let service = CFArrayGetValueAtIndex(services, 0);
+
+    IOHIDEventSystemOpen(system, 0, 0, 0, 0);
+    
+    tprint("opened system")
+    
+    let KeyboardEvent = IOHIDEventCreateKeyboardEvent(
+        kCFAllocatorDefault,
+        mach_absolute_time(),
+        0x0c, 0xe9, // volume up
+        false, 0x0
+    )
+    if let KeyboardEvent {
+        let v9 = _IOHIDEventSystemClientCopyEventForService(
+            system,
+            service,
+            3, // keyboard event
+            KeyboardEvent,
+            0
+        );
+        tprint("got system event")
+        let clicked = IOHIDEventGetIntegerValue(
+            v9,
+            0x30002 // keyboard down event
+        ) != 0;
+        tprint("successfully got event state \(clicked)")
+        return clicked
+    }
+    
+    return false
 }

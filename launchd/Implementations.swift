@@ -140,15 +140,14 @@ func spawn_replacement(
         if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
-            #warning("TODO: Stop hardcoding these frameworks")
+                  
+            let bundles = try? getLinkedPaths(file: path)
             
             let tweaks = tweaks
-                .compactMap {
-                    if $0.bundles.contains(bundleID) ||
-                        $0.bundles.contains("com.apple.uikit") ||
-                        $0.bundles.contains("com.apple.foundation") ||
-                        $0.bundles.contains("com.apple.security") {
-                        return $0.path
+                .compactMap { tweak in
+                    let containsFramework = bundles?.contains(where: { tweak.bundles.contains($0) }) ?? false
+                    if tweak.bundles.contains(bundleID) || containsFramework {
+                        return tweak.path
                     }
                     return nil
                 }
