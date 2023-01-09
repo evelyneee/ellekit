@@ -89,6 +89,7 @@
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
 		9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; };
+		9EC2B2E6296C89920079379D /* Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E5296C89920079379D /* Replacements.swift */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 		9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
@@ -208,6 +209,7 @@
 		9EA4989C29565D830099A3ED /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC2B2E0296B96350079379D /* Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Batch.swift; sourceTree = "<group>"; };
+		9EC2B2E5296C89920079379D /* Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Replacements.swift; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
 		9ED5277E29673BC9009319AA /* button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = button.swift; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,
 				9E7DE812295296A9008E8BB4 /* Implementations.swift */,
+				9EC2B2E5296C89920079379D /* Replacements.swift */,
 				9E7DE81029529688008E8BB4 /* Rebinds.swift */,
 				9E7DE81429529888008E8BB4 /* Tweak.swift */,
 				9E7DE7E7295293D1008E8BB4 /* launchd-Bridging-Header.h */,
@@ -794,6 +797,7 @@
 				9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */,
 				9E70D396295FCA5B00B284F6 /* Orig.swift in Sources */,
 				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
+				9EC2B2E6296C89920079379D /* Replacements.swift in Sources */,
 				9E7DE7EB295293E0008E8BB4 /* load.s in Sources */,
 				9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */,
 				9E70D38D295FCA5B00B284F6 /* ptrauth.swift in Sources */,
