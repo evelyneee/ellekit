@@ -134,13 +134,16 @@ func spawn_replacement(
                               
             var dylibs = [String]()
             
+            var injectedBundles = (try? getLinkedBundleIDs(file: path)) ?? []
+            
+            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0) // my macho parser isn't that good yet!
+            
+            tprint("loaded bundles", injectedBundles)
+            
             if !safeMode {
                 dylibs = tweaks
                     .compactMap {
-                         if $0.bundles.contains(bundleID) ||
-                             $0.bundles.contains("com.apple.uikit") ||
-                             $0.bundles.contains("com.apple.foundation") ||
-                                $0.bundles.contains("com.apple.security") {
+                         if $0.bundles.contains(bundleID) || $0.bundles.contains(where: { injectedBundles.contains($0) }) {
                              return $0.path
                          }
                         return nil

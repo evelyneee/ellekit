@@ -4,8 +4,15 @@
 
 import Foundation
 
+enum LinkPathError: Error {
+    case badMachO
+    case badPath
+}
+
 public func getLinkedPaths(file path: String) throws -> [String] {
         
+    guard FileManager.default.fileExists(atPath: path) else { throw LinkPathError.badPath }
+    
     guard var handle = FileHandle(forReadingAtPath: path) else { return [] }
         
     var headerData = handle.readData(ofLength: MemoryLayout<mach_header>.size)
@@ -71,7 +78,9 @@ public func getLinkedPaths(file path: String) throws -> [String] {
     }
     
     let machHeader = machHeaderPointer.assumingMemoryBound(to: mach_header.self).pointee
-        
+            
+    guard machHeader.ncmds < 0x4000 else { throw LinkPathError.badMachO }
+    
     // Read the load commands
     var command = machHeaderPointer.advanced(by: MemoryLayout<mach_header>.size)
     
@@ -80,7 +89,7 @@ public func getLinkedPaths(file path: String) throws -> [String] {
     // Iterate over the load commands
     for _ in 0..<machHeader.ncmds {
         let load_command = command.assumingMemoryBound(to: load_command.self).pointee
-                
+                        
         if load_command.cmd == LC_LOAD_DYLIB {
             let dylib_command_pointer = command
             let dylib_command = dylib_command_pointer.assumingMemoryBound(to: dylib_command.self).pointee
@@ -94,6 +103,8 @@ public func getLinkedPaths(file path: String) throws -> [String] {
             allPaths.append(path)
         }
         
+        guard load_command.cmdsize <= 0x4000 else { throw LinkPathError.badMachO }
+                
         command = command.advanced(by: Int(load_command.cmdsize))
     }
         

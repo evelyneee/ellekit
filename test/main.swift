@@ -9,11 +9,9 @@
 import Foundation
 import ellekit
 
-calculateTime(block: {
-    print(
-        try? ellekit.headerBundleIDs(file: "/Applications/Accord.app/Contents/MacOS/Accord")
-    )
-})
+print(
+    try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Library/Developer/Xcode/DerivedData/ellekit-dhqjqjjllmssnfdtbktrsblfipvk/Build/Products/Debug-iphoneos/MobileSMS")
+)
 
 exit(1)
 
