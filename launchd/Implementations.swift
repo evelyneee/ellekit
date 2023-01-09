@@ -108,7 +108,7 @@ func spawn_replacement(
                               
             var dylibs = [String]()
             
-            var injectedBundles = (try? getLinkedBundleIDs(file: path)) ?? []
+            var injectedBundles = [String]()
             
             injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0) // my macho parser isn't that good yet!
             
