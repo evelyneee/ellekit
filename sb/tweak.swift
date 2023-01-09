@@ -77,6 +77,7 @@ func performHooks() {
 @_cdecl("tweak_entry")
 public func tweak_entry() {
     tprint("Hello world, SpringBoard!")
+    
     if FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode") {
         performHooks()
     } else if checkVolumeUp() {
