@@ -171,11 +171,6 @@ guard create == KERN_SUCCESS else {
 
 print("[+] loader: set thread state")
 
-@_silgen_name("reboot3")
-func reboot3(_ flags: UInt64) -> Never
-
-let usermode_reboot_flag: UInt64 = 2305843009213693952
-
 DispatchQueue.global().async {
     thread_resume(thread)
     print("[+] loader: resumed thread state. waiting for launchd...")

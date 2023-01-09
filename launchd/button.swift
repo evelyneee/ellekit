@@ -161,62 +161,67 @@ func checkVolumeUp() -> Bool {
 */
 
 func checkVolumeUp() -> Bool {
-    // Create and open an event system.
-    guard let system = IOHIDEventSystemCreate(nil) else {
-        tprint("failed to get system")
-        return false
+    
+    if sharedClient == nil {
+        sharedClient = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
+               
+        _ = IOHIDEventSystemCreate(kCFAllocatorDefault) // if we don't have a system already, this can't work out...
+        
+        sleep(1)
+        
+        IOHIDEventSystemOpen(nil, 0, 0, 0, 0)
+        
+        sleep(1)
+        
+        tprint("Opened new event client")
+        
+        if let sharedClient {
+            var valuePtr = 11;
+            let value_page = CFNumberCreate(kCFAllocatorDefault, CFNumberType.sInt32Type, &valuePtr);
+            valuePtr = 1;
+            let value = CFNumberCreate(kCFAllocatorDefault, CFNumberType.sInt32Type, &valuePtr);
+            let dict = ["PrimaryUsagePage" as CFString:value_page,"PrimaryUsage" as CFString:value]
+            IOHIDEventSystemClientSetMatching(sharedClient, dict as CFDictionary);
+        }
     }
-    
-    tprint("got system")
-
-    // Set the PrimaryUsagePage and PrimaryUsage for the Ambient Light Sensor Service
-    let page = 11 as CFNumber
-    let usage = 1 as CFNumber
-    
-    let dict = [
-        "PrimaryUsagePage" as CFString : page,
-        "PrimaryUsage" as CFString : usage
-    ] as CFDictionary
-  
-    // Get all services matching the above criteria
-    let services = IOHIDEventSystemCopyServices(system, dict)
-  
-    guard let services, CFArrayGetCount(services) >= 1 else {
-        tprint("failed to get services")
-        return false
+    if let sharedClient {
+        let services = IOHIDEventSystemClientCopyServices(sharedClient);
+        if let services {
+            print("got services \(services as Array)")
+            guard CFArrayGetCount(services) >= 1 else {
+                print("no services outputted")
+                return false
+            }
+            
+            let ValueAtIndex = CFArrayGetValueAtIndex(services, 0);
+            
+            let KeyboardEvent = IOHIDEventCreateKeyboardEvent(
+                kCFAllocatorDefault,
+                mach_absolute_time(),
+                0x0c, 0xe9, // volume up
+                false, 0x0
+            )
+            if let KeyboardEvent
+            {
+                let v9 = _IOHIDEventSystemClientCopyEventForService(
+                    sharedClient,
+                    ValueAtIndex,
+                    3, // keyboard event
+                    KeyboardEvent,
+                    0
+                );
+                print("successfully got event")
+                let clicked = IOHIDEventGetIntegerValue(
+                    v9,
+                    0x30002 // keyboard down event
+                ) != 0;
+                print("successfully got event state \(clicked)")
+                return clicked
+            }
+        } else {
+            tprint("couldn't get services")
+        }
     }
-    
-    tprint("got services")
-    
-    // Get the service
-    let service = CFArrayGetValueAtIndex(services, 0);
-
-    IOHIDEventSystemOpen(system, 0, 0, 0, 0);
-    
-    tprint("opened system")
-    
-    let KeyboardEvent = IOHIDEventCreateKeyboardEvent(
-        kCFAllocatorDefault,
-        mach_absolute_time(),
-        0x0c, 0xe9, // volume up
-        false, 0x0
-    )
-    if let KeyboardEvent {
-        let v9 = _IOHIDEventSystemClientCopyEventForService(
-            system,
-            service,
-            3, // keyboard event
-            KeyboardEvent,
-            0
-        );
-        tprint("got system event")
-        let clicked = IOHIDEventGetIntegerValue(
-            v9,
-            0x30002 // keyboard down event
-        ) != 0;
-        tprint("successfully got event state \(clicked)")
-        return clicked
-    }
-    
-    return false
+    tprint("trying alternative")
+    return alternativeButtonCheck()
 }
