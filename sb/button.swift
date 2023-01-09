@@ -67,39 +67,6 @@ func IOHIDEventSystemCopyServices(_ client: UnsafeMutableRawPointer, _ dict: CFD
 
 var sharedClient: UnsafeMutableRawPointer? = nil
 
-func alternativeButtonCheck() -> Bool {
-    
-    guard let client = IOHIDEventSystemCreate(nil) else {
-        tprint("couldn't get client")
-        return false
-    }
-        
-    sleep(1)
-    
-    IOHIDEventSystemOpen(nil, 0, 0, 0, 0)
-    
-    #warning("TODO: remove sleep call")
-        
-    let keyboardEvent = IOHIDEventCreateKeyboardEvent(
-        kCFAllocatorDefault,
-        mach_absolute_time(),
-        0x0c, 0xe9,
-        false, 0
-    );
-    
-    if let keyboardEvent {
-        let v9 = IOHIDEventSystemCopyEvent(client, 3, keyboardEvent, 0);
-        if let v9 {
-            return IOHIDEventGetIntegerValue(v9, 0x30002) != 0;
-        } else {
-            tprint("couldn't get system event")
-      }
-    } else {
-        tprint("couldn't get kb event")
-    }
-    tprint("couldn't use alternative....... wtf")
-    return false
-  }
 /*
 
 // reverse engineered from substrate......
@@ -163,17 +130,9 @@ func checkVolumeUp() -> Bool {
 func checkVolumeUp() -> Bool {
     
     if sharedClient == nil {
-        sharedClient = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
-               
-        _ = IOHIDEventSystemCreate(kCFAllocatorDefault) // if we don't have a system already, this can't work out...
-        
-        sleep(1)
-        
-        IOHIDEventSystemOpen(nil, 0, 0, 0, 0)
-        
-        sleep(1)
-        
         tprint("Opened new event client")
+        
+        sharedClient = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
         
         if let sharedClient {
             var valuePtr = 11;
@@ -223,5 +182,5 @@ func checkVolumeUp() -> Bool {
         }
     }
     tprint("trying alternative")
-    return alternativeButtonCheck()
+    return false
 }

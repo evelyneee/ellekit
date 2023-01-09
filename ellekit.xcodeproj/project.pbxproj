@@ -87,9 +87,10 @@
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
+		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
+		9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; };
 		9ECE28DE292026B10038D993 /* load.s in Sources */ = {isa = PBXBuildFile; fileRef = 9ECE28DD292026B10038D993 /* load.s */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
-		9ED5277F29673BC9009319AA /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
 		9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
 /* End PBXBuildFile section */
 
@@ -247,6 +248,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,13 +378,14 @@
 			path = dyld;
 			sourceTree = "<group>";
 		};
-		9E6FBB5A29554734007B28FC /* safe mode ui */ = {
+		9E6FBB5A29554734007B28FC /* sb */ = {
 			isa = PBXGroup;
 			children = (
+				9ED5277E29673BC9009319AA /* button.swift */,
 				9EA4989A29565D0B0099A3ED /* tweak.swift */,
 				9EA4989C29565D830099A3ED /* load.s */,
 			);
-			path = "safe mode ui";
+			path = sb;
 			sourceTree = "<group>";
 		};
 		9E78FBE42916BD2B00B3B50B /* ExceptionHandler */ = {
@@ -418,7 +421,6 @@
 				9E9733572953D6DA0036F339 /* fishhook */,
 				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
-				9ED5277E29673BC9009319AA /* button.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,
 				9E7DE812295296A9008E8BB4 /* Implementations.swift */,
 				9E7DE81029529688008E8BB4 /* Rebinds.swift */,
@@ -443,7 +445,7 @@
 				9EA0D1BE291C5D5B0061B187 /* injector */,
 				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E2D4F4F2938389B00EF6619 /* test */,
-				9E6FBB5A29554734007B28FC /* safe mode ui */,
+				9E6FBB5A29554734007B28FC /* sb */,
 				9E96A5C3295924A4000EDC43 /* ptrauth shim */,
 				9E92AA88290D47540018604C /* Products */,
 				9E2D4F552938391C00EF6619 /* Frameworks */,
@@ -786,7 +788,6 @@
 			files = (
 				9E7DE7E9295293D2008E8BB4 /* entry.swift in Sources */,
 				9E70D387295FCA5B00B284F6 /* Register.swift in Sources */,
-				9ED5277F29673BC9009319AA /* button.swift in Sources */,
 				9E70D393295FCA5B00B284F6 /* Hook.swift in Sources */,
 				9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */,
 				9E70D395295FCA5B00B284F6 /* Rebind.swift in Sources */,
@@ -871,6 +872,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EA498AC295663240099A3ED /* PAC.swift in Sources */,
+				9EC2B2E3296C774B0079379D /* button.swift in Sources */,
 				9E6EBF932960EAF300D0D186 /* Logger.swift in Sources */,
 				9EA498A829565DD00099A3ED /* tweak.swift in Sources */,
 				9EA498A729565DD00099A3ED /* load.s in Sources */,

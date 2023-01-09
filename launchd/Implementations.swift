@@ -104,14 +104,7 @@ func spawn_replacement(
     // since we cache tweaks, a respring will forcefully refresh it
     // we also spawn safe mode after
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
-    
-    var safeMode = false
-    
-    if springboard {
-        tprint("Testing safe mode")
-        safeMode = checkVolumeUp()
-        tprint("Safe mode status:", safeMode)
-    }
+    let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
     func addDYLDEnv(_ envKey: String) {
         if let firstEnvIndex {
@@ -131,11 +124,6 @@ func spawn_replacement(
         tprint("launchd \(path)")
         addDYLDEnv(selfPath)
         
-    } else if safeMode && springboard {
-
-        tprint("Safe Mode \(path)")
-        addDYLDEnv(safeModePath)
-        
     } else if !blacklisted {
         
         tprint("injecting tweaks \(path)")
@@ -144,21 +132,30 @@ func spawn_replacement(
             
             tprint("found bundle \(path) \(bundleID)")
                               
-            let tweaks = tweaks
-                .compactMap {
-                     if $0.bundles.contains(bundleID) ||
-                         $0.bundles.contains("com.apple.uikit") ||
-                         $0.bundles.contains("com.apple.foundation") ||
-                            $0.bundles.contains("com.apple.security") {
-                         return $0.path
-                     }
-                    return nil
-                }
+            var dylibs = [String]()
+            
+            if !safeMode {
+                dylibs = tweaks
+                    .compactMap {
+                         if $0.bundles.contains(bundleID) ||
+                             $0.bundles.contains("com.apple.uikit") ||
+                             $0.bundles.contains("com.apple.foundation") ||
+                                $0.bundles.contains("com.apple.security") {
+                             return $0.path
+                         }
+                        return nil
+                    }
+            }
             
             tprint("got tweaks \(bundleID) \(tweaks)")
             
+            if springboard {
+                tprint("Injecting sb hook \(sbHookPath)")
+                dylibs.insert(sbHookPath, at: 0)
+            }
+            
             if !tweaks.isEmpty {
-                let env = tweaks.joined(separator: ":")
+                let env = dylibs.joined(separator: ":")
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }

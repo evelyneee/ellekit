@@ -3,7 +3,7 @@
 // Copyright 2022 © Charlotte Belanger
 
 var selfPath: String = "/usr/lib/system/libdyld.dylib"
-var safeModePath: String = "/usr/lib/system/libdyld.dylib"
+var sbHookPath: String = "/usr/lib/system/libdyld.dylib"
 
 func loadPath() {
     if let path = loadDLaddrPath() {
@@ -19,7 +19,7 @@ func loadPath() {
         }
         #endif
     }
-    safeModePath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/MobileSafety.dylib")
+    sbHookPath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/MobileSafety.dylib")
 }
 
 func loadDLaddrPath() -> String? {

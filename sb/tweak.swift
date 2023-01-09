@@ -62,9 +62,6 @@ extension UIViewController {
     }
 }
 
-@available(iOS 14.0, macOS 11.0, *)
-public let logger = Logger(subsystem: "red.charlotte.ellekit", category: "hooking")
-
 func performHooks() {
     guard let sb = NSClassFromString("SpringBoard") else { return }
     let replacement = class_getMethodImplementation(
@@ -79,5 +76,12 @@ func performHooks() {
 
 @_cdecl("tweak_entry")
 public func tweak_entry() {
-    performHooks()
+    tprint("Hello world, SpringBoard!")
+    if FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode") {
+        performHooks()
+    } else if checkVolumeUp() {
+        tprint("Volume up!!!")
+        FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
+        exit(0)
+    }
 }
