@@ -31,7 +31,9 @@ private struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
-    private var enableLogging = true
+    private var enableLogging: Bool {
+        FileManager.default.fileExists(atPath: "/private/var/mobile/.ekenablelogging")
+    }
     
     func write(_ string: String) {
         guard enableLogging else { return print(string) }
