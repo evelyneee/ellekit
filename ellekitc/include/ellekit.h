@@ -17,7 +17,7 @@ extern void sys_icache_invalidate(void *start, size_t length);
 // MARK: - Libhooker
 
 struct LHFunctionHook {
-    void* function;
+    void *function;
     void *replacement;
     void *oldptr;
     struct LHFunctionHookOptions *options;
