@@ -178,6 +178,7 @@ DispatchQueue.global().async {
     print("[+] loader: closed thread")
     thread_suspend(thread)
     print("[i] run `launchctl reboot userspace` to load your tweaks")
+    exit(0)
 }
 
 dispatchMain()
