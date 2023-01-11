@@ -9,9 +9,67 @@
 import Foundation
 import ellekit
 
-print(
-    try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Library/Developer/Xcode/DerivedData/ellekit-dhqjqjjllmssnfdtbktrsblfipvk/Build/Products/Debug-iphoneos/MobileSMS")
-)
+func calculateTime(block : (() -> Void)) {
+        let start = DispatchTime.now()
+        block()
+        let end = DispatchTime.now()
+        let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000
+        print("Time: \(timeInterval) seconds")
+    }
+
+print("--------- Finding posix_spawnp symbol through image iteration ---------")
+calculateTime {
+    for image in 0..<_dyld_image_count() {
+        if let sym = try? ellekit.findSymbol(image: _dyld_get_image_header(image), symbol: "_posix_spawnp") {
+            print("posix_spawnp: \(sym)")
+            break
+        }
+    }
+}
+
+print("--------- Finding objc_direct symbol ---------")
+// CF tests
+let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
+let symbol = try ellekit.findSymbol(image: image, symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]")! // private sym
+print("Symbol found:", symbol)
+
+print("--------- Finding posix_spawn and memcpy symbols ---------")
+// libkernel tests
+let libkernel = try ellekit.openImage(image: "/usr/lib/system/libsystem_kernel.dylib")!
+let _posix_spawn_sym = try ellekit.findSymbol(image: libkernel, symbol: "_posix_spawn")!
+let _memcpy_sym = try ellekit.findSymbol(image: libkernel, symbol: "_memcpy")!
+print("Symbols found: \(_posix_spawn_sym) \(_memcpy_sym)")
+
+// normal dylib test
+print("--------- Hooking a findSymbol result ---------")
+dlopen("/usr/local/lib/libsubstrate.dylib", RTLD_NOW)
+let libsubstrate = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")!
+let _MSHookFunction_sym = try ellekit.findSymbol(image: libsubstrate, symbol: "_MSHookFunction")!
+let _:Void = ellekit.hook(.init(mutating: _MSHookFunction_sym), .init(mutating: _memcpy_sym))
+
+print("--------- Finding _main in myself ---------")
+// selftest
+let self_bin = try ellekit.openImage(image: ProcessInfo.processInfo.processName)!
+let _main_self_sym = try ellekit.findSymbol(image: self_bin, symbol: "_main")!
+print("_main:", _main_self_sym)
+
+print("--------- Finding bundles for thin Mach-O ---------")
+// MobileSMS
+let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Library/Developer/Xcode/DerivedData/ellekit-dhqjqjjllmssnfdtbktrsblfipvk/Build/Products/Debug-iphoneos/MobileSMS")
+
+print("Found bundles for MobileSMS:", msms.prefix(2))
+
+print("--------- Finding bundles for thick Mach-O ---------")
+let substrate = try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib")
+
+print("Found bundles for libsubstrate:", substrate)
+
+#if false
+
+print(try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Library/Developer/Xcode/DerivedData/ellekit-dhqjqjjllmssnfdtbktrsblfipvk/Build/Products/Debug-iphoneos/MobileSMS"))
+
+print(try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
 
 exit(1)
 
@@ -78,7 +136,7 @@ print("FOUND SYMBOL \(symbol)")
 let imageData = try Data(contentsOf: URL(fileURLWithPath: "/Applications/Accord.app/Contents/MacOS/Accord"))
 
 let ptr = imageData.withUnsafeBytes { ptr in
-    print(ptr.baseAddress?.assumingMemoryBound(to: mach_header.self).pointee)
+    print(ptr.baseAddress?.assumingMemoryBound(to: mach_header_64.self).pointee)
 }
 
 exit(0)
@@ -150,3 +208,5 @@ public func free_c_orig(_ ptr: UnsafeMutableRawPointer?) {
 let orig: UnsafeMutableRawPointer? = hook(dlsym(dlopen(nil, RTLD_NOW), "free"), dlsym(dlopen(nil, RTLD_NOW), "free_c_orig"))
 
 free_orig = unsafeBitCast(orig, to: freebody?.self)
+
+#endif

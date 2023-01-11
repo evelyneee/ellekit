@@ -98,6 +98,8 @@ func spawn_replacement(
         tprint("launchd \(path)")
         addDYLDEnv(selfPath)
         
+    } else if safeMode {
+        // do nothing
     } else if !blacklisted {
         
         tprint("injecting tweaks \(path)")

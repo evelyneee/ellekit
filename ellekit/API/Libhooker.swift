@@ -129,7 +129,7 @@ func LHOpenImage(_ path: UnsafePointer<CChar>) -> UnsafePointer<mach_header>? {
 
 @_cdecl("LHFindSymbols")
 func LHFindSymbols(
-    _ image: UnsafePointer<mach_header>,
+    _ image: UnsafePointer<mach_header_64>,
     _ search: UnsafePointer<UnsafePointer<CChar>>,
     _ searchSyms: UnsafeMutablePointer<UnsafeRawPointer?>,
     _ searchSymCount: size_t
