@@ -123,12 +123,12 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
 }
 
 @_cdecl("LHOpenImage")
-func LHOpenImage(_ path: UnsafePointer<CChar>) -> UnsafePointer<mach_header>? {
+public func LHOpenImage(_ path: UnsafePointer<CChar>) -> UnsafePointer<mach_header>? {
     try? ellekit.openImage(image: String(cString: path))
 }
 
 @_cdecl("LHFindSymbols")
-func LHFindSymbols(
+public func LHFindSymbols(
     _ image: UnsafePointer<mach_header_64>,
     _ search: UnsafePointer<UnsafePointer<CChar>>,
     _ searchSyms: UnsafeMutablePointer<UnsafeRawPointer?>,
