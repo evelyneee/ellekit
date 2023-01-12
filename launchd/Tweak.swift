@@ -40,10 +40,10 @@ func getTweaksPath() -> String {
     #if os(macOS)
     return "/Library/TweakInject/"
     #else
-    if access("/Library/MobileSubstrate/DynamicLibraries/", F_OK) == 0 {
-        return (("/Library/MobileSubstrate/DynamicLibraries/" as NSString).resolvingSymlinksInPath)+"/"
-    } else {
+    if access("/var/jb/usr/lib/TweakInject/", F_OK) == 0 {
         return (("/var/jb/usr/lib/TweakInject/" as NSString).resolvingSymlinksInPath)+"/"
+    } else {
+        return (("/Library/MobileSubstrate/DynamicLibraries/" as NSString).resolvingSymlinksInPath)+"/"
     }
     #endif
 }

@@ -84,8 +84,9 @@ func spawn_replacement(
         if let firstEnvIndex {
             let previousEnvKey = envp[firstEnvIndex].dropFirst("DYLD_INSERT_LIBRARIES=".count) // gives us the path
             envp[firstEnvIndex] = "DYLD_INSERT_LIBRARIES="+envKey + ":" + previousEnvKey
+        } else {
+            envp.append("DYLD_INSERT_LIBRARIES="+envKey)
         }
-        envp.append("DYLD_INSERT_LIBRARIES="+envKey)
     }
     
     if springboard {
