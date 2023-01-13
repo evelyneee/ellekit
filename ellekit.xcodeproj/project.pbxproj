@@ -12,6 +12,7 @@
 		9E2D4F562938391C00EF6619 /* libellekit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; };
 		9E2D4F572938391C00EF6619 /* libellekit.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		9E2D4F5E293A9F6200EF6619 /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
+		9E4195992972248600062F0E /* Dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4195982972248600062F0E /* Dyld.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019A29109B96007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
 		9E48019D2910A076007E433F /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
@@ -157,6 +158,7 @@
 		9E2D4F5C293A9F2300EF6619 /* Rebind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rebind.swift; sourceTree = "<group>"; };
 		9E381C3A293D1C87004D36B2 /* loader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = loader; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E381C3C293D1C88004D36B2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		9E4195982972248600062F0E /* Dyld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dyld.swift; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 		9E96A5C9295A352F000EDC43 /* Mach-O */ = {
 			isa = PBXGroup;
 			children = (
+				9E4195982972248600062F0E /* Dyld.swift */,
 				9E96A603295BC0E3000EDC43 /* Image.swift */,
 				9E96A5CA295A3548000EDC43 /* Symbols.swift */,
 				9E6EBF99296136A300D0D186 /* Load Commands.swift */,
@@ -825,6 +828,7 @@
 				9E6EBF9A296136A300D0D186 /* Load Commands.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
 				9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */,
+				9E4195992972248600062F0E /* Dyld.swift in Sources */,
 				9E96A604295BC0E3000EDC43 /* Image.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,
