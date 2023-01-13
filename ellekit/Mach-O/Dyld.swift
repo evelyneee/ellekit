@@ -9,9 +9,9 @@ public func sharedCachePath() -> String {
     #if os(macOS)
     if #available(macOS 13.0, *) {
         #if arch(arm64)
-        return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e"
+        return "/System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e"
         #elseif arch(x86_64)
-        return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_x86_64"
+        return "/System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64"
         #endif
     } else {
         #if arch(arm64)
