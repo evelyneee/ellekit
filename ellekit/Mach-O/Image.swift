@@ -3,6 +3,7 @@
 // Copyright 2022 © Charlotte Belanger
 
 import Foundation
+import MachO
 
 public func openImage(image path: String) throws -> UnsafePointer<mach_header>? {
     

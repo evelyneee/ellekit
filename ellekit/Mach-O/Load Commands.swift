@@ -4,6 +4,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 enum LinkPathError: Error {
     case badMachO
     case badPath

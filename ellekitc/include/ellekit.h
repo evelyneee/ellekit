@@ -10,6 +10,12 @@
 
 #include <stdlib.h>
 
+struct sCSRange {
+   unsigned long long location;
+   unsigned long long length;
+};
+typedef struct sCSRange CSRange;
+
 // MARK: - CPU
 
 extern void sys_icache_invalidate(void *start, size_t length);

@@ -3,6 +3,7 @@
 // Copyright 2022 © Charlotte Belanger
 
 import Foundation
+import MachO
 
 public func hook(
     _ target: UnsafeMutableRawPointer,

@@ -4,6 +4,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 enum FunctionHookErrors: Error {
     case allocationFailure
     case protectionFailure

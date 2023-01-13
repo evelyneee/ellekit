@@ -5,6 +5,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 enum SymbolErr: Error {
     case noSymbol
     case noAddress
@@ -134,7 +138,7 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
         }
                         
         let nName = String(cString: name)
-                
+                      
         if nName == symbolName {
             
             guard symbol.n_value != 0 else {

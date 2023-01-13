@@ -135,7 +135,7 @@ public func LHFindSymbols(
     _ searchSymCount: size_t
 ) -> Bool {
     let search = Array(UnsafeBufferPointer(start: search, count: searchSymCount)).map { String(cString: $0) }
-    let found = search.map { try? ellekit.findSymbol(image: image, symbol: $0) }
+    let found = search.map { (try? ellekit.findSymbol(image: image, symbol: $0)) ?? (try? ellekit.findPrivateSymbol(image: image, symbol: $0)) }
     for sym in 0..<found.count {
         searchSyms[sym] = found[sym]
     }
