@@ -44,7 +44,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var code = [UInt8]()
 
     // fast big branch option
-    if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize > 5 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
 
          let target_addr = UInt64(UInt(bitPattern: replacement))
@@ -69,7 +69,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     let orig = getOriginal(
         target,
         targetSize,
-        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize >= 5
+        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 5,
+        shouldBranchAfter: targetSize != 5
     )
 
     let ret = code.withUnsafeBufferPointer { buf in
@@ -103,7 +104,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
     var code = [UInt8]()
 
-    if targetSize >= 5 && abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize > 5 && abs(branchOffset / 1024 / 1024) > 128 {
         print("[*] Big branch")
 
         let target_addr = UInt64(UInt(bitPattern: replacement))

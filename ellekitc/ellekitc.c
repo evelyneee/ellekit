@@ -31,3 +31,9 @@ void* strip_pointer(void* ptr) {
     return ptr;
 #endif
 }
+
+#include <unistd.h>
+
+int shared_region_check(uint64_t* address) {
+    return syscall(294, address);
+}

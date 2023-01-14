@@ -110,7 +110,7 @@ public class br: Instruction {
 
 func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false) -> [UInt8] {
     let offset = Int(target - pc)
-    if (size >= 5 && abs(offset / 1024 / 1024) > 128) || big {
+    if (size > 5 && abs(offset / 1024 / 1024) > 128) || big {
         let target_addr = Int(UInt64(offset) + pc)
         let codeBuild = [
             movk(.x16, target_addr % 65536).bytes(),

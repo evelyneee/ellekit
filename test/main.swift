@@ -31,8 +31,40 @@ calculateTime {
 print("--------- Finding objc_direct symbol ---------")
 // CF tests
 let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
-let symbol = try ellekit.findSymbol(image: image, symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]")! // private sym
+calculateTime {
+    print(
+        try! ellekit.findPrivateSymbol(
+            image: image,
+            symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]",
+            overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+        )! // private sym
+    )
+}
+let symbol = try ellekit.findSymbol(
+    image: image,
+    symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]"
+)! // private sym
 print("Symbol found:", symbol)
+
+print("--------- Finding Capt's symbol ---------")
+for image in 0..<_dyld_image_count() {
+    [
+        "_CFAttributedStringGetAttribute",
+        "_CFUUIDCreate",
+        "_CGFontCopyVariations",
+        "_CGImageCreateWithPNGDataProvider",
+        "_FPFileMetadataCopyTagData",
+        "_BKSDisplayBrightnessSetAutoBrightnessEnabled",
+        "_BKSDisplayBrightnessGetCurrent",
+        "_UISUserInterfaceStyleModeValuelsAutomatic",
+        "_MGGetBoolAnswer"
+    ].forEach {
+        if let sym = try? ellekit.findSymbol(image: _dyld_get_image_header(image), symbol: $0) {
+            print("\($0): \(sym)")
+            let _:Void = hook(UnsafeMutableRawPointer(mutating: sym), dlsym(dlopen(nil, RTLD_NOW), "MSHookFunction"))
+        }
+    }
+}
 
 print("--------- Finding posix_spawn and memcpy symbols ---------")
 // libkernel tests

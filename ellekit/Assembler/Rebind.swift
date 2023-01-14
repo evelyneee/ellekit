@@ -40,6 +40,7 @@ extension Instructions {
                 if checkBranch(byteArray) {
                     let imm = (UInt64(disassembleBranchImm(UInt64(instruction))) + formerPC) - newPC
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
+                        print("bl")
                         return assembleJump(imm + newPC, pc: newPC, link: true)
                     } else { // b
                         return assembleJump(imm + newPC, pc: newPC, link: false)

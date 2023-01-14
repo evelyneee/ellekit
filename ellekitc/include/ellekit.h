@@ -110,8 +110,6 @@ struct arm_thread_state64
 
 #include <unistd.h>
 
-int shared_region_check(uint64_t* address) {
-    return syscall(294, address);
-}
+extern int shared_region_check(uint64_t* address);
 
 #include "dyld.h"

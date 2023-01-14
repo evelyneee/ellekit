@@ -9,7 +9,7 @@ import ellekitc
 #endif
 
 // PAC: strip before calling this function and sign the result afterwards
-func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: mach_vm_address_t? = nil, _ totalSize: Int? = nil, usedBigBranch: Bool = false) -> (UnsafeMutableRawPointer?, Int) {
+func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: mach_vm_address_t? = nil, _ totalSize: Int? = nil, usedBigBranch: Bool = false, shouldBranchAfter: Bool = true) -> (UnsafeMutableRawPointer?, Int) {
 
     var unpatched = target.withMemoryRebound(to: UInt8.self, capacity: usedBigBranch ? 20 : 4, { ptr in
         Array(UnsafeMutableBufferPointer(start: ptr, count: usedBigBranch ? 20 : 4))
@@ -83,12 +83,12 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
         ptr = UnsafeMutableRawPointer(bitPattern: UInt(address))
     }
     guard let ptr else { return (nil, 0) }
-
+    
     unpatched = Array(unpatched.chunked(into: 4).rebind(
         formerPC: UInt64(UInt(bitPattern: target)),
         newPC: UInt64(UInt(bitPattern: ptr))).joined()
     )
-
+    
     var code = [UInt8]()
 
     @InstructionBuilder
@@ -100,6 +100,10 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
     }
 
     code = codeBuilder
+
+    if !shouldBranchAfter {
+        code.removeLast(4)
+    }
 
     let codesize = MemoryLayout<[UInt8]>.size * code.count
 

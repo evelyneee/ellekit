@@ -12,10 +12,14 @@ import ellekitc
 enum SymbolErr: Error {
     case noSymbol
     case noAddress
+    case badCachePath
 }
 
 // Thanks to opa334 for the help
-public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolName: String) throws -> UnsafeRawPointer? {
+public func findSymbol(
+    image machHeaderPointer: UnsafeRawPointer,
+    symbol symbolName: String
+) throws -> UnsafeRawPointer? {
     
     var machHeaderPointer = machHeaderPointer
     
@@ -45,7 +49,7 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
     }
     
     let machHeader = machHeaderPointer.assumingMemoryBound(to: mach_header_64.self).pointee
-    
+        
     // Read the load commands
     var command = machHeaderPointer.advanced(by: MemoryLayout<mach_header_64>.size)
     var commandIt = command;
@@ -62,9 +66,7 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
         commandIt = commandIt.advanced(by: Int(load_command.cmdsize))
     }
     
-    if symtab_cmd == nil {
-        return nil;
-    }
+    guard let symtab_cmd else { throw SymbolErr.noSymbol }
     
     var stroff: UInt64 = 0
     var symoff: UInt64 = 0
@@ -82,13 +84,11 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
                     String(cString: $0)
                 }
             }
-                       
+                                   
             if slide == 0 && segnameString == "__TEXT" {
-                
                 slide = segment_command.vmaddr
-                
-            } else if segnameString == "__LINKEDIT", let symtab_cmd = symtab_cmd {
-                
+            } else if segnameString == "__LINKEDIT" {
+                                
                 if (UInt64(symtab_cmd.symoff) - segment_command.fileoff) < segment_command.filesize {
                     symoff = segment_command.vmaddr + UInt64(symtab_cmd.symoff) - segment_command.fileoff
                 }
@@ -106,49 +106,45 @@ public func findSymbol(image machHeaderPointer: UnsafeRawPointer, symbol symbolN
         
         command = command.advanced(by: Int(load_command.cmdsize))
     }
-    
+            
     if slide != 0 {
         stroff = stroff - slide
         symoff = symoff - slide
     }
-    
-    let strTab = machHeaderPointer.advanced(by: Int(stroff))
-        
-    var sym = machHeaderPointer.advanced(by: Int(symoff))
-    
-    // Iterate over the load commands
-    for _ in 0..<(symtab_cmd!.nsyms) { // idk why but the last symbols are always invalid
-                        
-        let symbol = sym.assumingMemoryBound(to: nlist_64.self).pointee
+            
+    let strTab = machHeaderPointer
+        .advanced(by: Int(stroff))
                     
+    // Iterate over the load commands
+    for idx in 0..<(symtab_cmd.nsyms) { // idk why but the last symbols are always invalid
+        
+        let symbol = machHeaderPointer
+            .advanced(by: Int(symoff))
+            .advanced(by: Int(idx) * MemoryLayout<nlist_64>.size)
+            .assumingMemoryBound(to: nlist_64.self).pointee
+        
         // Access the properties of the symbol structure
         let strIndex = symbol.n_un.n_strx
-        
-        if strIndex >= symtab_cmd!.strsize || strIndex == 0 {
-            sym = sym.advanced(by: MemoryLayout<nlist_64>.size)
+                
+        if strIndex >= symtab_cmd.strsize || strIndex == 0 {
             continue;
         }
-
+        
         // Get the symbol's name from the string table
         let name = strTab.advanced(by: Int(strIndex)).assumingMemoryBound(to: CChar.self)
                     
         guard symbol.n_type != 115 && symbol.n_type != 17 else {
-            sym = sym.advanced(by: MemoryLayout<nlist_64>.size)
             continue
         }
-                        
-        let nName = String(cString: name)
-                      
-        if nName == symbolName {
+                     
+        if strcmp(name, symbolName) == 0 {
             
             guard symbol.n_value != 0 else {
                 throw SymbolErr.noAddress
             }
             
-            return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value))))
+            return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))
         }
-        
-        sym = sym.advanced(by: MemoryLayout<nlist_64>.size)
     }
 
     throw SymbolErr.noSymbol
