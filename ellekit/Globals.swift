@@ -10,7 +10,7 @@ public var hooks: [UnsafeMutableRawPointer: UnsafeMutableRawPointer] = [:]
 
 public var exceptionHandler: ExceptionHandler?
 
-public var enforceThreadSafety: Bool = false
+public var enforceThreadSafety: Bool = true
 
 @_cdecl("EKEnableThreadSafety")
 public func EKEnableThreadSafety(_ on: Int) {

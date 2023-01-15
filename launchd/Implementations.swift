@@ -213,5 +213,9 @@ func spawn_replacement(
         }
     }
     
+    if springboard && ret != 0 {
+        FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
+    }
+    
     return ret
 }
