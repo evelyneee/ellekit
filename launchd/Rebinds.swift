@@ -20,9 +20,10 @@ class Rebinds {
     var posix_spawn = dlsym(dlopen(nil, RTLD_NOW), "posix_spawn")!
     var posix_spawnp = dlsym(dlopen(nil, RTLD_NOW), "posix_spawnp")!
     
-    var posix_spawn_replacement = dlsym(dlopen(nil, RTLD_NOW), "posix_spawn_replacement")!
-    var posix_spawnp_replacement = dlsym(dlopen(nil, RTLD_NOW), "posix_spawnp_replacement")!
-
+    var posix_spawn_replacement = dlsym(dlopen(nil, RTLD_LAZY), "posix_spawn_replacement")!
+    var posix_spawnp_replacement = dlsym(dlopen(nil, RTLD_LAZY), "posix_spawnp_replacement")!
+    var sandbox_check_replacement = dlsym(dlopen(nil, RTLD_LAZY), "hook_sandbox_check")!
+    
     var posix_spawn_orig_ptr: UnsafeMutableRawPointer? = dlsym(dlopen("/usr/lib/system/libsystem_kernel.dylib", RTLD_NOW), "posix_spawn")!
     var posix_spawn_orig: SpawnBody {
         unsafeBitCast(posix_spawn_orig_ptr!, to: SpawnBody.self)
@@ -39,7 +40,8 @@ class Rebinds {
                     
         var rebindinds = [
             rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
-            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil)
+            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil),
+            rebinding(name: strdup("sandbox_check"), replacement: sandbox_check_replacement, replaced: nil)
         ]
         
         let index = (0..<_dyld_image_count())

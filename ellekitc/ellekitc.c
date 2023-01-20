@@ -32,8 +32,29 @@ void* strip_pointer(void* ptr) {
 #endif
 }
 
-#include <unistd.h>
+extern int shared_region_check(void* address);
 
-int shared_region_check(uint64_t* address) {
-    return syscall(294, address);
+#include <stdarg.h>
+#include <sys/types.h>
+#include <string.h>
+
+// This is taken from Substitute, because I don't write C, and I can't use va_list in Swift
+
+extern int sandbox_check(pid_t, const char *, int type, ...);
+
+int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
+    va_list ap;
+    va_start(ap, type);
+    long blah[5];
+    for (int i = 0; i < 5; i++)
+        blah[i] = va_arg(ap, long);
+    va_end(ap);
+    if (!strcmp(op, "mach-lookup")) {
+        const char *name = (void *) blah[0];
+        if (!memcmp(name, "cy:", 3) || !memcmp(name, "lh:", 3)) {
+            /* always allow */
+            return 0;
+        }
+    }
+    return sandbox_check(pid, op, type, blah[0], blah[1], blah[2], blah[3], blah[4]);
 }

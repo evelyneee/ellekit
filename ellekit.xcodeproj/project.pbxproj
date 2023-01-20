@@ -20,6 +20,9 @@
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
+		9E4A6D9B297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
+		9E4A6D9C297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
+		9E4A6D9D297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
@@ -167,6 +170,7 @@
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
@@ -269,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				9E19B240291814CB00F8C4C7 /* ellekitc.c */,
+				9E4A6D9A297B427900E5387E /* routines.s */,
 				9E19B23C2918139300F8C4C7 /* include */,
 			);
 			path = ellekitc;
@@ -799,6 +804,7 @@
 				9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */,
 				9E70D38E295FCA5B00B284F6 /* Execute.swift in Sources */,
 				9E70D38B295FCA5B00B284F6 /* Globals.swift in Sources */,
+				9E4A6D9C297B427900E5387E /* routines.s in Sources */,
 				9E70D390295FCA5B00B284F6 /* Sizing.swift in Sources */,
 				9E70D38C295FCA5B00B284F6 /* Exception.swift in Sources */,
 				9E70D389295FCA5B00B284F6 /* PAC.swift in Sources */,
@@ -841,6 +847,7 @@
 				9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */,
 				9E69857A290ECAE500408E14 /* Sizing.swift in Sources */,
 				9E48019D2910A076007E433F /* Objective-C.swift in Sources */,
+				9E4A6D9B297B427900E5387E /* routines.s in Sources */,
 				9E48019A29109B96007E433F /* Bits.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,6 +878,7 @@
 				9EC2B2E3296C774B0079379D /* button.swift in Sources */,
 				9E6EBF932960EAF300D0D186 /* Logger.swift in Sources */,
 				9EA498A829565DD00099A3ED /* tweak.swift in Sources */,
+				9E4A6D9D297B427900E5387E /* routines.s in Sources */,
 				9EA498A729565DD00099A3ED /* load.s in Sources */,
 				9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */,
 				9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */,

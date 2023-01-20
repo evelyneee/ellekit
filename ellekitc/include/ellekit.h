@@ -113,3 +113,5 @@ struct arm_thread_state64
 extern int shared_region_check(uint64_t* address);
 
 #include "dyld.h"
+
+extern void test();
