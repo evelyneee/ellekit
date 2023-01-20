@@ -136,7 +136,7 @@ public func findSymbol(
         guard symbol.n_type != 115 && symbol.n_type != 17 else {
             continue
         }
-                     
+                             
         if strcmp(name, symbolName) == 0 {
             
             guard symbol.n_value != 0 else {

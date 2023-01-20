@@ -55,7 +55,7 @@ extension FileHandleC {
     }
     
     @discardableResult @inline(__always)
-    func seek(toFileOffset offset: UInt64) -> Self {
+    func seek(toFileOffset offset: UInt64) -> UnsafeMutablePointer<FILE> {
         var pos: fpos_t = .init(offset)
         fsetpos(self, &pos)
         return self
@@ -76,7 +76,9 @@ extension FileHandleC {
 
 func findDYLDSlide(image machHeaderPointer: UnsafeRawPointer) -> UInt64 {
     
-    var machHeader = machHeaderPointer.assumingMemoryBound(to: mach_header_64.self).pointee
+    let machHeader = machHeaderPointer
+        .assumingMemoryBound(to: mach_header_64.self)
+        .pointee
     
     var slide: UInt64 = 0
     
@@ -113,10 +115,10 @@ public func findPrivateSymbol(
     symbol symbolName: String,
     overrideCachePath: String? = nil
 ) throws -> UnsafeRawPointer? {
-        
+            
     let slide = findDYLDSlide(image: machHeaderPointer)
     
-    guard let handle = fopen(overrideCachePath ?? sharedCacheSymbolsPath(), "rb") else {
+    guard let handle = fopen(overrideCachePath ?? sharedCacheSymbolsPath(), "r") else {
         print("[-] ellekit: failed to open shared cache")
         throw SymbolErr.badCachePath
     }
@@ -128,7 +130,7 @@ public func findPrivateSymbol(
         .assumingMemoryBound(to: dyld_cache_header.self)
     
     let entry = entryPtr.pointee
-    
+            
     handle.seek(toFileOffset: entry.localSymbolsOffset)
     
     free(entryPtr)
@@ -137,7 +139,30 @@ public func findPrivateSymbol(
         .readData(ofLength: MemoryLayout<dyld_cache_local_symbols_info>.size)
         .assumingMemoryBound(to: dyld_cache_local_symbols_info.self)
 
-    let symInfo = symInfoPtr.pointee
+    var symInfo = symInfoPtr.pointee
+        
+    handle.seek(toFileOffset: entry.localSymbolsOffset + UInt64(symInfo.entriesOffset))
+    
+    var check: UInt64 = 0
+    
+    shared_region_check(&check)
+            
+    for _ in 0..<symInfo.entriesCount {
+        let entryPtr = handle
+            .readData(ofLength: MemoryLayout<dyld_cache_local_symbols_entry>.size)
+            .assumingMemoryBound(to: dyld_cache_local_symbols_entry.self)
+
+        let entry = entryPtr.pointee
+        
+        if UnsafeRawPointer(bitPattern: UInt(check + entry.dylibOffset)) == machHeaderPointer {
+            symInfo.nlistOffset = entry.nlistStartIndex * UInt32(MemoryLayout<nlist_64>.size) + symInfo.nlistOffset
+            symInfo.nlistCount = entry.nlistCount
+            
+            break
+        }
+        
+        free(entryPtr)
+    }
     
     let strTab = entry.localSymbolsOffset + UInt64(symInfo.stringsOffset)
                     
@@ -145,45 +170,38 @@ public func findPrivateSymbol(
     
     defer { free(symInfoPtr) }
         
-    for _ in 0..<(symInfo.nlistCount) { // idk why but the last symbols are always invalid
-                
+    let cSymbolName = strdup((symbolName as NSString).utf8String)
+    
+    defer { free(cSymbolName) }
+    
+    for idx in 0..<(symInfo.nlistCount) { // idk why but the last symbols are always invalid
+                        
         let symbolPtr = handle
+            .seek(toFileOffset: UInt64(entry.localSymbolsOffset + UInt64(symInfo.nlistOffset)) + UInt64(idx) * UInt64(MemoryLayout<nlist_64>.size))
             .readData(ofLength: MemoryLayout<nlist_64>.size)
             .assumingMemoryBound(to: nlist_64.self)
         
         let symbol = symbolPtr.pointee
-        
-        let lastOffset = handle.offsetInFile
-        
-        // Access the properties of the symbol structure
-        let strIndex = symbol.n_un.n_strx
-        
-        if strIndex == 0 {
+                        
+        defer { free(symbolPtr) }
+                
+        guard symbol.n_un.n_strx != 0 && symbol.n_value != 0 && symbol.n_type != 115 && symbol.n_type != 17 else {
             continue
         }
-
+                
         // Get the symbol's name from the string table
         let name = handle
-            .seek(toFileOffset: strTab + UInt64(strIndex))
+            .seek(toFileOffset: strTab + UInt64(symbol.n_un.n_strx))
             .readData(ofLength: symbolName.count)
             .assumingMemoryBound(to: CChar.self)
-                            
-        guard symbol.n_type != 115 && symbol.n_type != 17 else {
-            continue
-        }
-                                                        
-        if (strcmp(name, symbolName) == 0) {
-            
-            guard symbol.n_value != 0 else {
-                return nil
-            }
-                        
-            return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))
+                
+        defer {
+            free(name)
         }
         
-        handle.seek(toFileOffset: lastOffset)
-        free(name)
-        free(symbolPtr)
+        if strcmp(name, cSymbolName) == 0 {
+            return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))
+        }
     }
     
     throw SymbolErr.noSymbol

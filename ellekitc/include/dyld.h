@@ -241,11 +241,10 @@ struct dyld_cache_local_symbols_info
 
 struct dyld_cache_local_symbols_entry
 {
-    uint32_t    dylibOffset;        // offset in cache file of start of dylib
+    uint64_t    dylibOffset;        // offset in cache file of start of dylib
     uint32_t    nlistStartIndex;    // start index of locals for this dylib
-    uint32_t    nlistCount;            // number of local symbols for this dylib
+    uint32_t    nlistCount;         // number of local symbols for this dylib
 };
-
 
 
 #define MACOSX_DYLD_SHARED_CACHE_DIR    "/private/var/db/dyld/"

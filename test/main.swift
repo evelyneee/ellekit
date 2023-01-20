@@ -9,6 +9,18 @@
 import Foundation
 import ellekit
 
+// CF tests
+let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
+calculateTime {
+    print(
+        try! ellekit.findPrivateSymbol(
+            image: image,
+            symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]",
+            overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+        )! // private sym
+    )
+}
+
 func calculateTime(block : (() -> Void)) {
         let start = DispatchTime.now()
         block()
@@ -18,6 +30,8 @@ func calculateTime(block : (() -> Void)) {
         print("Time: \(timeInterval) seconds")
     }
 
+#if false
+
 print("--------- Finding posix_spawnp symbol through image iteration ---------")
 calculateTime {
     for image in 0..<_dyld_image_count() {
@@ -26,6 +40,18 @@ calculateTime {
             break
         }
     }
+}
+
+print("--------- Finding DhinakG's symbol -----------")
+
+dlopen("/System/Library/PrivateFrameworks/DeviceIdentity.framework/Versions/A/DeviceIdentity", RTLD_NOW)
+let devID = try ellekit.openImage(image: "/System/Library/PrivateFrameworks/DeviceIdentity.framework/Versions/A/DeviceIdentity")!
+calculateTime {
+    print(try? ellekit.findPrivateSymbol(
+        image: devID,
+        symbol: "_isSupportedDeviceIdentityClient",
+        overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+    )!) // private sym
 }
 
 print("--------- Finding objc_direct symbol ---------")
@@ -40,6 +66,7 @@ calculateTime {
         )! // private sym
     )
 }
+
 let symbol = try ellekit.findSymbol(
     image: image,
     symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]"
@@ -241,4 +268,5 @@ let orig: UnsafeMutableRawPointer? = hook(dlsym(dlopen(nil, RTLD_NOW), "free"), 
 
 free_orig = unsafeBitCast(orig, to: freebody?.self)
 
+#endif
 #endif
