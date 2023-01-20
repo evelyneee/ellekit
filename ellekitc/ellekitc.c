@@ -42,6 +42,7 @@ extern int shared_region_check(void* address);
 
 extern int sandbox_check(pid_t, const char *, int type, ...);
 
+extern int hook_sandbox_check(pid_t pid, const char *op, int type, ...);
 int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
     va_list ap;
     va_start(ap, type);
