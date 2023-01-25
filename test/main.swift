@@ -9,6 +9,92 @@
 import Foundation
 import ellekit
 
+EKEnableThreadSafety(1)
+
+let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
+
+@_cdecl("rep")
+public func rep() -> Int {
+    2
+}
+
+let repcl: @convention(c) () -> Int = rep
+
+let repptr = unsafeBitCast(repcl, to: UnsafeMutableRawPointer.self)
+
+DispatchQueue.global().async {
+    while true {
+        let two = atoi("3")
+        if two == 2 {
+            break
+        }
+    }
+    print("hooked fine")
+}
+
+let test: UnsafeMutableRawPointer? = hook(atoiptr, repptr)!
+
+let origRes = unsafeBitCast(test, to: (@convention (c) (UnsafePointer<CChar>) -> Int).self)("4")
+
+print(
+    atoi("3"),
+    origRes
+)
+
+
+#if false
+
+func test() -> Int {
+    print("a")
+    return 2
+}
+
+struct FunctionLayout {
+    var ptr1: UnsafeRawPointer
+    var ptr2: UnsafeRawPointer
+}
+
+extension FixedWidthInteger {
+    func reverse() -> Self {
+        ((self>>24)&0xff) | ((self<<8)&0xff0000) | ((self>>8)&0xff00) | ((self<<24)&0xff000000)
+    }
+}
+
+func getPointer(_ function: @escaping (String) -> () -> String) {
+    let partialApply = unsafeBitCast(function, to: FunctionLayout.self).ptr1
+    
+    let partialApplyOpcodes = partialApply.assumingMemoryBound(to: UInt32.self)
+    var idx: Int = 0
+    
+    repeat {
+        let instruction = partialApplyOpcodes[idx]
+        let reverse = partialApplyOpcodes[idx].reverse()
+        
+        Swift.print(String(format: "%02llX", reverse), String(format: "%02llX", reverse & 0x9F000000))
+        
+        if reverse & 0x9F000000 == 0x88000000 { // adr
+            print("got adr gadget")
+            
+            var imm = (instruction & 0xFFFFE0) >> 3
+            imm |= (instruction & 0x60000000) >> 29
+            if (instruction & 0x800000) == 1 {
+                // Sign extend
+                imm |= 0xFFE00000
+            }
+            
+            print(idx * 4 + Int(imm))
+            
+            print(partialApply, partialApply.advanced(by: idx * 4 + Int(imm)))
+            
+            print(String(format: "%02llX", partialApply.advanced(by: idx * 4 + Int(imm)).assumingMemoryBound(to: UInt32.self).pointee.reverse()))
+        }
+        
+        idx += 1
+    } while (idx <= 20)
+}
+
+getPointer(String.lowercased)
+
 // CF tests
 let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
 calculateTime {
@@ -16,7 +102,7 @@ calculateTime {
         try! ellekit.findPrivateSymbol(
             image: image,
             symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]",
-            overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+            overrideCachePath: "/Users/charlotte/Downloads/iPhone7-10.0-14A93012r/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64"
         )! // private sym
     )
 }
@@ -29,8 +115,6 @@ func calculateTime(block : (() -> Void)) {
         let timeInterval = Double(nanoTime) / 1_000_000_000
         print("Time: \(timeInterval) seconds")
     }
-
-#if false
 
 print("--------- Finding posix_spawnp symbol through image iteration ---------")
 calculateTime {

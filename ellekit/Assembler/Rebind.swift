@@ -28,19 +28,21 @@ extension Instructions {
                 }
 
                 let reversed = instruction.reverse()
-
+                
+                print(String(format: "%02X", reversed & 0x9F000000))
+                
                 if reversed & 0x9F000000 == 0x90000000 { // adr
-                    return adr(isn: instruction, formerPC: formerPC, newPC: newPC)?.bytes()
+                    return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
                 }
 
-                if reversed & 0x9F000000 == 0x90000000 { // adrp
-                    return adrp(isn: instruction, formerPC: formerPC, newPC: newPC)?.bytes()
-                }
+//                if reversed & 0x9F000000 == 0x90000000 { // adrp
+//                    print("rewriting adrp", String(format: "%02X", instruction))
+//                    return adrp(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
+//                }
 
                 if checkBranch(byteArray) {
                     let imm = (UInt64(disassembleBranchImm(UInt64(instruction))) + formerPC) - newPC
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
-                        print("bl")
                         return assembleJump(imm + newPC, pc: newPC, link: true)
                     } else { // b
                         return assembleJump(imm + newPC, pc: newPC, link: false)

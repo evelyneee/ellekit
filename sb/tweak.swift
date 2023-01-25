@@ -36,11 +36,8 @@ extension UIViewController {
         
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
         
-        let title = "You've broken your configuration and reached safe mode"
-        let message = """
-        It appears that you have installed a poorly made tweak and crashed SpringBoard.
-        Remove the tweak and restart SpringBoard to resume tweak injection.
-        """
+        let title = "Safe Mode"
+        let message = "You've entered safe mode. SpringBoard tweaks will not get injected until you respring your device. You can also safely remove your broken tweaks."
         DispatchQueue.main.async(execute: {
             guard let alertWindow = UIApplication.shared.keyWindow else { return }
             
@@ -49,7 +46,7 @@ extension UIViewController {
             let alert2 = UIAlertController(title: title, message: message, preferredStyle: .alert)
             
             let defaultAction2 = UIAlertAction(title: "OK", style: .default, handler: { action in
-                try? FileManager.default.removeItem(atPath: "/private/var/mobile/.eksafemode")
+                try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
             })
             
             alert2.addAction(defaultAction2)
@@ -76,6 +73,7 @@ func performHooks() {
 
 @_cdecl("tweak_entry")
 public func tweak_entry() {
+    
     tprint("Hello world, SpringBoard!")
     
     if FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode") {

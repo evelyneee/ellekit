@@ -76,7 +76,7 @@ func spawn_replacement(
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
     // since we cache tweaks, a respring will forcefully refresh it
-    // we also spawn safe mode after
+    // we also *not anymore* spawn safe mode after
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
@@ -145,10 +145,13 @@ func spawn_replacement(
         } else {
             let executableName = (path as NSString).lastPathComponent
             tprint("using exec name \(path) \(executableName)")
+            
             let tweaks = tweaks
                 .filter { $0.executables.contains(executableName.lowercased()) }
                 .map(\.path)
+            
             tprint("got tweaks \(executableName) \(tweaks)")
+            
             if !tweaks.isEmpty {
                 let env = tweaks.joined(separator: ":")
                 tprint("adding env \(env)")
@@ -162,7 +165,9 @@ func spawn_replacement(
     
     tprint("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
     
-    var envp_c: [UnsafeMutablePointer<CChar>?] = envp.compactMap { ($0 as NSString).utf8String }.map { strdup($0) }
+    var envp_c: [UnsafeMutablePointer<CChar>?] = envp
+        .compactMap { ($0 as NSString).utf8String }
+        .map { strdup($0) }
     
     envp_c.append(nil)
             
@@ -186,7 +191,6 @@ func spawn_replacement(
         }
     }
     #endif
-
     
     let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
@@ -212,10 +216,11 @@ func spawn_replacement(
             }
         }
     }
-    
+    #if os(iOS)
     if springboard && ret != 0 {
         FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
     }
+    #endif
     
     return ret
 }
