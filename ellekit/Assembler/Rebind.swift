@@ -28,9 +28,7 @@ extension Instructions {
                 }
 
                 let reversed = instruction.reverse()
-                
-                print(String(format: "%02X", reversed & 0x9F000000))
-                
+                                
                 if reversed & 0x9F000000 == 0x90000000 { // adr
                     return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
                 }

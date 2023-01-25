@@ -242,10 +242,8 @@ class adrp: Instruction {
         guard let target = Self.destination(isn, formerPC) else {
             return nil
         }
-        print(target)
         let rt = isn.bits(0...4)
         self.init(.x(Int(rt)), Int(target - newPC))
-        print(String(format: "%02X", self.value))
     }
 
     static let base = 0b1_00_10000_0000000000000000000_00000
@@ -260,7 +258,7 @@ class adrp: Instruction {
         }
 
         // Build real imm
-        let imm = (imm_hi_lo << 12) / UInt32(vm_page_size)
+        let imm = (imm_hi_lo << 12)
         
         // Emulate
         return (pc & 0xFFFFFFFFFFFFF000) + UInt64(imm)
