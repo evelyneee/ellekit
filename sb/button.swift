@@ -162,13 +162,13 @@ func checkVolumeUp() -> Bool {
             )
             if let KeyboardEvent
             {
-                let v9 = _IOHIDEventSystemClientCopyEventForService(
+                guard let v9 = _IOHIDEventSystemClientCopyEventForService(
                     sharedClient,
                     ValueAtIndex,
                     3, // keyboard event
                     KeyboardEvent,
                     0
-                );
+                ) else { return false }
                 print("successfully got event")
                 let clicked = IOHIDEventGetIntegerValue(
                     v9,

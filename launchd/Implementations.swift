@@ -103,6 +103,11 @@ func spawn_replacement(
         
         // do nothing
         
+        if springboard {
+            tprint("Injecting sb hook \(sbHookPath)")
+            addDYLDEnv(sbHookPath)
+        }
+        
     } else if !blacklisted {
         
         tprint("injecting tweaks \(path)")
