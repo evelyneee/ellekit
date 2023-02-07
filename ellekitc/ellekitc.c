@@ -37,6 +37,7 @@ extern int shared_region_check(void* address);
 #include <stdarg.h>
 #include <sys/types.h>
 #include <string.h>
+#include <sys/fcntl.h>
 
 // This is taken from Substitute, because I don't write C, and I can't use va_list in Swift
 

@@ -13,6 +13,26 @@ enum LinkPathError: Error {
     case badPath
 }
 
+/*
+ int loadSignature(NSString* filePath)
+ {
+     uint32_t offset = 0, size = 0;
+     
+     getCSBlobOffsetAndSize(filePath, &offset, &size);
+     
+     int binaryFd = open(filePath.UTF8String, O_RDONLY);
+     
+     struct fsignatures fsig;
+     fsig.fs_file_start = 0;
+     fsig.fs_blob_start = (void*)(uint64_t)offset;
+     fsig.fs_blob_size = size;
+     
+     int ret = fcntl(binaryFd, F_ADDFILESIGS, fsig);
+     close(binaryFd);
+     return ret;
+ }
+ */
+
 public func getLinkedPaths(file path: String) throws -> [String] {
         
     guard FileManager.default.fileExists(atPath: path) else { throw LinkPathError.badPath }

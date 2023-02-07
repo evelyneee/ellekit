@@ -9,6 +9,113 @@
 import Foundation
 import ellekit
 
+func demangle(symbol: UnsafePointer<Int8>) -> String? {
+    if let demangledNamePtr = _stdlib_demangleImpl(
+        symbol, mangledNameLength: UInt(strlen(symbol)),
+        outputBuffer: nil, outputBufferSize: nil, flags: 0) {
+        let demangledName = String(cString: demangledNamePtr)
+        free(demangledNamePtr)
+        return demangledName
+    }
+    return nil
+}
+
+// Taken from stdlib, not public Swift3+
+@_silgen_name("swift_demangle")
+private
+func _stdlib_demangleImpl(
+_ mangledName: UnsafePointer<CChar>?,
+mangledNameLength: UInt,
+outputBuffer: UnsafeMutablePointer<UInt8>?,
+outputBufferSize: UnsafeMutablePointer<UInt>?,
+flags: UInt32
+) -> UnsafeMutablePointer<CChar>?
+
+public typealias OneThinClosure<S, C1> = @convention(thin) (C1) -> S
+
+@discardableResult
+public func withUnsafeFunctionPointer<S, C1, R>(
+    _ closure: OneThinClosure<S, C1>,
+    _ block: (UnsafeRawPointer) -> R
+) -> R  {
+    block(getAbsolutePointer(unsafeBitCast(closure, to: UnsafeRawPointer.self)))
+}
+
+public typealias TwoThinClosure<S, C1, C2> = @convention(thin) (C1, C2) -> S
+
+@discardableResult
+public func withUnsafeFunctionPointer<S, C1, C2, R>(
+    _ closure: TwoThinClosure<S, C1, C2>,
+    _ block: (UnsafeRawPointer) -> R
+) -> R  {
+    block(getAbsolutePointer(unsafeBitCast(closure, to: UnsafeRawPointer.self)))
+}
+
+public typealias ThreeThinClosure<S, C1, C2, C3> = @convention(thin) (C1, C2, C3) -> S
+
+@discardableResult
+public func withUnsafeFunctionPointer<S, C1, C2, C3, R>(
+    _ closure: ThreeThinClosure<S, C1, C2, C3>,
+    _ block: (UnsafeRawPointer) -> R
+) -> R  {
+    block(getAbsolutePointer(unsafeBitCast(closure, to: UnsafeRawPointer.self)))
+}
+
+public func getAbsolutePointer(_ ptr: UnsafeRawPointer) -> UnsafeRawPointer {
+    return ptr
+}
+
+withUnsafeFunctionPointer(atoi) { ptr in
+    ptr.hexDump(128)
+    
+    print(String(format: "%02X", ptr.advanced(by: 20).assumingMemoryBound(to: UInt32.self).pointee.reverse()))
+
+    let imm = disassembleBranchImm(.init(ptr.advanced(by: 20).assumingMemoryBound(to: UInt32.self).pointee.reverse()))
+    let ptr = ptr.advanced(by: 20).advanced(by: imm)
+        
+    print(ptr, imm)
+        
+    ptr.hexDump(128)
+    
+    var info = Dl_info()
+    dladdr(ptr, &info)
+    print(String(cString: info.dli_sname))
+    print(
+        demangle(symbol: info.dli_sname)
+    )
+}
+
+//withUnsafeFunctionPointer(String.lowercased) {
+//    $0.hexDump(128)
+//    var info = Dl_info()
+//    dladdr($0, &info)
+//    print(String(cString: info.dli_sname))
+//    print(
+//        demangle(symbol: info.dli_sname)
+//    )
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit(0)
+
+#if false
+
 EKEnableThreadSafety(1)
 
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
@@ -41,9 +148,6 @@ print(
     origRes
 )
 
-
-#if false
-
 func test() -> Int {
     print("a")
     return 2
@@ -59,41 +163,6 @@ extension FixedWidthInteger {
         ((self>>24)&0xff) | ((self<<8)&0xff0000) | ((self>>8)&0xff00) | ((self<<24)&0xff000000)
     }
 }
-
-func getPointer(_ function: @escaping (String) -> () -> String) {
-    let partialApply = unsafeBitCast(function, to: FunctionLayout.self).ptr1
-    
-    let partialApplyOpcodes = partialApply.assumingMemoryBound(to: UInt32.self)
-    var idx: Int = 0
-    
-    repeat {
-        let instruction = partialApplyOpcodes[idx]
-        let reverse = partialApplyOpcodes[idx].reverse()
-        
-        Swift.print(String(format: "%02llX", reverse), String(format: "%02llX", reverse & 0x9F000000))
-        
-        if reverse & 0x9F000000 == 0x88000000 { // adr
-            print("got adr gadget")
-            
-            var imm = (instruction & 0xFFFFE0) >> 3
-            imm |= (instruction & 0x60000000) >> 29
-            if (instruction & 0x800000) == 1 {
-                // Sign extend
-                imm |= 0xFFE00000
-            }
-            
-            print(idx * 4 + Int(imm))
-            
-            print(partialApply, partialApply.advanced(by: idx * 4 + Int(imm)))
-            
-            print(String(format: "%02llX", partialApply.advanced(by: idx * 4 + Int(imm)).assumingMemoryBound(to: UInt32.self).pointee.reverse()))
-        }
-        
-        idx += 1
-    } while (idx <= 20)
-}
-
-getPointer(String.lowercased)
 
 // CF tests
 let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!

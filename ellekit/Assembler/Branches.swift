@@ -2,7 +2,7 @@
 // This file is licensed under the BSD-3 Clause License
 // Copyright 2022 © Charlotte Belanger
 
-func disassembleBranchImm(_ opcode: UInt64) -> Int {
+public func disassembleBranchImm(_ opcode: UInt64) -> Int {
     var imm = (opcode & 0x3FFFFFF) << 2
     if (opcode & 0x2000000) == 1 {
         // Sign extend
@@ -106,6 +106,56 @@ public class br: Instruction {
     }
 
     static let base = 0b1101011_0_0_00_11111_0000_0_0_00000_00000
+}
+
+public class cbz: Instruction {
+    required public init(encoded: Int) {
+        self.value = encoded
+    }
+
+    public func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+
+    let value: Int
+
+    public init(_ register: Register, _ addr: Int) {
+        var base = Self.base
+        base |= (register.w ? 0 : 1) << 31
+        base |= (addr << 5)
+        base |= register.value
+        self.value = reverse(base)
+    }
+
+    static let base = 0b0_011010_0_0000000000000000000_00000
+}
+
+public class cbnz: Instruction {
+    required public init(encoded: Int) {
+        self.value = encoded
+    }
+
+    public func bytes() -> [UInt8] {
+        byteArray(from: value)
+    }
+
+    let value: Int
+
+    public init(_ register: Register, _ addr: Int) {
+        var base = Self.base
+        base |= (register.w ? 0 : 1) << 31
+        base |= (addr << 5)
+        base |= register.value
+        self.value = reverse(base)
+    }
+
+    static let base = 0b0_011010_1_0000000000000000000_00000
+    
+    public static func destination(_ instruction: UInt32, pc: UInt64) -> UInt64 {
+        var imm = (instruction & 0xFFFFE0) >> 3
+        imm |= (instruction & 0x60000000) >> 29
+        return pc + UInt64((imm - 1) / 4)
+    }
 }
 
 func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false) -> [UInt8] {

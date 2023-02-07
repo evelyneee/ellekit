@@ -24,7 +24,7 @@ public enum Register {
         default: return false
         }
     }
-
+    
     static public let x0 = Self.x(0)
     static public let x1 = Self.x(1)
     static public let x2 = Self.x(2)

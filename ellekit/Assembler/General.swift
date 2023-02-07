@@ -266,18 +266,33 @@ class adrp: Instruction {
 
 }
 
-class adr: Instruction {
+public class adr: Instruction {
     required public init(encoded: Int) {
         self.value = encoded
+        self.register = Register.x(encoded.reverse().bits(0...4))
+        self.label = Int(Self.destination(UInt32(encoded.reverse()), 0))
     }
 
     public func bytes() -> [UInt8] {
         byteArray(from: value)
     }
 
-    let value: Int
+    public var _cyanideTarget: Int? = nil
+    
+    public init(_ rt: Register, data: Int = 0) {
+        self.register = rt
+        self._cyanideTarget = data
+        self.label = 0
+        self.value = -1
+    }
+    
+    public let value: Int
+    public let register: Register
+    public let label: Int
 
     public init(_ rt: Register, _ label: Int = 0) {
+        self.register = rt
+        self.label = label
         var base = Self.base
         let immlow = label & 0x3
         let immhigh = label >> 2 & 0x7ffff

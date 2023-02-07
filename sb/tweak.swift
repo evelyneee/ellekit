@@ -71,6 +71,21 @@ func performHooks() {
     )
 }
 
+func trap(signals: [Int32], action: @convention(c) (Int32) -> Void) {
+    var signalAction = sigaction(__sigaction_u: unsafeBitCast(action, to: __sigaction_u.self), sa_mask: 0, sa_flags: 0)
+
+    signals.forEach { signal in
+        _ = withUnsafePointer(to: &signalAction) { actionPointer in
+            sigaction(signal, actionPointer, nil)
+        }
+    }
+}
+
+func handleSBCrash(_: Int32) {
+    FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
+    exit(0)
+}
+
 @_cdecl("tweak_entry")
 public func tweak_entry() {
     
@@ -83,4 +98,16 @@ public func tweak_entry() {
         FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
         exit(0)
     }
+    
+    trap(signals: [
+        SIGQUIT,
+        SIGILL,
+        SIGTRAP,
+        SIGABRT,
+        SIGEMT,
+        SIGFPE,
+        SIGBUS,
+        SIGSEGV,
+        SIGSYS
+    ], action: handleSBCrash)
 }
