@@ -26,19 +26,25 @@ extension Instructions {
                 if instruction == 0x7F2303D5 {
                     return byteArray
                 }
-
+                
                 let reversed = instruction.reverse()
                                 
-                if reversed & 0x9F000000 == 0x90000000 { // adr
+                if reversed & 0x9F000000 == 0x10000000 { // adr
                     return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
                 }
 
-//                if reversed & 0x9F000000 == 0x90000000 { // adrp
-//                    print("rewriting adrp", String(format: "%02X", instruction))
-//                    return adrp(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
-//                }
+                if reversed & 0x9F000000 == 0x90000000 { // adrp
+                    guard let target = adrp.destination(reversed, formerPC) else {
+                        return nil
+                    }
+                    
+                    let register = reversed.bits(0...4)
+                    
+                    return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
+                }
 
                 if checkBranch(byteArray) {
+                    print("Rebinding branch")
                     let imm = (UInt64(disassembleBranchImm(UInt64(instruction))) + formerPC) - newPC
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
                         return assembleJump(imm + newPC, pc: newPC, link: true)

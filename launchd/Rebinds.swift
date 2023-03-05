@@ -17,31 +17,34 @@ class Rebinds {
         UnsafePointer<UnsafeMutablePointer<CChar>?>?
     ) -> Int32
     
-    var posix_spawn = dlsym(dlopen(nil, RTLD_NOW), "posix_spawn")!
-    var posix_spawnp = dlsym(dlopen(nil, RTLD_NOW), "posix_spawnp")!
+    var posix_spawn = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "posix_spawn")!
+    var posix_spawnp = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "posix_spawnp")!
     
-    var posix_spawn_replacement = dlsym(dlopen(nil, RTLD_LAZY), "posix_spawn_replacement")!
-    var posix_spawnp_replacement = dlsym(dlopen(nil, RTLD_LAZY), "posix_spawnp_replacement")!
-    var sandbox_check_replacement = dlsym(dlopen(nil, RTLD_LAZY), "hook_sandbox_check")!
+    var posix_spawn_replacement = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "posix_spawn_replacement")!
+    var posix_spawnp_replacement = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "posix_spawnp_replacement")!
+    var sandbox_check_replacement = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "hook_sandbox_check")!
     
-    var posix_spawn_orig_ptr: UnsafeMutableRawPointer? = dlsym(dlopen("/usr/lib/system/libsystem_kernel.dylib", RTLD_NOW), "posix_spawn")!
+    var posix_spawn_orig_ptr: UnsafeMutableRawPointer? = nil
     var posix_spawn_orig: SpawnBody {
         unsafeBitCast(posix_spawn_orig_ptr!, to: SpawnBody.self)
     }
-    var posix_spawnp_orig_ptr: UnsafeMutableRawPointer? = dlsym(dlopen("/usr/lib/libSystem.B.dylib", RTLD_NOW), "posix_spawnp")!
+    var posix_spawnp_orig_ptr: UnsafeMutableRawPointer? = nil
     var posix_spawnp_orig: SpawnBody {
         unsafeBitCast(posix_spawnp_orig_ptr!, to: SpawnBody.self)
     }
     
     var usedFishhook = false
     
+    let posix_spawnp_cstring = strdup(("posix_spawnp" as NSString).utf8String)
+    let posix_spawn_cstring = strdup(("posix_spawn" as NSString).utf8String)
+    
     func rebind() {
+                
         self.usedFishhook = true
-                    
-        var rebindinds = [
-            rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
-            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil),
-            rebinding(name: strdup("sandbox_check"), replacement: sandbox_check_replacement, replaced: nil)
+        
+        var rebindings: [rebinding] = [
+            rebinding(name: posix_spawn_cstring, replacement: posix_spawn_replacement, replaced: nil),
+            rebinding(name: posix_spawnp_cstring, replacement: posix_spawnp_replacement, replaced: nil),
         ]
         
         let index = (0..<_dyld_image_count())
@@ -49,17 +52,22 @@ class Rebinds {
                 String(cString: _dyld_get_image_name($0))
                     .contains( ProcessInfo.processInfo.processName)
             }
-            .first ?? 1
+            .first
+        
+        guard let index else {
+            tprint("failed to get my image")
+            return
+        }
         
         tprint("rebindinds starting \(index) \(String(cString: _dyld_get_image_name(index)))")
+                
+        let ret = rebind_symbols_image(
+            .init(mutating: _dyld_get_image_header(index)),
+            _dyld_get_image_vmaddr_slide(index),
+            &rebindings, rebindings.count
+        )
         
-        _ = rebindinds.withUnsafeMutableBufferPointer { buf in
-            rebind_symbols_image(
-                unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
-                _dyld_get_image_vmaddr_slide(index),
-                buf.baseAddress, 2
-            )
-        }
+        tprint("got ret", ret)
     }
     
     func hook() {
@@ -78,11 +86,12 @@ class Rebinds {
     }
     
     func performHooks() {
-        #if os(macOS)
+//        #if os(macOS)
+        tprint("using ellekit for hooking")
         hook()
-        #else
-        tprint("using fishhook for launchd/proxy hooks")
-        rebind()
-        #endif
+//        #else
+//        tprint("using fishhook for launchd/proxy hooks")
+//        rebind()
+//        #endif
     }
 }

@@ -4,6 +4,8 @@
 
 import Foundation
 
+let ptrace = unsafeBitCast(dlsym(dlopen(nil, RTLD_LAZY), "ptrace"), to: (@convention(c) (CInt, pid_t, caddr_t?, CInt) -> CInt).self)
+
 extension String {
     var removingLastComponent: String {
         (self as NSString).deletingLastPathComponent
@@ -41,16 +43,17 @@ func findBundleID(path: String) -> String? {
     return nil
 }
 
+@inline(never)
 func spawn_replacement(
     _ p: Bool,
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>?,
     _ spawnattr: UnsafePointer<posix_spawnattr_t?>?,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
-        
+            
     let path = String(cString: path)
     
     tprint("executing \(path)")
@@ -65,13 +68,24 @@ func spawn_replacement(
     
     let blacklisted = [
         "BlastDoor",
-        "mobile_assertion_agent",
-        "WebKit",
-        "Safari"
+        "mobile_assertion_agent"
     ]
     .map { path.contains($0) }
     .contains(true)
     
+    #if os(iOS)
+    if let spawnattr, Fugu15 {
+        var flags: Int16 = 0
+
+        tprint("begin unsafe setflags")
+
+        posix_spawnattr_getflags(spawnattr, &flags)
+
+        flags |= Int16(POSIX_SPAWN_START_SUSPENDED)
+        
+        posix_spawnattr_setflags(UnsafeMutablePointer(mutating: spawnattr), flags)
+    }
+    #endif
     
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
@@ -81,7 +95,7 @@ func spawn_replacement(
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
     func addDYLDEnv(_ envKey: String) {
-        if let firstEnvIndex {
+        if let firstEnvIndex, envKey != envp[firstEnvIndex] {
             let previousEnvKey = envp[firstEnvIndex].dropFirst("DYLD_INSERT_LIBRARIES=".count) // gives us the path
             envp[firstEnvIndex] = "DYLD_INSERT_LIBRARIES="+envKey + ":" + previousEnvKey
         } else {
@@ -120,7 +134,8 @@ func spawn_replacement(
             
             var injectedBundles = [String]()
             
-            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0) // my macho parser isn't that good yet!
+            // my macho parser isn't that good yet!
+            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0)
             
             tprint("loaded bundles", injectedBundles)
             
@@ -197,6 +212,13 @@ func spawn_replacement(
     }
     #endif
     
+    #if os(iOS)
+    if !insideLaunchd {
+        tprint("entitle and cont requested")
+        entitleAndContJBD()
+    }
+    #endif
+    
     let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
             tprint("calling fishhook orig")
@@ -221,11 +243,35 @@ func spawn_replacement(
             }
         }
     }
+    
     #if os(iOS)
+    if Fugu15 {
+        do {
+            if let proc = try procForPid(pidToFind: UInt32(pid.pointee)) {
+                tprint("got proc", proc)
+                
+                try platformize(proc: proc)
+                
+                tprint("platformize done")
+            }
+        } catch {
+            tprint("got error", error)
+        }
+        
+        if !insideLaunchd {
+            unrestrictCSJBD(pid.pointee)
+
+            tprint("unrestricted cs", pid.pointee)
+        }
+                   
+        kill(pid.pointee, SIGCONT)
+        tprint("resumed proc", pid.pointee)
+    }
+    
     if springboard && ret != 0 {
         FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
     }
     #endif
-    
+        
     return ret
 }

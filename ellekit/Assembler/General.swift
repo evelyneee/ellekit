@@ -230,25 +230,17 @@ class adrp: Instruction {
 
     public init(_ rt: Register, _ label: Int = 0) {
         var base = Self.base
-        let immlow = label / 4096
-        let immhigh = label >> 2 & 0x7ffff
+        let immlow = (label / 4096)
+        let immhigh = (label >> 2)
         base |= immlow << 29
         base |= immhigh << 5
         base |= rt.value
         self.value = reverse(base)
     }
 
-    public convenience init?(isn: UInt32, formerPC: UInt64, newPC: UInt64) {
-        guard let target = Self.destination(isn, formerPC) else {
-            return nil
-        }
-        let rt = isn.bits(0...4)
-        self.init(.x(Int(rt)), Int(target - newPC))
-    }
-
     static let base = 0b1_00_10000_0000000000000000000_00000
 
-    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
+    static func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
         // Calculate imm from hi and lo
         var imm_hi_lo = (instruction & 0xFFFFE0) >> 3
         imm_hi_lo |= (instruction & 0x60000000) >> 29
@@ -261,7 +253,7 @@ class adrp: Instruction {
         let imm = (imm_hi_lo << 12)
         
         // Emulate
-        return (pc & 0xFFFFFFFFFFFFF000) + UInt64(imm)
+        return (pc & ~0xFFF) &+ UInt64(imm)
     }
 
 }

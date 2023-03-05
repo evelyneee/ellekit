@@ -9,6 +9,10 @@
 import Foundation
 import ellekit
 
+
+
+#if false
+
 func demangle(symbol: UnsafePointer<Int8>) -> String? {
     if let demangledNamePtr = _stdlib_demangleImpl(
         symbol, mangledNameLength: UInt(strlen(symbol)),
@@ -95,26 +99,8 @@ withUnsafeFunctionPointer(atoi) { ptr in
 //    )
 //}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 exit(0)
 
-#if false
 
 EKEnableThreadSafety(1)
 

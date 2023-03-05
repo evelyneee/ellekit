@@ -177,3 +177,13 @@ func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: 
         return codeBuild.joined().literal()
     }
 }
+
+func assembleReference(target: UInt64, register: Int) -> [UInt8] {
+    let codeBuild = [
+        movk(.x(register), target % 65536).bytes(),
+        movk(.x(register), (target / 65536) % 65536, lsl: 16).bytes(),
+        movk(.x(register), ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
+        movk(.x(register), ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
+    ]
+    return codeBuild.joined().literal()
+}

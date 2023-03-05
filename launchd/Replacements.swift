@@ -8,8 +8,8 @@ import Foundation
 public func posix_spawn_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>?,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>?,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {
@@ -21,8 +21,8 @@ public func posix_spawn_replacement(
 public func posix_spawnp_replacement(
     _ pid: UnsafeMutablePointer<pid_t>,
     _ path: UnsafePointer<CChar>,
-    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>,
-    _ spawnattr: UnsafePointer<posix_spawnattr_t?>,
+    _ file_actions: UnsafePointer<posix_spawn_file_actions_t?>?,
+    _ spawnattr: UnsafePointer<posix_spawnattr_t?>?,
     _ argv: UnsafePointer<UnsafeMutablePointer<CChar>?>?,
     _ envp: UnsafePointer<UnsafeMutablePointer<CChar>?>?
 ) -> Int32 {

@@ -60,3 +60,21 @@ int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
     }
     return sandbox_check(pid, op, type, blah[0], blah[1], blah[2], blah[3], blah[4]);
 }
+
+#include <mach/arm/kern_return.h>
+#include <mach/port.h>
+#include <mach/vm_prot.h>
+
+__attribute__((noinline, naked)) volatile kern_return_t custom_mach_vm_protect(mach_port_name_t target, mach_vm_address_t address, mach_vm_size_t size, boolean_t set_maximum, vm_prot_t new_protection)
+{
+    __asm("mov x16, #0xFFFFFFFFFFFFFFF2");
+    __asm("svc 0x80");
+    __asm("ret");
+}
+
+void manual_memcpy(void *restrict dest, const void *src, size_t len) {
+    volatile uint8_t *d8 = dest;
+    const uint8_t *s8 = src;
+    while (len--)
+        *d8++ = *s8++;
+}

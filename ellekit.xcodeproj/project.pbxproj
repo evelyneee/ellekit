@@ -26,6 +26,7 @@
 		9E4A6D9D297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
+		9E5B3E3D29A1689700F6EECC /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B3E3C29A1689700F6EECC /* Entitlements.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
@@ -88,6 +89,7 @@
 		9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9EA498AC295663240099A3ED /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9EC181CE2997C712004863E6 /* PPLRW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC181CD2997C712004863E6 /* PPLRW.swift */; };
 		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
@@ -173,6 +175,8 @@
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
+		9E5B3E3C29A1689700F6EECC /* Entitlements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
+		9E5B3E7429A4369000F6EECC /* xpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E6EBF8F2960EA9000D0D186 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -213,6 +217,7 @@
 		9EA4989A29565D0B0099A3ED /* tweak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tweak.swift; sourceTree = "<group>"; };
 		9EA4989C29565D830099A3ED /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EC181CD2997C712004863E6 /* PPLRW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPLRW.swift; sourceTree = "<group>"; };
 		9EC2B2E0296B96350079379D /* Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Batch.swift; sourceTree = "<group>"; };
 		9EC2B2E5296C89920079379D /* Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Replacements.swift; sourceTree = "<group>"; };
 		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
@@ -285,6 +290,7 @@
 			children = (
 				9E19B2392918118300F8C4C7 /* ellekit.h */,
 				9E6EBFA0296239B500D0D186 /* dyld.h */,
+				9E5B3E7429A4369000F6EECC /* xpc.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -419,6 +425,7 @@
 		9E7DE7E6295293BB008E8BB4 /* launchd */ = {
 			isa = PBXGroup;
 			children = (
+				9EC181CC2997C6FF004863E6 /* Fugu15 */,
 				9E9733572953D6DA0036F339 /* fishhook */,
 				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
@@ -535,6 +542,15 @@
 				9E6FBB642955478A007B28FC /* handler.swift */,
 			);
 			path = "safe mode";
+			sourceTree = "<group>";
+		};
+		9EC181CC2997C6FF004863E6 /* Fugu15 */ = {
+			isa = PBXGroup;
+			children = (
+				9EC181CD2997C712004863E6 /* PPLRW.swift */,
+				9E5B3E3C29A1689700F6EECC /* Entitlements.swift */,
+			);
+			path = Fugu15;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -796,6 +812,7 @@
 				9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */,
 				9E70D396295FCA5B00B284F6 /* Orig.swift in Sources */,
 				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
+				9E5B3E3D29A1689700F6EECC /* Entitlements.swift in Sources */,
 				9EC2B2E6296C89920079379D /* Replacements.swift in Sources */,
 				9E7DE7EB295293E0008E8BB4 /* load.s in Sources */,
 				9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */,
@@ -817,6 +834,7 @@
 				9E97335A2953D6FD0036F339 /* fishhook.c in Sources */,
 				9E6EBF982960FB5100D0D186 /* handler.swift in Sources */,
 				9E70D38F295FCA5B00B284F6 /* General.swift in Sources */,
+				9EC181CE2997C712004863E6 /* PPLRW.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1032,7 +1050,7 @@
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "launchd/launchd-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;

@@ -10,6 +10,8 @@
 
 #include <stdlib.h>
 
+#import "xpc.h"
+
 struct sCSRange {
    unsigned long long location;
    unsigned long long length;
@@ -71,6 +73,17 @@ mach_vm_allocate(mach_port_name_t target, mach_vm_address_t *address, mach_vm_si
 extern kern_return_t
 mach_vm_protect(mach_port_name_t task, mach_vm_address_t address, mach_vm_size_t size, boolean_t set_maximum, vm_prot_t new_protection);
 
+extern kern_return_t
+custom_mach_vm_protect(mach_port_name_t task, mach_vm_address_t address, mach_vm_size_t size, boolean_t set_maximum, vm_prot_t new_protection);
+
+extern kern_return_t
+mach_vm_write(vm_map_t target_task, mach_vm_address_t address, vm_offset_t data, mach_msg_type_number_t dataCnt);
+
+extern kern_return_t
+mach_vm_remap(vm_map_t target_task, mach_vm_address_t *target_address, mach_vm_size_t size, mach_vm_offset_t mask, int flags, vm_map_t src_task, mach_vm_address_t src_address, boolean_t copy, vm_prot_t *cur_protection, vm_prot_t *max_protection, vm_inherit_t inheritance);
+
+extern void manual_memcpy(void *restrict dest, const void *src, size_t len);
+
 #pragma pack(4)
 typedef struct {
   mach_msg_header_t Head;
@@ -115,3 +128,36 @@ extern int shared_region_check(uint64_t* address);
 #include "dyld.h"
 
 extern void test();
+
+extern void dmb_sy();
+
+#define CS_VALID                        0x0000001    /* dynamically valid */
+#define CS_ADHOC                        0x0000002    /* ad hoc signed */
+#define CS_GET_TASK_ALLOW               0x0000004    /* has get-task-allow entitlement */
+#define CS_INSTALLER                    0x0000008    /* has installer entitlement */
+
+#define CS_HARD                         0x0000100    /* don't load invalid pages */
+#define CS_KILL                         0x0000200    /* kill process if it becomes invalid */
+#define CS_CHECK_EXPIRATION             0x0000400    /* force expiration checking */
+#define CS_RESTRICT                     0x0000800    /* tell dyld to treat restricted */
+#define CS_ENFORCEMENT                  0x0001000    /* require enforcement */
+#define CS_REQUIRE_LV                   0x0002000    /* require library validation */
+#define CS_ENTITLEMENTS_VALIDATED       0x0004000
+
+#define CS_ALLOWED_MACHO                0x00ffffe
+
+#define CS_EXEC_SET_HARD                0x0100000    /* set CS_HARD on any exec'ed process */
+#define CS_EXEC_SET_KILL                0x0200000    /* set CS_KILL on any exec'ed process */
+#define CS_EXEC_SET_ENFORCEMENT         0x0400000    /* set CS_ENFORCEMENT on any exec'ed process */
+#define CS_EXEC_SET_INSTALLER           0x0800000    /* set CS_INSTALLER on any exec'ed process */
+
+#define CS_KILLED                       0x1000000    /* was killed by kernel for invalidity */
+#define CS_DYLD_PLATFORM                0x2000000    /* dyld used to load this is a platform binary */
+#define CS_PLATFORM_BINARY              0x4000000    /* this is a platform binary */
+#define CS_PLATFORM_PATH                0x8000000    /* platform binary by the fact of path (osx only) */
+
+#define CS_DEBUGGED                     0x10000000  /* process is currently or has previously been debugged and allowed to run with invalid pages */
+#define CS_SIGNED                       0x20000000  /* process has a signature (may have gone invalid) */
+#define CS_DEV_CODE                     0x40000000  /* code is dev signed, cannot be loaded into prod signed code */
+
+
