@@ -1,19 +1,14 @@
-//
-//  xpc.h
-//  ellekit
-//
-//  Created by charlotte on 2023-02-20.
-//
 
 #ifndef xpc_h
 #define xpc_h
 
 @import Foundation;
 
+#if !TARGET_OS_OSX
 typedef void * xpc_object_t;
 typedef void * xpc_connection_t;
 
-xpc_connection_t xpc_connection_create_mach_service(const char * _Nonnull name,
+_Nullable xpc_connection_t xpc_connection_create_mach_service(const char * _Nonnull name,
     dispatch_queue_t _Nullable targetq, uint64_t flags);
 
 void xpc_connection_resume(xpc_connection_t _Nullable connection);
@@ -33,6 +28,9 @@ xpc_dictionary_set_string(xpc_object_t _Nonnull xdict, const char * _Nullable ke
 void
 xpc_dictionary_set_uint64(xpc_object_t _Nonnull xdict, const char * _Nullable key, uint64_t value);
 
+void
+xpc_dictionary_set_int64(xpc_object_t _Nonnull xdict, const char * _Nullable key, int64_t value);
+
 uint64_t
 xpc_dictionary_get_uint64(xpc_object_t _Nonnull xdict, const char * _Nullable key);
 
@@ -44,3 +42,4 @@ xpc_connection_send_message_with_reply_sync(xpc_connection_t _Nonnull connection
     xpc_object_t _Nonnull message);
 
 #endif /* xpc_h */
+#endif

@@ -13,7 +13,7 @@ public func messageHook(_ cls: AnyClass, _ sel: Selector, _ imp: IMP, _ result: 
         return
     }
 
-    let old = class_replaceMethod(cls, sel, imp, method_getTypeEncoding(method))
+    let old = class_replaceMethod(cls, sel, .init(UnsafeMutableRawPointer(imp).makeCallable()), method_getTypeEncoding(method))
 
     if let result {
         if let old,
@@ -60,18 +60,18 @@ public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ base
 
             let target_implementation = method_getImplementation(target_method)
             let method_encoding = method_getTypeEncoding(target_method)
-            method_setImplementation(target_method, hookedImp)
+            method_setImplementation(target_method, .init(UnsafeMutableRawPointer(hookedImp).makeCallable()))
             let hookedClassName: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?> = .allocate(capacity: 50)
 
             class_addMethod(
                 NSClassFromString(String(cString: hookedClassName.pointee!)),
                 selector,
-                target_implementation,
+                .init(UnsafeMutableRawPointer(target_implementation).makeCallable()),
                 method_encoding
             )
         } else {
             let method_encoding = method_getTypeEncoding(methods[iter])
-            class_addMethod(targetClass, selector, hookedImp, method_encoding)
+            class_addMethod(targetClass, selector, .init(UnsafeMutableRawPointer(hookedImp).makeCallable()), method_encoding)
         }
     }
 }

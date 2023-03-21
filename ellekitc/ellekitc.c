@@ -67,9 +67,13 @@ int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
 
 __attribute__((noinline, naked)) volatile kern_return_t custom_mach_vm_protect(mach_port_name_t target, mach_vm_address_t address, mach_vm_size_t size, boolean_t set_maximum, vm_prot_t new_protection)
 {
+#if __arm64__
     __asm("mov x16, #0xFFFFFFFFFFFFFFF2");
     __asm("svc 0x80");
     __asm("ret");
+#else
+    __asm("ret");
+#endif
 }
 
 void manual_memcpy(void *restrict dest, const void *src, size_t len) {

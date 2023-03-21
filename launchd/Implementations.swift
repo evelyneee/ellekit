@@ -4,8 +4,6 @@
 
 import Foundation
 
-let ptrace = unsafeBitCast(dlsym(dlopen(nil, RTLD_LAZY), "ptrace"), to: (@convention(c) (CInt, pid_t, caddr_t?, CInt) -> CInt).self)
-
 extension String {
     var removingLastComponent: String {
         (self as NSString).deletingLastPathComponent
@@ -68,13 +66,16 @@ func spawn_replacement(
     
     let blacklisted = [
         "BlastDoor",
-        "mobile_assertion_agent"
+        "mobile_assertion_agent",
+        "watchdog",
+        "webkit",
+        "jailbreakd"
     ]
     .map { path.contains($0) }
     .contains(true)
     
     #if os(iOS)
-    if let spawnattr, Fugu15 {
+    if let spawnattr, Fugu15 && !blacklisted {
         var flags: Int16 = 0
 
         tprint("begin unsafe setflags")
@@ -110,13 +111,14 @@ func spawn_replacement(
     
     if launchd {
         
+        // Inject pspawn.dylib in launchd and xpcproxy
         tprint("launchd \(path)")
         addDYLDEnv(selfPath)
         
     } else if safeMode {
-        
-        // do nothing
-        
+                
+        // We always inject the SpringBoard MobileSafety.dylib, I believe it is safe
+        // If it isn't SpringBoard, skip ahead
         if springboard {
             tprint("Injecting sb hook \(sbHookPath)")
             addDYLDEnv(sbHookPath)
@@ -126,7 +128,14 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        if let bundleID = findBundleID(path: path) {
+        if Fugu15 {
+            tprint("Injecting system-wide hook \(sbHookPath)")
+            if springboard {
+                addDYLDEnv(sbHookPath+":"+injectorPath)
+            } else {
+                addDYLDEnv(injectorPath)
+            }
+        } else if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
@@ -138,7 +147,7 @@ func spawn_replacement(
             injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0)
             
             tprint("loaded bundles", injectedBundles)
-            
+                        
             if !safeMode {
                 dylibs = tweaks
                     .compactMap {
@@ -183,6 +192,17 @@ func spawn_replacement(
         tprint("no tweaks \(path)")
     }
     
+    let file_extension = sandbox_extension_issue_file(
+        APP_SANDBOX_READ,
+        ("/var/jb" as NSString).resolvingSymlinksInPath,
+        0
+    )
+        
+    if let exten = file_extension {
+        tprint("got extension", String(cString: exten))
+        envp.append("SANDBOX_EXTENSION="+String(cString: exten))
+    }
+    
     tprint("----------\n new env is \n\(envp.joined(separator: "\n"))\n----------")
     
     var envp_c: [UnsafeMutablePointer<CChar>?] = envp
@@ -213,7 +233,16 @@ func spawn_replacement(
     #endif
     
     #if os(iOS)
-    if !insideLaunchd {
+    if !insideLaunchd && !blacklisted {
+        
+        // `xpcproxy` uses the POSIX_SPAWN_SETEXEC argument
+        // Since the Fugu15 patchset requires spawning suspended,
+        // we cannot patch after from xpcproxy, since it doesn't
+        // return from the pspawn call. We then call jbd, which loops
+        // until the process name changes with the exec posix_spawn call.
+        // When the name has changed, it platformizes the process with
+        // its internal functions and resumes the process
+        
         tprint("entitle and cont requested")
         entitleAndContJBD()
     }
@@ -247,10 +276,11 @@ func spawn_replacement(
     #if os(iOS)
     if Fugu15 {
         do {
-            if let proc = try procForPid(pidToFind: UInt32(pid.pointee)) {
+            if PPLRW.hasKRW, let proc = try procForPid(pidToFind: UInt32(pid.pointee)) {
                 tprint("got proc", proc)
                 
                 try platformize(proc: proc)
+                jbdProcSetDebugged(pid.pointee)
                 
                 tprint("platformize done")
             }
@@ -258,11 +288,11 @@ func spawn_replacement(
             tprint("got error", error)
         }
         
-        if !insideLaunchd {
-            unrestrictCSJBD(pid.pointee)
-
-            tprint("unrestricted cs", pid.pointee)
-        }
+//        if !insideLaunchd {
+//            unrestrictCSJBD(pid.pointee)
+//
+//            tprint("unrestricted cs", pid.pointee)
+//        }
                    
         kill(pid.pointee, SIGCONT)
         tprint("resumed proc", pid.pointee)

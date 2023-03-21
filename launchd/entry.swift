@@ -7,6 +7,7 @@ import os.log
 
 var selfPath: String = "/usr/lib/system/libdyld.dylib"
 var sbHookPath: String = "/usr/lib/system/libdyld.dylib"
+var injectorPath: String = "/usr/lib/system/libdyld.dylib"
 
 func loadPath() {
     if let path = loadDLaddrPath() {
@@ -23,6 +24,7 @@ func loadPath() {
         #endif
     }
     sbHookPath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/MobileSafety.dylib")
+    injectorPath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/libinjector.dylib")
 }
 
 func loadDLaddrPath() -> String? {
@@ -59,7 +61,6 @@ func taskGetVmMap(task: UInt64) throws -> UInt64
 func vmMapGetPmap(vmMap: UInt64) throws -> UInt64
 {
     if vmMap == 0 { return 0 }
-    #warning("used to be 0x40, but ida said 0x48")
     let pmapAddr = vmMap + 0x48
     tprint("getting pmap", pmapAddr)
     return try PPLRW.rPtr(pmapAddr)
@@ -128,44 +129,63 @@ let proc_ro_offset: UInt64 = 0x20
 let proc_ro_csflags_offset: UInt64 = 0x1C
 
 #if os(iOS)
-var jbdConnection: UnsafeMutableRawPointer? = {
-    let connection = xpc_connection_create_mach_service("com.opa334.jailbreakd", nil, 1 << 1);
-    xpc_connection_set_event_handler(connection, { _ in })
-    xpc_connection_resume(connection)
-    tprint("got connection", connection)
-    return connection
+
+struct JBDMessage {
+    static var JBD_MSG_HANDOFF_PPL: UInt64 = 10
+    static var JBD_MSG_REBUILD_TRUSTCACHE: UInt64 = 20
+    static var JBD_MSG_UNRESTRICT_VNODE: UInt64 = 21
+    static var JBD_MSG_PROCESS_BINARY: UInt64 = 22
+    static var JBD_MSG_PROC_SET_DEBUGGED: UInt64 = 23
+    static var JBD_MSG_UNRESTRICT_AND_SIGCONT: UInt64 = 24
+}
+
+
+var sendJBDMessage: @convention (c) (xpc_object_t) -> xpc_object_t = {
+    tprint("INIT: Loading sendJBDMessage")
+    let handle = dlopen("/var/jb/basebin/libjailbreak.dylib", RTLD_NOW)
+    if handle == nil {
+        tprint("couldn't get handle... panic incoming")
+        sleep(2)
+        fatalError()
+    }
+    let fn = dlsym(handle, "sendJBDMessage")
+    if fn == nil {
+        tprint("couldn't get symbol... panic incoming")
+        sleep(2)
+        fatalError()
+    }
+    return unsafeBitCast(fn, to: (@convention (c) (xpc_object_t) -> xpc_object_t).self)
 }()
 
-func unrestrictCSJBD(_ pid: pid_t) {
-    guard let jbdConnection else {
-        tprint("can't connect to jailbreakd service")
-        return
-    }
+func initPPLJBD() {
     let msg = xpc_dictionary_create(nil, nil, 0)
-    xpc_dictionary_set_string(msg, "action", "unrestrict-cs")
-    xpc_dictionary_set_uint64(msg, "pid", UInt64(pid))
-    xpc_connection_send_message_with_reply_sync(jbdConnection, msg)
+    xpc_dictionary_set_uint64(msg, "id", JBDMessage.JBD_MSG_HANDOFF_PPL)
+    let ret = sendJBDMessage(msg)
+    tprint("returned:", xpc_dictionary_get_uint64(ret, "success"))
 }
 
-func initPPLJBD() {
-    guard let jbdConnection else {
-        tprint("can't connect to jailbreakd service")
-        return
+var jbdProcSetDebugged: @convention (c) (pid_t) -> UInt64 = {
+    tprint("INIT: Loading jbdProcSetDebugged")
+    let handle = dlopen("/var/jb/basebin/libjailbreak.dylib", RTLD_NOW)
+    if handle == nil {
+        tprint("couldn't get handle... panic incoming")
+        sleep(2)
+        fatalError()
     }
-    let msg = xpc_dictionary_create(nil, nil, 0)
-    xpc_dictionary_set_string(msg, "action", "handoff-ppl")
-    xpc_connection_send_message_with_reply_sync(jbdConnection, msg)
-    tprint("PPL initiated")
-}
+    let fn = dlsym(handle, "jbdProcSetDebugged")
+    if fn == nil {
+        tprint("couldn't get symbol... panic incoming")
+        sleep(2)
+        fatalError()
+    }
+    return unsafeBitCast(fn, to: (@convention (c) (pid_t) -> UInt64).self)
+}()
 
 func entitleAndContJBD() {
-    guard let jbdConnection else {
-        tprint("can't connect to jailbreakd service")
-        return
-    }
     let msg = xpc_dictionary_create(nil, nil, 0)
-    xpc_dictionary_set_string(msg, "action", "entitle-sigcont")
-    xpc_connection_send_message_with_reply_sync(jbdConnection, msg)
+    xpc_dictionary_set_uint64(msg, "id", JBDMessage.JBD_MSG_UNRESTRICT_AND_SIGCONT)
+    let ret = sendJBDMessage(msg)
+    tprint("returned:", xpc_dictionary_get_uint64(ret, "success"))
     tprint("Entitle and sigcont started")
 }
 #endif
@@ -175,7 +195,7 @@ func platformize(proc: UInt64) throws {
     tprint("got proc_ro", proc_ro)
     let proc_ro_csflags = try PPLRW.r32(virt: proc_ro + proc_ro_csflags_offset)
     tprint("got orig csflags", proc_ro_csflags)
-    let new_csflags = UInt32((Int32(proc_ro_csflags) | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW | CS_DEBUGGED) & ~(CS_RESTRICT | CS_HARD | CS_KILL))
+    let new_csflags = UInt32((Int32(proc_ro_csflags) | CS_GET_TASK_ALLOW | CS_DEBUGGED | 0x00000020) & ~(CS_RESTRICT | CS_HARD | CS_KILL))
     tprint("got new csflags", new_csflags)
     let write_csflags = PPLRW.w32(proc_ro + proc_ro_csflags_offset, value: new_csflags)
     tprint("write csflags", write_csflags)
@@ -239,25 +259,17 @@ func loadFugu15KRW() throws {
 
 let insideLaunchd = ProcessInfo.processInfo.processName.contains("launchd")
 
-@_cdecl("launchd_entry")
-public func entry() {
+func pspawnMain() {
     do {
         #if os(iOS)
         if Fugu15 {
-            
-            if !insideLaunchd {
-                tprint("calling jbd to have ppl initialized")
-                initPPLJBD()
-                unrestrictCSJBD(getpid())
-            }
+            tprint("calling jbd to have ppl initialized")
+//            initPPLJBD()
+//            if insideLaunchd {
+//                _ = jbdProcSetDebugged(getpid())
+//            }
             tprint("should have ppl initialized")
             try loadFugu15KRW()
-            
-//            if exceptionHandler == nil {
-//                exceptionHandler = .init()
-//
-//                tprint("initialized exception handler for debug")
-//            }
         }
         #endif
         try loadTweaks()
@@ -267,4 +279,16 @@ public func entry() {
     
     loadPath()
     Rebinds.shared.performHooks()
+}
+
+@_cdecl("launchd_entry")
+public func entry() {
+    tprint("Hello world from", ProcessInfo.processInfo.processName, "running as", getuid())
+    if getpid() == 1 {
+        DispatchQueue.global().async {
+            pspawnMain()
+        }
+    } else {
+        pspawnMain()
+    }
 }

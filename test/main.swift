@@ -8,8 +8,15 @@
 
 import Foundation
 import ellekit
+import AppKit
 
-
+for image in 0..<_dyld_image_count() {
+    print(String(cString: _dyld_get_image_name(image)))
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_NSDrawMenuBarBackground") {
+        print("_NSDrawMenuBarBackground: \(sym)")
+        break
+    }
+}
 
 #if false
 

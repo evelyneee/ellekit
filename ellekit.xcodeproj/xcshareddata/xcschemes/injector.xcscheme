@@ -42,7 +42,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
-         FilePath = "/Applications/iTerm.app/Contents/MacOS/iTerm2">
+         FilePath = "/Applications/Vivid.app/Contents/MacOS/Vivid">
       </PathRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable

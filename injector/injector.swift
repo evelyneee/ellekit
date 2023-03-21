@@ -13,78 +13,35 @@ let path = "/Library/MobileSubstrate/DynamicLibraries/"
 let path = "/Library/TweakInject/"
 #endif
 
+@_silgen_name("sandbox_extension_consume")
+func sandbox_extension_consume(_ str: UnsafePointer<Int8>)
+
 // big wip don't complain!
 @_cdecl("injector_entry")
 public func entry() {
+    dlopen("/usr/lib/libobjc.A.dylib", RTLD_NOW)
     print("[ellekit] injector: out here")
+    if let exten = ProcessInfo.processInfo.environment["SANDBOX_EXTENSION"] {
+        NSLog("got extension")
+        NSLog(exten)
+        sandbox_extension_consume(exten)
+    } else {
+        NSLog("no extension")
+    }
     do {
-        try FileManager.default.contentsOfDirectory(atPath: path)
-            .filter { $0.suffix(6) == ".dylib" || $0.suffix(6) == ".plist" }
-            .compactMap {
-                path+$0.components(separatedBy: ".").dropLast().joined(separator: ".") // remove extension
+        try loadTweaks()
+        tweaks
+            .filter { $0.bundles.contains(Bundle.main.bundleIdentifier ?? "com.apple.security") }
+            .forEach {
+                NSLog("opening tweak")
+                NSLog($0.path)
+                dlopen($0.path, RTLD_NOW)
+                if let err = dlerror() {
+                    NSLog("Got dlerr")
+                    NSLog(String(cString: err))
+                }
             }
-            .removeDuplicates()
-            .sorted { $0 < $1 }
-            .forEach(openTweak(_:))
     } catch {
         print("got error", error)
-    }
-}
-
-struct Filter: Codable {
-    var Filter: CoreFilter
-    struct CoreFilter: Codable {
-        var Bundles: [String]
-    }
-    var UnloadAfter: Bool?
-}
-
-func openTweak(_ tweak: String) throws {
-
-    let filterData = try Data(contentsOf: NSURL.fileURL(withPath: tweak+".plist"))
-    let filterRoot = try PropertyListDecoder().decode(Filter.self, from: filterData)
-    let filter = filterRoot
-        .Filter
-        .Bundles
-        .map { $0.lowercased() }
-
-    if let bundleID = Bundle.main.bundleIdentifier {
-        if filter.contains(bundleID.lowercased()) {
-            print("[ellekit] injector: loaded \(tweak+".dylib")")
-            let handle = dlopen(tweak + ".dylib", RTLD_NOW)
-            if handle == nil {
-                print("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
-            }
-            if filterRoot.UnloadAfter == true {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
-                    dlclose(handle)
-                    dlclose(handle)
-                    print("[ellekit] injector: closed \(tweak+".dylib")")
-                })
-            }
-            return
-        }
-    }
-
-    if filter.contains("*") {
-        print("[ellekit] injector: loading with wildcard filter: \(tweak+".dylib")")
-        let handle = dlopen(tweak + ".dylib", RTLD_NOW)
-        if handle == nil {
-            print("[ellekit] injector: Failed to open tweak: \(String(cString: dlerror()))")
-        }
-        if filterRoot.UnloadAfter == true {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
-                dlclose(handle)
-                dlclose(handle)
-                print("[ellekit] injector: closed \(tweak+".dylib")")
-            })
-        }
-        return
-    }
-}
-
-extension Array where Element: Hashable {
-    func removeDuplicates() -> Self {
-        Array(Set(self))
     }
 }

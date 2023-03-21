@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #import "xpc.h"
+#import "sandbox.h"
 
 struct sCSRange {
    unsigned long long location;
@@ -131,9 +132,10 @@ extern void test();
 
 extern void dmb_sy();
 
-#define CS_VALID                        0x0000001    /* dynamically valid */
+#define CS_VALID 0x0000001    /* dynamically valid */
 #define CS_ADHOC                        0x0000002    /* ad hoc signed */
 #define CS_GET_TASK_ALLOW               0x0000004    /* has get-task-allow entitlement */
+#define CS_INVALID_ALLOWED              0x00000020
 #define CS_INSTALLER                    0x0000008    /* has installer entitlement */
 
 #define CS_HARD                         0x0000100    /* don't load invalid pages */

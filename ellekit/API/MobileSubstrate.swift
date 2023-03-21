@@ -14,11 +14,17 @@ public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeRawPointer? {
 
 @_cdecl("MSFindSymbol")
 public func MSFindSymbol(_ image: UnsafeRawPointer, _ name: UnsafeRawPointer) -> UnsafeRawPointer? {
+    #if os(macOS)
+    if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        return .init(symbol)
+    }
+    #else
     if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
         return .init(symbol)
     } else if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
         return .init(symbol)
     }
+    #endif
     return nil
 }
 

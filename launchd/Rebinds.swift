@@ -86,12 +86,17 @@ class Rebinds {
     }
     
     func performHooks() {
-//        #if os(macOS)
+        #if os(macOS)
         tprint("using ellekit for hooking")
         hook()
-//        #else
-//        tprint("using fishhook for launchd/proxy hooks")
-//        rebind()
-//        #endif
+        #else // iOS, tvOS, watchOS (?)
+        if Fugu15 { // Fugu will have CS_DEBUGGED set everywhere, unlike checkm8 (unsure about this in practice though)
+            tprint("using ellekit for hooking")
+            hook()
+        } else {
+            tprint("using fishhook for launchd/proxy hooks")
+            rebind()
+        }
+        #endif
     }
 }

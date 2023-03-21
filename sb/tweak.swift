@@ -99,6 +99,8 @@ public func tweak_entry() {
         exit(0)
     }
     
+    return;
+    
     trap(signals: [
         SIGQUIT,
         SIGILL,

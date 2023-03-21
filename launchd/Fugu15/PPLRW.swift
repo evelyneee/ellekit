@@ -76,10 +76,15 @@ public class PPLRW {
     public private(set) static var magicPageUInt64: UInt64!
     public private(set) static var magicPage: UnsafeMutableBufferPointer<UInt64>!
     public private(set) static var cpuTTEP: UInt64!
-    
+    public private(set) static var hasKRW: Bool = false
     static let lock = NSLock()
     
     public static func initialize(magicPage: UInt64, cpuTTEP: UInt64) {
+        
+        guard !hasKRW else { return }
+        
+        self.hasKRW = true
+        
         self.magicPageUInt64 = magicPage
         self.cpuTTEP = cpuTTEP
         
