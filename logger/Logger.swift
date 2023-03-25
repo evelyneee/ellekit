@@ -36,7 +36,7 @@ private struct TextLog: TextOutputStream {
     }
     
     func write(_ string: String) {
-        guard enableLogging else { return print(string) }
+        guard enableLogging else { return }
         #if os(iOS)
         let log = NSURL.fileURL(withPath: "/private/var/mobile/log.txt")
         #else
