@@ -175,8 +175,6 @@
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
-		9E495E9F29CE6DB100420457 /* injector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
-		9E495EA029CE6DB100420457 /* load.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9E49622E29BD326600B1FB2B /* sandbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sandbox.h; sourceTree = "<group>"; };
 		9E49623229C39F8600B1FB2B /* prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prefs.swift; sourceTree = "<group>"; };
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
@@ -535,8 +533,6 @@
 			children = (
 				9E18B75429C4F58900714AB8 /* injector.h */,
 				9E18B75529C4F58900714AB8 /* injector.c */,
-				9E495E9F29CE6DB100420457 /* injector.swift */,
-				9E495EA029CE6DB100420457 /* load.s */,
 			);
 			path = injector;
 			sourceTree = "<group>";
