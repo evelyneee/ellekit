@@ -36,7 +36,9 @@
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 
-#include <stdio.h>
+#if __has_include(<ptrauth.h>)
+#include <ptrauth.h>
+#endif
 
 #ifdef __LP64__
 typedef struct mach_header_64 mach_header_t;
@@ -54,10 +56,6 @@ typedef struct nlist nlist_t;
 
 #ifndef SEG_DATA_CONST
 #define SEG_DATA_CONST  "__DATA_CONST"
-#endif
-
-#ifndef SEG_AUTH_CONST
-#define SEG_AUTH_CONST  "__AUTH_CONST"
 #endif
 
 struct rebindings_entry {
@@ -87,12 +85,13 @@ static int prepend_rebindings(struct rebindings_entry **rebindings_head,
   return 0;
 }
 
-static vm_prot_t get_protection(void *sectionStart) {
+#if 0
+static int get_protection(void *addr, vm_prot_t *prot, vm_prot_t *max_prot) {
   mach_port_t task = mach_task_self();
   vm_size_t size = 0;
-  vm_address_t address = (vm_address_t)sectionStart;
+  vm_address_t address = (vm_address_t)addr;
   memory_object_name_t object;
-#if __LP64__
+#ifdef __LP64__
   mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
   vm_region_basic_info_data_64_t info;
   kern_return_t info_ret = vm_region_64(
@@ -103,34 +102,32 @@ static vm_prot_t get_protection(void *sectionStart) {
   kern_return_t info_ret = vm_region(task, &address, &size, VM_REGION_BASIC_INFO, (vm_region_info_t)&info, &count, &object);
 #endif
   if (info_ret == KERN_SUCCESS) {
-    return info.protection;
-  } else {
-    return VM_PROT_READ;
+    if (prot != NULL)
+      *prot = info.protection;
+
+    if (max_prot != NULL)
+      *max_prot = info.max_protection;
+
+    return 0;
   }
+
+  return -1;
 }
+#endif
+
 static void perform_rebinding_with_section(struct rebindings_entry *rebindings,
                                            section_t *section,
                                            intptr_t slide,
                                            nlist_t *symtab,
                                            char *strtab,
                                            uint32_t *indirect_symtab) {
-  const bool isDataConst = strcmp(section->segname, SEG_DATA_CONST) == 0;
-  const bool isAuthConst = strcmp(section->segname, SEG_AUTH_CONST) == 0;
   uint32_t *indirect_symbol_indices = indirect_symtab + section->reserved1;
   void **indirect_symbol_bindings = (void **)((uintptr_t)slide + section->addr);
-  vm_prot_t oldProtection = VM_PROT_READ;
-  vm_size_t trunc_address = (vm_size_t)indirect_symbol_bindings;
-  vm_size_t trunc_size = 0;
-  if (isDataConst || isAuthConst) {
-    oldProtection = get_protection(rebindings);
-    trunc_address = trunc_page((vm_size_t)indirect_symbol_bindings);
-    trunc_size =(vm_size_t)indirect_symbol_bindings -trunc_address;
-    mprotect((void *)trunc_address, section->size+trunc_size, PROT_READ | PROT_WRITE);
-  }
+
   for (uint i = 0; i < section->size / sizeof(void *); i++) {
     uint32_t symtab_index = indirect_symbol_indices[i];
     if (symtab_index == INDIRECT_SYMBOL_ABS || symtab_index == INDIRECT_SYMBOL_LOCAL ||
-        symtab_index == (INDIRECT_SYMBOL_LOCAL | INDIRECT_SYMBOL_ABS)) {
+        symtab_index == (INDIRECT_SYMBOL_LOCAL   | INDIRECT_SYMBOL_ABS)) {
       continue;
     }
     uint32_t strtab_offset = symtab[symtab_index].n_un.n_strx;
@@ -139,20 +136,37 @@ static void perform_rebinding_with_section(struct rebindings_entry *rebindings,
     struct rebindings_entry *cur = rebindings;
     while (cur) {
       for (uint j = 0; j < cur->rebindings_nel; j++) {
-        if (symbol_name_longer_than_1 &&
-            strcmp(&symbol_name[1], cur->rebindings[j].name) == 0) {
-          if (cur->rebindings[j].replaced != NULL &&
-              indirect_symbol_bindings[i] != cur->rebindings[j].replacement) {
+        if (symbol_name_longer_than_1 && strcmp(&symbol_name[1], cur->rebindings[j].name) == 0) {
+          kern_return_t err;
+
+          if (cur->rebindings[j].replaced != NULL && indirect_symbol_bindings[i] != cur->rebindings[j].replacement)
             *(cur->rebindings[j].replaced) = indirect_symbol_bindings[i];
-          }
-          void *replacement = cur->rebindings[j].replacement;
-          
-          if (!strcmp(section->sectname, "__auth_got")) {
-            #if __arm64e__
-            void *stripped = ptrauth_strip(replacement, ptrauth_key_process_independent_code);
-            replacement = ptrauth_sign_unauthenticated(stripped, ptrauth_key_asia, &indirect_symbol_bindings[i]);
-            #endif
+
+          /**
+           * 1. Moved the vm protection modifying codes to here to reduce the
+           *    changing scope.
+           * 2. Adding VM_PROT_WRITE mode unconditionally because vm_region
+           *    API on some iOS/Mac reports mismatch vm protection attributes.
+           * -- Lianfu Hao Jun 16th, 2021
+           **/
+          err = vm_protect (mach_task_self (), (uintptr_t)indirect_symbol_bindings, section->size, 0, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY);
+          if (err == KERN_SUCCESS) {
+            /**
+             * Once we failed to change the vm protection, we
+             * MUST NOT continue the following write actions!
+             * iOS 15 has corrected the const segments prot.
+             * -- Lionfore Hao Jun 11th, 2021
+             **/
+            #if !__has_feature(ptrauth_calls)
+            indirect_symbol_bindings[i] = cur->rebindings[j].replacement;
+            #else
+            void *replacement = cur->rebindings[j].replacement;
+            if (!strcmp(section->sectname, "__auth_got")) {
+              void *stripped = ptrauth_strip(replacement, ptrauth_key_process_independent_code);
+              replacement = ptrauth_sign_unauthenticated(stripped, ptrauth_key_process_independent_code, &indirect_symbol_bindings[i]);
+            }
             indirect_symbol_bindings[i] = replacement;
+            #endif
           }
           goto symbol_loop;
         }
@@ -160,19 +174,6 @@ static void perform_rebinding_with_section(struct rebindings_entry *rebindings,
       cur = cur->next;
     }
   symbol_loop:;
-  }
-  if (isDataConst || isAuthConst) {
-    int protection = 0;
-    if (oldProtection & VM_PROT_READ) {
-      protection |= PROT_READ;
-    }
-    if (oldProtection & VM_PROT_WRITE) {
-      protection |= PROT_WRITE;
-    }
-    if (oldProtection & VM_PROT_EXECUTE) {
-      protection |= PROT_EXEC;
-    }
-    mprotect((void *)trunc_address, section->size+trunc_size, protection);
   }
 }
 
@@ -221,8 +222,7 @@ static void rebind_symbols_for_image(struct rebindings_entry *rebindings,
     cur_seg_cmd = (segment_command_t *)cur;
     if (cur_seg_cmd->cmd == LC_SEGMENT_ARCH_DEPENDENT) {
       if (strcmp(cur_seg_cmd->segname, SEG_DATA) != 0 &&
-          strcmp(cur_seg_cmd->segname, SEG_DATA_CONST) != 0 &&
-          strcmp(cur_seg_cmd->segname, SEG_AUTH_CONST) != 0) {
+          strcmp(cur_seg_cmd->segname, SEG_DATA_CONST) != 0) {
         continue;
       }
       for (uint j = 0; j < cur_seg_cmd->nsects; j++) {

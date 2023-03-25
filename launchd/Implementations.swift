@@ -74,20 +74,6 @@ func spawn_replacement(
     .map { path.contains($0) }
     .contains(true)
     
-//    #if os(iOS)
-//    if let spawnattr, Fugu15 && !blacklisted {
-//        var flags: Int16 = 0
-//
-//        tprint("begin unsafe setflags")
-//
-//        posix_spawnattr_getflags(spawnattr, &flags)
-//
-//        flags |= Int16(POSIX_SPAWN_START_SUSPENDED)
-//
-//        posix_spawnattr_setflags(UnsafeMutablePointer(mutating: spawnattr), flags)
-//    }
-//    #endif
-    
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
     // since we cache tweaks, a respring will forcefully refresh it
@@ -128,14 +114,7 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        if Fugu15 {
-            tprint("Injecting system-wide hook \(sbHookPath)")
-            if springboard {
-                addDYLDEnv(sbHookPath+":"+injectorPath)
-            } else {
-                addDYLDEnv(injectorPath)
-            }
-        } else if let bundleID = findBundleID(path: path) {
+        if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               

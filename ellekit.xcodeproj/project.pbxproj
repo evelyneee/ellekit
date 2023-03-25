@@ -21,9 +21,8 @@
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
-		9E495EA429CE6F1900420457 /* injector.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B75529C4F58900714AB8 /* injector.c */; };
-		9E495EA529CE6F1C00420457 /* injector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E18B75429C4F58900714AB8 /* injector.h */; };
-		9E49622F29C1206E00B1FB2B /* Tweak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81429529888008E8BB4 /* Tweak.swift */; };
+		9E495EAE29CF800C00420457 /* injector.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B75529C4F58900714AB8 /* injector.c */; };
+		9E495EAF29CF800E00420457 /* injector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E18B75429C4F58900714AB8 /* injector.h */; };
 		9E49623329C39F8600B1FB2B /* prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E49623229C39F8600B1FB2B /* prefs.swift */; };
 		9E4A6D9B297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4A6D9C297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
@@ -34,7 +33,6 @@
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
-		9E6EBF922960EAF000D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6EBF932960EAF300D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
 		9E6EBF982960FB5100D0D186 /* handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6FBB642955478A007B28FC /* handler.swift */; };
@@ -175,6 +173,7 @@
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		9E495EAA29CF800100420457 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E49622E29BD326600B1FB2B /* sandbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sandbox.h; sourceTree = "<group>"; };
 		9E49623229C39F8600B1FB2B /* prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prefs.swift; sourceTree = "<group>"; };
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
@@ -215,7 +214,6 @@
 		9E9733592953D6FD0036F339 /* fishhook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fishhook.h; sourceTree = "<group>"; };
 		9E9FA76B294BD98A00D18D18 /* taskforpid.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = taskforpid.xml; sourceTree = "<group>"; };
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EA4989A29565D0B0099A3ED /* tweak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tweak.swift; sourceTree = "<group>"; };
 		9EA4989C29565D830099A3ED /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -242,14 +240,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9E96A5BF295924A4000EDC43 /* Frameworks */ = {
+		9E495EA829CF800100420457 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9EA0D1B8291C5D500061B187 /* Frameworks */ = {
+		9E96A5BF295924A4000EDC43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -466,12 +464,12 @@
 			isa = PBXGroup;
 			children = (
 				9E92AAA9290D4E680018604C /* libellekit.dylib */,
-				9EA0D1BA291C5D500061B187 /* libinjector.dylib */,
 				9E2D4F4E2938389B00EF6619 /* test */,
 				9E381C3A293D1C87004D36B2 /* loader */,
 				9E7DE7E2295293B5008E8BB4 /* pspawn.dylib */,
 				9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */,
 				9E96A5C2295924A4000EDC43 /* ptrauth-shim */,
+				9E495EAA29CF800100420457 /* libinjector.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -548,6 +546,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		9E495EA629CF800100420457 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E495EAF29CF800E00420457 /* injector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E7DE7DE295293B5008E8BB4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -561,14 +567,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9EA0D1B6291C5D500061B187 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9E495EA529CE6F1C00420457 /* injector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,6 +615,23 @@
 			productName = loader;
 			productReference = 9E381C3A293D1C87004D36B2 /* loader */;
 			productType = "com.apple.product-type.tool";
+		};
+		9E495EA929CF800100420457 /* injector */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E495EAB29CF800100420457 /* Build configuration list for PBXNativeTarget "injector" */;
+			buildPhases = (
+				9E495EA629CF800100420457 /* Headers */,
+				9E495EA729CF800100420457 /* Sources */,
+				9E495EA829CF800100420457 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = injector;
+			productName = injector;
+			productReference = 9E495EAA29CF800100420457 /* libinjector.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		9E7DE7E1295293B5008E8BB4 /* launchd */ = {
 			isa = PBXNativeTarget;
@@ -670,23 +685,6 @@
 			productReference = 9E96A5C2295924A4000EDC43 /* ptrauth-shim */;
 			productType = "com.apple.product-type.tool";
 		};
-		9EA0D1B9291C5D500061B187 /* injector */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9EA0D1BD291C5D500061B187 /* Build configuration list for PBXNativeTarget "injector" */;
-			buildPhases = (
-				9EA0D1B6291C5D500061B187 /* Headers */,
-				9EA0D1B7291C5D500061B187 /* Sources */,
-				9EA0D1B8291C5D500061B187 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = injector;
-			productName = injector;
-			productReference = 9EA0D1BA291C5D500061B187 /* libinjector.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		9EA498A129565DC80099A3ED /* safemode-ui */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9EA498A329565DC80099A3ED /* Build configuration list for PBXNativeTarget "safemode-ui" */;
@@ -720,6 +718,9 @@
 					9E381C39293D1C87004D36B2 = {
 						CreatedOnToolsVersion = 14.1;
 					};
+					9E495EA929CF800100420457 = {
+						CreatedOnToolsVersion = 14.1;
+					};
 					9E7DE7E1295293B5008E8BB4 = {
 						CreatedOnToolsVersion = 14.1;
 						LastSwiftMigration = 1410;
@@ -729,10 +730,6 @@
 					};
 					9E96A5C1295924A4000EDC43 = {
 						CreatedOnToolsVersion = 14.1;
-					};
-					9EA0D1B9291C5D500061B187 = {
-						CreatedOnToolsVersion = 14.1;
-						LastSwiftMigration = 1410;
 					};
 					9EA498A129565DC80099A3ED = {
 						CreatedOnToolsVersion = 14.1;
@@ -753,12 +750,12 @@
 			projectRoot = "";
 			targets = (
 				9E92AAA8290D4E680018604C /* ellekit */,
-				9EA0D1B9291C5D500061B187 /* injector */,
 				9E2D4F4D2938389B00EF6619 /* test */,
 				9E381C39293D1C87004D36B2 /* loader */,
 				9E7DE7E1295293B5008E8BB4 /* launchd */,
 				9EA498A129565DC80099A3ED /* safemode-ui */,
 				9E96A5C1295924A4000EDC43 /* ptrauth-shim */,
+				9E495EA929CF800100420457 /* injector */,
 			);
 		};
 /* End PBXProject section */
@@ -790,6 +787,14 @@
 				9E823CF12942CFC80037659B /* Rebind.swift in Sources */,
 				9E823CF22942CFC80037659B /* General.swift in Sources */,
 				9E823CF82942CFF40037659B /* Sizing.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E495EA729CF800100420457 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E495EAE29CF800C00420457 /* injector.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -869,16 +874,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E96A5C5295924A4000EDC43 /* main.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9EA0D1B7291C5D500061B187 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9E6EBF922960EAF000D0D186 /* Logger.swift in Sources */,
-				9E495EA429CE6F1900420457 /* injector.c in Sources */,
-				9E49622F29C1206E00B1FB2B /* Tweak.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1010,11 +1005,64 @@
 			};
 			name = Release;
 		};
+		9E495EAC29CF800100420457 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+			};
+			name = Debug;
+		};
+		9E495EAD29CF800100420457 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ARCHS = (
+					arm64,
+					arm64e,
+				);
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF46MYDSGH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+			};
+			name = Release;
+		};
 		9E7DE7E4295293B5008E8BB4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = arm64e;
+				ARCHS = (
+					arm64e,
+					arm64,
+				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
@@ -1048,7 +1096,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = arm64e;
+				ARCHS = (
+					arm64e,
+					arm64,
+				);
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
@@ -1294,84 +1345,6 @@
 			};
 			name = Release;
 		};
-		9EA0D1BB291C5D500061B187 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = (
-					arm64,
-					arm64e,
-					x86_64,
-				);
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_STATIC_ANALYZER_MODE = deep;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VF46MYDSGH;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = macosx13.0;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		9EA0D1BC291C5D500061B187 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				ARCHS = (
-					arm64,
-					arm64e,
-					x86_64,
-				);
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_STATIC_ANALYZER_MODE = deep;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VF46MYDSGH;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = macosx13.0;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 		9EA498A429565DC80099A3ED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1435,6 +1408,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		9E495EAB29CF800100420457 /* Build configuration list for PBXNativeTarget "injector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E495EAC29CF800100420457 /* Debug */,
+				9E495EAD29CF800100420457 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9E7DE7E3295293B5008E8BB4 /* Build configuration list for PBXNativeTarget "launchd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1467,15 +1449,6 @@
 			buildConfigurations = (
 				9E96A5C7295924A4000EDC43 /* Debug */,
 				9E96A5C8295924A4000EDC43 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9EA0D1BD291C5D500061B187 /* Build configuration list for PBXNativeTarget "injector" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9EA0D1BB291C5D500061B187 /* Debug */,
-				9EA0D1BC291C5D500061B187 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

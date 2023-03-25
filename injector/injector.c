@@ -8,10 +8,14 @@
 #include <objc/runtime.h>
 #include <dirent.h>
 #include <dlfcn.h>
+#include <os/log.h>
+#include <mach-o/dyld.h>
 
 static int compare(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
 }
+
+os_log_t eklog;
 
 #if TARGET_OS_OSX
 #define TWEAKS_DIRECTORY "/Library/TweakInject/"
@@ -57,6 +61,15 @@ char* append_str(const char* str, const char* append_str) {
     new_str[str_len + append_str_len] = '\0';  // terminate the new string
 
     return new_str;
+}
+
+char *get_last_path_component(const char *path)
+{
+    char *last_component = strrchr(path, '/');
+    if (last_component == NULL) {
+        return NULL;
+    }
+    return last_component + 1;
 }
 
 #warning "Add bundle checks, needs choicy code"
@@ -128,6 +141,61 @@ static bool tweak_needinject(const char* orig_path) {
         }
     }
     
+    CFArrayRef executables = CFDictionaryGetValue(filter, CFSTR("Executables"));
+
+    if (executables) {
+        
+        char executable[1024];
+        uint32_t size = sizeof(path);
+
+        if (_NSGetExecutablePath(executable, &size) == 0) {
+            
+            for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
+                CFStringRef id = CFArrayGetValueAtIndex(executables, i);
+
+                char* str = malloc(CFStringGetLength(id)+1);
+
+                CFStringGetCString(id, str, CFStringGetLength(id)+1, kCFStringEncodingASCII);
+
+                printf("opening %s\n", str);
+                
+                if (strcmp(str, get_last_path_component(executable))) {
+                    free(str);
+                    goto success;
+                }
+
+                free(str);
+            }
+        } else if (CFBundleGetMainBundle()) {
+            for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
+                CFStringRef id = CFArrayGetValueAtIndex(executables, i);
+
+                char *name_str = NULL;
+                CFBundleRef bundle = CFBundleGetMainBundle();
+                CFURLRef url = CFBundleCopyExecutableURL(bundle);
+                if (url) {
+                    CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+                    CFStringRef file_name = CFURLCopyLastPathComponent(url);
+                    if (file_name) {
+                        if (CFStringCompare(file_name, id, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                            CFRelease(file_name);
+                            CFRelease(path);
+                            CFRelease(url);
+                            free(name_str);
+                            goto success;
+                        }
+                        CFRelease(file_name);
+                    }
+                    CFRelease(path);
+                    CFRelease(url);
+                }
+                
+                free(name_str);
+
+            }
+        }
+    }
+    
     CFRelease(plist);
     return false;
     
@@ -187,6 +255,12 @@ static void tweaks_iterate() {
             bool ret = tweak_needinject(plist);
             if (ret) {
                 dlopen(full_path, RTLD_NOW);
+                
+                char* err = dlerror();
+                
+                if (err) {
+                    os_log_with_type(eklog, OS_LOG_TYPE_ERROR, "[libinjector] Got dlopen error: %s", err);
+                }
             }
             free(full_path);
             free(plist);
@@ -201,6 +275,7 @@ static void tweaks_iterate() {
 
 __attribute__((constructor))
 static void injection_init() {
+    eklog = os_log_create("red.charlotte.libinjector", "ellekit");
     const char* extension = getenv("SANDBOX_EXTENSION");
     if (extension) {
         sandbox_extension_consume(extension);

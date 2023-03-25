@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9EA0D1B9291C5D500061B187"
+               BlueprintIdentifier = "9E495EA929CF800100420457"
                BuildableName = "libinjector.dylib"
                BlueprintName = "injector"
                ReferencedContainer = "container:ellekit.xcodeproj">
@@ -61,7 +61,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9EA0D1B9291C5D500061B187"
+            BlueprintIdentifier = "9E495EA929CF800100420457"
             BuildableName = "libinjector.dylib"
             BlueprintName = "injector"
             ReferencedContainer = "container:ellekit.xcodeproj">

@@ -38,29 +38,19 @@ func loadDLaddrPath() -> String? {
     return str
 }
 
-public var Fugu15: Bool = FileManager.default.fileExists(atPath: "/var/jb/basebin/boot_info.plist")
-
 let insideLaunchd = ProcessInfo.processInfo.processName.contains("launchd")
 
-func pspawnMain() {
+@_cdecl("launchd_entry")
+public func entry() {
+    tprint("Hello world from", ProcessInfo.processInfo.processName, "running as", getuid())
+    
+    loadPath()
+    
     do {
         try loadTweaks()
     } catch {
         tprint("\(error)")
     }
     
-    loadPath()
     Rebinds.shared.performHooks()
-}
-
-@_cdecl("launchd_entry")
-public func entry() {
-    tprint("Hello world from", ProcessInfo.processInfo.processName, "running as", getuid())
-    if getpid() == 1 {
-        DispatchQueue.global().async {
-            pspawnMain()
-        }
-    } else {
-        pspawnMain()
-    }
 }
