@@ -74,19 +74,19 @@ func spawn_replacement(
     .map { path.contains($0) }
     .contains(true)
     
-    #if os(iOS)
-    if let spawnattr, Fugu15 && !blacklisted {
-        var flags: Int16 = 0
-
-        tprint("begin unsafe setflags")
-
-        posix_spawnattr_getflags(spawnattr, &flags)
-
-        flags |= Int16(POSIX_SPAWN_START_SUSPENDED)
-        
-        posix_spawnattr_setflags(UnsafeMutablePointer(mutating: spawnattr), flags)
-    }
-    #endif
+//    #if os(iOS)
+//    if let spawnattr, Fugu15 && !blacklisted {
+//        var flags: Int16 = 0
+//
+//        tprint("begin unsafe setflags")
+//
+//        posix_spawnattr_getflags(spawnattr, &flags)
+//
+//        flags |= Int16(POSIX_SPAWN_START_SUSPENDED)
+//
+//        posix_spawnattr_setflags(UnsafeMutablePointer(mutating: spawnattr), flags)
+//    }
+//    #endif
     
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
@@ -232,22 +232,6 @@ func spawn_replacement(
     }
     #endif
     
-    #if os(iOS)
-    if !insideLaunchd && !blacklisted {
-        
-        // `xpcproxy` uses the POSIX_SPAWN_SETEXEC argument
-        // Since the Fugu15 patchset requires spawning suspended,
-        // we cannot patch after from xpcproxy, since it doesn't
-        // return from the pspawn call. We then call jbd, which loops
-        // until the process name changes with the exec posix_spawn call.
-        // When the name has changed, it platformizes the process with
-        // its internal functions and resumes the process
-        
-        tprint("entitle and cont requested")
-        entitleAndContJBD()
-    }
-    #endif
-    
     let ret = envp_c.withUnsafeBufferPointer { buf in
         if Rebinds.shared.usedFishhook {
             tprint("calling fishhook orig")
@@ -274,30 +258,6 @@ func spawn_replacement(
     }
     
     #if os(iOS)
-    if Fugu15 {
-        do {
-            if PPLRW.hasKRW, let proc = try procForPid(pidToFind: UInt32(pid.pointee)) {
-                tprint("got proc", proc)
-                
-                try platformize(proc: proc)
-                jbdProcSetDebugged(pid.pointee)
-                
-                tprint("platformize done")
-            }
-        } catch {
-            tprint("got error", error)
-        }
-        
-//        if !insideLaunchd {
-//            unrestrictCSJBD(pid.pointee)
-//
-//            tprint("unrestricted cs", pid.pointee)
-//        }
-                   
-        kill(pid.pointee, SIGCONT)
-        tprint("resumed proc", pid.pointee)
-    }
-    
     if springboard && ret != 0 {
         FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
     }

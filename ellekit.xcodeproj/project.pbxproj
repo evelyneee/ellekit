@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9E18B75629C4F58900714AB8 /* injector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E18B75429C4F58900714AB8 /* injector.h */; };
-		9E18B75729C4F58900714AB8 /* injector.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B75529C4F58900714AB8 /* injector.c */; };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E2D4F512938389B00EF6619 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F502938389B00EF6619 /* main.swift */; };
 		9E2D4F562938391C00EF6619 /* libellekit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; };
@@ -23,6 +21,8 @@
 		9E4801AB2913E2E9007E433F /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801A92913E0F7007E433F /* Exception.swift */; };
 		9E4801AE2913ED56007E433F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4801AC2913EB83007E433F /* Globals.swift */; };
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
+		9E495EA429CE6F1900420457 /* injector.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B75529C4F58900714AB8 /* injector.c */; };
+		9E495EA529CE6F1C00420457 /* injector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E18B75429C4F58900714AB8 /* injector.h */; };
 		9E49622F29C1206E00B1FB2B /* Tweak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7DE81429529888008E8BB4 /* Tweak.swift */; };
 		9E49623329C39F8600B1FB2B /* prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E49623229C39F8600B1FB2B /* prefs.swift */; };
 		9E4A6D9B297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
@@ -30,7 +30,6 @@
 		9E4A6D9D297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
-		9E5B3E3D29A1689700F6EECC /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B3E3C29A1689700F6EECC /* Entitlements.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
@@ -92,7 +91,6 @@
 		9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9EA498AC295663240099A3ED /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
-		9EC181CE2997C712004863E6 /* PPLRW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC181CD2997C712004863E6 /* PPLRW.swift */; };
 		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
@@ -177,11 +175,12 @@
 		9E4801AC2913EB83007E433F /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9E4801B329144B7A007E433F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		9E495E9F29CE6DB100420457 /* injector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
+		9E495EA029CE6DB100420457 /* load.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9E49622E29BD326600B1FB2B /* sandbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sandbox.h; sourceTree = "<group>"; };
 		9E49623229C39F8600B1FB2B /* prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prefs.swift; sourceTree = "<group>"; };
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
-		9E5B3E3C29A1689700F6EECC /* Entitlements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
 		9E5B3E7429A4369000F6EECC /* xpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
@@ -219,14 +218,11 @@
 		9E9FA76B294BD98A00D18D18 /* taskforpid.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = taskforpid.xml; sourceTree = "<group>"; };
 		9EA0CC7C293AE89A0000E9AA /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9EA0D1BA291C5D500061B187 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EA0D1C1291C5D7F0061B187 /* injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = injector.swift; sourceTree = "<group>"; };
 		9EA4989A29565D0B0099A3ED /* tweak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tweak.swift; sourceTree = "<group>"; };
 		9EA4989C29565D830099A3ED /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EC181CD2997C712004863E6 /* PPLRW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPLRW.swift; sourceTree = "<group>"; };
 		9EC2B2E0296B96350079379D /* Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Batch.swift; sourceTree = "<group>"; };
 		9EC2B2E5296C89920079379D /* Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Replacements.swift; sourceTree = "<group>"; };
-		9ECE28DD292026B10038D993 /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
 		9ED5277E29673BC9009319AA /* button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = button.swift; sourceTree = "<group>"; };
 		9ED5278129673C0F009319AA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -432,7 +428,6 @@
 		9E7DE7E6295293BB008E8BB4 /* launchd */ = {
 			isa = PBXGroup;
 			children = (
-				9EC181CC2997C6FF004863E6 /* Fugu15 */,
 				9E9733572953D6DA0036F339 /* fishhook */,
 				9EA498AE2956700B0099A3ED /* safe mode */,
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
@@ -538,10 +533,10 @@
 		9EA0D1BE291C5D5B0061B187 /* injector */ = {
 			isa = PBXGroup;
 			children = (
-				9EA0D1C1291C5D7F0061B187 /* injector.swift */,
-				9ECE28DD292026B10038D993 /* load.s */,
 				9E18B75429C4F58900714AB8 /* injector.h */,
 				9E18B75529C4F58900714AB8 /* injector.c */,
+				9E495E9F29CE6DB100420457 /* injector.swift */,
+				9E495EA029CE6DB100420457 /* load.s */,
 			);
 			path = injector;
 			sourceTree = "<group>";
@@ -552,15 +547,6 @@
 				9E6FBB642955478A007B28FC /* handler.swift */,
 			);
 			path = "safe mode";
-			sourceTree = "<group>";
-		};
-		9EC181CC2997C6FF004863E6 /* Fugu15 */ = {
-			isa = PBXGroup;
-			children = (
-				9EC181CD2997C712004863E6 /* PPLRW.swift */,
-				9E5B3E3C29A1689700F6EECC /* Entitlements.swift */,
-			);
-			path = Fugu15;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -586,7 +572,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E18B75629C4F58900714AB8 /* injector.h in Headers */,
+				9E495EA529CE6F1C00420457 /* injector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,7 +810,6 @@
 				9E49623329C39F8600B1FB2B /* prefs.swift in Sources */,
 				9E70D396295FCA5B00B284F6 /* Orig.swift in Sources */,
 				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
-				9E5B3E3D29A1689700F6EECC /* Entitlements.swift in Sources */,
 				9EC2B2E6296C89920079379D /* Replacements.swift in Sources */,
 				9E7DE7EB295293E0008E8BB4 /* load.s in Sources */,
 				9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */,
@@ -846,7 +831,6 @@
 				9E97335A2953D6FD0036F339 /* fishhook.c in Sources */,
 				9E6EBF982960FB5100D0D186 /* handler.swift in Sources */,
 				9E70D38F295FCA5B00B284F6 /* General.swift in Sources */,
-				9EC181CE2997C712004863E6 /* PPLRW.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -897,8 +881,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E6EBF922960EAF000D0D186 /* Logger.swift in Sources */,
+				9E495EA429CE6F1900420457 /* injector.c in Sources */,
 				9E49622F29C1206E00B1FB2B /* Tweak.swift in Sources */,
-				9E18B75729C4F58900714AB8 /* injector.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1059,7 +1043,7 @@
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "launchd/launchd-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;

@@ -23,7 +23,41 @@ static int compare(const void *a, const void *b) {
 CFStringRef copyAndLowercaseCFString(CFStringRef input) {
     CFMutableStringRef mutableCopy = CFStringCreateMutableCopy(NULL, 0, input);
     CFStringLowercase(mutableCopy, NULL);
-    return CFStringCreateCopy(NULL, mutableCopy);
+    return mutableCopy;
+}
+
+char* drop_last_n_chars(const char* str, size_t n) {
+    size_t len = strlen(str);
+
+    if (n >= len) {
+        return NULL;  // invalid input, n is too large
+    }
+
+    char* new_str = malloc(len - n + 1);  // allocate memory for the new string
+    if (new_str == NULL) {
+        return NULL;  // allocation failed
+    }
+
+    strncpy(new_str, str, len - n);  // copy the first len - n characters
+    new_str[len - n] = '\0';  // terminate the new string
+
+    return new_str;
+}
+
+char* append_str(const char* str, const char* append_str) {
+    size_t str_len = strlen(str);
+    size_t append_str_len = strlen(append_str);
+
+    char* new_str = malloc(str_len + append_str_len + 1);  // allocate memory for the new string
+    if (new_str == NULL) {
+        return NULL;  // allocation failed
+    }
+
+    strcpy(new_str, str);  // copy the original string to the new string
+    strcat(new_str, append_str);  // append the new string to the end
+    new_str[str_len + append_str_len] = '\0';  // terminate the new string
+
+    return new_str;
 }
 
 #warning "Add bundle checks, needs choicy code"
@@ -34,9 +68,7 @@ static bool tweak_needinject(const char* orig_path) {
     CFDataRef data;
     CFPropertyListRef plist;
     
-    char* path = malloc(strlen(orig_path)+7);
-    strcpy(path, orig_path);
-    strcat(path, ".plist");
+    char* path = append_str(orig_path, ".plist");
     
     os_log(os_log_create("red.charlotte.injector", "ellekit"), "now loading: %s", path);
     
@@ -56,6 +88,9 @@ static bool tweak_needinject(const char* orig_path) {
         plist = CFPropertyListCreateWithData(kCFAllocatorSystemDefault, data, kCFPropertyListImmutable, NULL, NULL);
         CFRelease(data);
     } else {
+        if (url) {
+            CFRelease(url);
+        }
         CFRelease(plistPath);
         return false;
     }
@@ -68,10 +103,12 @@ static bool tweak_needinject(const char* orig_path) {
     if (bundles) {
         for (CFIndex i = 0; i < CFArrayGetCount(bundles); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(bundles, i);
-            
-            if (CFBundleGetBundleWithIdentifier(id) || CFBundleGetBundleWithIdentifier(copyAndLowercaseCFString(id))) {
+            CFStringRef lowercased = copyAndLowercaseCFString(id);
+            if (CFBundleGetBundleWithIdentifier(id) || CFBundleGetBundleWithIdentifier(lowercased)) {
+                CFRelease(lowercased);
                 goto success;
             }
+            CFRelease(lowercased);
         }
     }
     
@@ -146,19 +183,16 @@ static void tweaks_iterate() {
     for (i = 0; i < n; ++i) {
         if (!!strstr(files[i], ".dylib")) {
             
-            char *full_path = (char *) malloc(strlen(TWEAKS_DIRECTORY) + strlen(files[i]) + 1);
+            char *full_path = append_str(TWEAKS_DIRECTORY, files[i]);
             
-            strcat(full_path, TWEAKS_DIRECTORY);
-            strcat(full_path, files[i]);
-            
-            char* plist = strdup(full_path);
-            *(plist + strlen(plist) - 6) = '\0';
+            char* plist = drop_last_n_chars(full_path, 6);
             
             bool ret = tweak_needinject(plist);
             if (ret) {
                 dlopen(full_path, RTLD_NOW);
             }
             free(full_path);
+            free(plist);
         }
         free(files[i]);
     }

@@ -8,7 +8,7 @@ import os.log
 #warning("TODO: C rewrite")
 
 #if os(iOS) || os(tvOS) || os(watchOS)
-let path = "/Library/MobileSubstrate/DynamicLibraries/"
+let path = "/var/jb/usr/lib/TweakInject/"
 #elseif os(macOS)
 let path = "/Library/TweakInject/"
 #endif
@@ -31,7 +31,7 @@ public func entry() {
     do {
         try loadTweaks()
         tweaks
-            .filter { $0.bundles.contains(Bundle.main.bundleIdentifier ?? "com.apple.security") }
+            .filter { $0.bundles.map { $0.lowercased() }.contains(Bundle.main.bundleIdentifier?.lowercased() ?? "com.apple.security") }
             .forEach {
                 NSLog("opening tweak")
                 NSLog($0.path)
