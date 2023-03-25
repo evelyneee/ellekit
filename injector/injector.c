@@ -8,7 +8,6 @@
 #include <objc/runtime.h>
 #include <dirent.h>
 #include <dlfcn.h>
-#include <os/log.h>
 
 static int compare(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
@@ -69,9 +68,7 @@ static bool tweak_needinject(const char* orig_path) {
     CFPropertyListRef plist;
     
     char* path = append_str(orig_path, ".plist");
-    
-    os_log(os_log_create("red.charlotte.injector", "ellekit"), "now loading: %s", path);
-    
+        
     plistPath = CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingUTF8);
             
     if (!!access(path, F_OK)) {
