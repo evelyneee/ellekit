@@ -2,3 +2,6 @@ build/
 .build/
 launchd-hook/fishhook/*
 .DS_Store
+*.deb
+ellekit.xcodeproj/xcuserdata
+ellekit.xcodeproj/project.xcworkspace/xcuserdata
