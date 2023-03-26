@@ -98,9 +98,7 @@ public func tweak_entry() {
         FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
         exit(0)
     }
-    
-    return;
-    
+        
     trap(signals: [
         SIGQUIT,
         SIGILL,
