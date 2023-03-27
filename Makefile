@@ -9,18 +9,21 @@ clean:
 	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' clean
 	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' clean
 	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' clean
+	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' clean
 
 release:
 	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
 	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
 	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
 	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
+	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
 
 debug:
 	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
 	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
 	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
 	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
+	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
 
 control:
 	( echo 'Package: ellekit'; \
@@ -54,6 +57,9 @@ deb: release
 	cp -RpP build/Build/Products/Release-iphoneos/pspawn.dylib debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
 	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
 	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
+	cp -RpP build/Build/Products/Release-iphoneos/libsafemode-ui.dylib debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
+	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
+	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
 	cp -RpP build/Build/Products/Release-iphoneos/loader debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	ldid -S debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	chmod 0755 debsource/ellekit/var/jb/usr/libexec/ellekit/loader
@@ -74,6 +80,9 @@ deb_debug: debug
 	cp -RpP build/Build/Products/Debug-iphoneos/pspawn.dylib debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
 	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
 	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
+	cp -RpP build/Build/Products/Debug-iphoneos/libsafemode-ui.dylib debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
+	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
+	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
 	cp -RpP build/Build/Products/Debug-iphoneos/loader debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	ldid -S debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	chmod 0755 debsource/ellekit/var/jb/usr/libexec/ellekit/loader
