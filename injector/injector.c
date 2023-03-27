@@ -21,6 +21,7 @@ os_log_t eklog;
 #define TWEAKS_DIRECTORY "/Library/TweakInject/"
 #else
 #define TWEAKS_DIRECTORY "/var/jb/usr/lib/TweakInject/"
+#define MOBILESAFETY_PATH "/var/jb/usr/lib/ellekit/MobileSafety.dylib"
 #endif
 
 CFStringRef copyAndLowercaseCFString(CFStringRef input) {
@@ -275,7 +276,19 @@ static void tweaks_iterate() {
 
 __attribute__((constructor))
 static void injection_init() {
-    eklog = os_log_create("red.charlotte.libinjector", "ellekit");
+    
+#if !TARGET_OS_OSX
+    if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
+        if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+            dlopen(MOBILESAFETY_PATH, RTLD_NOW);
+        }
+    }
+    
+    if (!access("/var/mobile/.eksafemode", F_OK)) {
+        return;
+    }
+#endif
+    
     const char* extension = getenv("SANDBOX_EXTENSION");
     if (extension) {
         sandbox_extension_consume(extension);
