@@ -131,7 +131,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
-        assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
+        assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement) with error \(result), \(String(cString: mach_error_string(Int32(result))))")
         #else
         if result != 0 {
             print("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
@@ -149,6 +149,8 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     
     let goodSize = Int(size)
     let machAddr = mach_vm_address_t(UInt(bitPattern: address))
+    
+    print(address)
     
     let krt1 = custom_mach_vm_protect(
         mach_task_self_,
@@ -175,7 +177,9 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     // flush page cache so we don't hit cached unpatched functions
     sys_icache_invalidate(address, Int(vm_page_size))
 
-    guard err2 == KERN_SUCCESS else { return Int(err2) }
+    guard err2 == KERN_SUCCESS else {
+        return Int(err2)
+    }
     if enforceThreadSafety {
         resumeAllThreads()
     }

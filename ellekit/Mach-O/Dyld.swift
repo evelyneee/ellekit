@@ -192,7 +192,7 @@ public func findPrivateSymbol(
         // Get the symbol's name from the string table
         let name = handle
             .seek(toFileOffset: strTab + UInt64(symbol.n_un.n_strx))
-            .readData(ofLength: symbolName.count)
+            .readData(ofLength: symbolName.count + 1)
             .assumingMemoryBound(to: CChar.self)
                 
         defer {
