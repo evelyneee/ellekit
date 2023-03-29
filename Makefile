@@ -40,7 +40,6 @@ control:
       echo 'Description: ElleKit tweak injection libraries and loader'; \
       echo ' ElleKit tweak injection libraries and loader. Currently in beta,'; \
       echo ' does not currently include a LaunchDaemon.'; \
-      echo 'Depends: libiosexec1 (>= 1.2.2)'; \
 	) > debsource/ellekit/DEBIAN/control
 
 deb: release
@@ -60,7 +59,7 @@ deb: release
 	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
 	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
 	cp -RpP build/Build/Products/Release-iphoneos/loader debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	ldid -S./debsource/loader.xml debsource/ellekit/var/jb/usr/libexec/ellekit/loader
+	ldid -S./loader/taskforpid.xml debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	chmod 0755 debsource/ellekit/var/jb/usr/libexec/ellekit/loader
 	sudo chown -R 0:0 debsource/ellekit
 	dpkg-deb -Zzstd -b debsource/ellekit ellekit_$(VERSION)_iphoneos-arm64.deb
