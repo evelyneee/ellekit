@@ -147,7 +147,7 @@ static bool tweak_needinject(const char* orig_path) {
     if (executables) {
         
         char executable[1024];
-        uint32_t size = sizeof(path);
+        uint32_t size = 1024;
 
         if (_NSGetExecutablePath(executable, &size) == 0) {
             
@@ -158,9 +158,9 @@ static bool tweak_needinject(const char* orig_path) {
 
                 CFStringGetCString(id, str, CFStringGetLength(id)+1, kCFStringEncodingASCII);
 
-                printf("opening %s\n", str);
+//                printf("opening %s\n", str);
                 
-                if (strcmp(str, get_last_path_component(executable))) {
+                if (!strcmp(str, get_last_path_component(executable))) {
                     free(str);
                     goto success;
                 }

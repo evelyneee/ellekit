@@ -38,7 +38,6 @@ control:
       echo 'Section: Tweak Injection'; \
       echo 'Priority: optional'; \
       echo 'Description: ElleKit tweak injection libraries and loader'; \
-      echo ' Currently NO SAFE MODE INCLUDED! Install at your own risk!'; \
       echo ' ElleKit tweak injection libraries and loader. Currently in beta,'; \
       echo ' does not currently include a LaunchDaemon.'; \
       echo 'Depends: libiosexec1 (>= 1.2.2)'; \
