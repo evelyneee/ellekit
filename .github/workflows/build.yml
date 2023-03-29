@@ -29,9 +29,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
-      - name: Select Xcode version (14.1)
+      - name: Select Xcode version (14.2)
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app
+          sudo xcode-select --switch /Applications/Xcode_14.2.app
       
       - name: Build library
         run: |
@@ -81,4 +81,3 @@ jobs:
         with:
           name: pspawn
           path: ${{ github.workspace }}/product/pspawn.dylib
-    
