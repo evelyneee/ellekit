@@ -12,25 +12,25 @@ clean:
 	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' clean
 
 release:
-	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
-	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
-	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
-	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
-	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' -configuration Release
+	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
+	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
+	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
+	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
+	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
 
 debug:
-	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
-	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
-	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
-	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
-	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' -configuration Debug
+	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
+	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
+	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
+	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
+	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
 
 control:
 	( echo 'Package: ellekit'; \
       echo 'Name: ElleKit (Beta)'; \
       echo 'Version: $(VERSION)'; \
       echo 'Architecture: iphoneos-arm64'; \
-      echo 'Maintainer: Procursus Team <support@procurs.us>'; \
+      echo 'Maintainer: Evelyn'; \
       echo 'Conflicts: com.ex.substitute, org.coolstar.libhooker, science.xnu.substitute, mobilesubstrate'; \
       echo 'Replaces: com.ex.libsubstitute, org.coolstar.libhooker, mobilesubstrate'; \
       echo 'Provides: mobilesubstrate (= 99), org.coolstar.libhooker (= 1.6.9)'; \
