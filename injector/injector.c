@@ -22,6 +22,7 @@ os_log_t eklog;
 #else
 #define TWEAKS_DIRECTORY "/var/jb/usr/lib/TweakInject/"
 #define MOBILESAFETY_PATH "/var/jb/usr/lib/ellekit/MobileSafety.dylib"
+#define OLDABI_PATH "/var/jb/usr/lib/ellekit/OldABI.dylib"
 #endif
 
 CFStringRef copyAndLowercaseCFString(CFStringRef input) {
@@ -255,6 +256,10 @@ static void tweaks_iterate() {
             
             bool ret = tweak_needinject(plist);
             if (ret) {
+                if (!access(OLDABI_PATH, F_OK)) {
+                    dlopen(OLDABI_PATH, RTLD_NOW);
+                }
+                
                 dlopen(full_path, RTLD_NOW);
                 
                 char* err = dlerror();
