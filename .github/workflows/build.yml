@@ -96,6 +96,7 @@ jobs:
               export LIBRARY_PATH="$LIBRARY_PATH:/opt/procursus/lib"
               apt update
               apt install ldid
+              cd ellekit
               make
               
             
