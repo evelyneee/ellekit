@@ -95,7 +95,7 @@ jobs:
               export CPATH="$CPATH:/opt/procursus/include"
               export LIBRARY_PATH="$LIBRARY_PATH:/opt/procursus/lib"
               sudo apt update
-              sudo apt install ldid
+              sudo apt install ldid -y
               cd ${{ github.workspace }}
               make
               
