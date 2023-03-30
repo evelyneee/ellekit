@@ -18,24 +18,27 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
     guard let name else { return nil }
     
     if let image {
-        #if os(macOS)
-        if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
-            return .init(symbol)
+        if #available(iOS 14.0, *) {
+            #if canImport(Darwin) && !os(macOS)
+            if _dyld_shared_cache_contains_path(_dyld_get_image_name(image)), let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+                return .init(symbol)
+            }
+            #endif
         }
-        #else
         if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
             return .init(symbol)
         } else if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
             return .init(symbol)
         }
-        #endif
     } else {
         for img in 0..<_dyld_image_count() {
             if let hdr = _dyld_get_image_header(img) {
                 if #available(iOS 14.0, *) {
+                    #if canImport(Darwin) && !os(macOS)
                     if _dyld_shared_cache_contains_path(_dyld_get_image_name(img)), let symbol = try? ellekit.findPrivateSymbol(image: hdr, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
                         return .init(symbol)
                     }
+                    #endif
                 }
                 if let symbol = try? ellekit.findSymbol(image: hdr, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
                     return .init(symbol)
