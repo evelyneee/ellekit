@@ -85,6 +85,8 @@ jobs:
       - name: Build iOS rootless ellekit deb
         run: |
               make
+              curl -L https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_macosx_x86_64 -o /usr/local/bin/ldid
+              chmod +x /usr/local/bin/ldid
             
       - name: Upload iOS rootless ellekit deb
         uses: actions/upload-artifact@v3
