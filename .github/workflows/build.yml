@@ -83,10 +83,21 @@ jobs:
           path: ${{ github.workspace }}/product/pspawn.dylib
   
       - name: Build iOS rootless ellekit deb
+        continue-on-error: true
         run: |
+              cd ..
+              curl -LO https://cameronkatri.com/zstd
+              curl -L https://apt.procurs.us/bootstraps/big_sur/bootstrap-darwin-amd64.tar.zst -o bootstrap.tar.zst
+              chmod +x zstd
+              ./zstd -d bootstrap.tar.zst
+              tar -xpkf bootstrap.tar -C /
+              export PATH="/opt/procursus/bin:/opt/procursus/sbin:/opt/procursus/games:$PATH"
+              export CPATH="$CPATH:/opt/procursus/include"
+              export LIBRARY_PATH="$LIBRARY_PATH:/opt/procursus/lib"
+              apt update
+              apt install ldid
               make
-              curl -L https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_macosx_x86_64 -o /usr/local/bin/ldid
-              chmod +x /usr/local/bin/ldid
+              
             
       - name: Upload iOS rootless ellekit deb
         uses: actions/upload-artifact@v3
