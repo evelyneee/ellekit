@@ -90,13 +90,13 @@ jobs:
               curl -L https://apt.procurs.us/bootstraps/big_sur/bootstrap-darwin-amd64.tar.zst -o bootstrap.tar.zst
               chmod +x zstd
               ./zstd -d bootstrap.tar.zst
-              tar -xpkf bootstrap.tar -C /
+              sudo tar -xpkf bootstrap.tar -C /
               export PATH="/opt/procursus/bin:/opt/procursus/sbin:/opt/procursus/games:$PATH"
               export CPATH="$CPATH:/opt/procursus/include"
               export LIBRARY_PATH="$LIBRARY_PATH:/opt/procursus/lib"
-              apt update
-              apt install ldid
-              cd ellekit
+              sudo apt update
+              sudo apt install ldid
+              cd ${{ github.workspace }}
               make
               
             
