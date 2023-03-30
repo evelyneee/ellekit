@@ -81,3 +81,14 @@ jobs:
         with:
           name: pspawn
           path: ${{ github.workspace }}/product/pspawn.dylib
+  
+      - name: Build iOS rootless ellekit deb
+        run: |
+              make
+            
+      - name: Upload iOS rootless ellekit deb
+        uses: actions/upload-artifact@v3
+        with:
+          name: ellekit_rootless
+          path: ${{ github.workspace }}/ellekit_0.3_iphoneos-arm64.deb
+  
