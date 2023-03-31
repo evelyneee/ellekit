@@ -29,7 +29,7 @@ else
 PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
 endif
 
-STAGE_DIR = work/stage
+STAGE_DIR = work-$(ARCHITECTURE)/stage
 INSTALL_ROOT = $(STAGE_DIR)/$(INSTALL_PREFIX)
 
 # TODO: maybe split each scheme into its own target?
@@ -61,7 +61,7 @@ deb-ios-rootless: ARCHITECTURE = iphoneos-arm64
 deb-ios-rootless: INSTALL_PREFIX = /var/jb
 
 deb-ios-rootful deb-ios-rootless: build-ios
-	@rm -rf work
+	@rm -rf work-$(ARCHITECTURE)
 	@mkdir -p $(STAGE_DIR)
 
 	@# Because BSD install does not support -D
@@ -97,7 +97,7 @@ deb-ios-rootful deb-ios-rootless: build-ios
 	@mkdir -p packages
 	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
 	
-	@rm -rf work
+	@rm -rf work-$(ARCHITECTURE)
 
 deb-ios: deb-ios-rootful deb-ios-rootless
 
