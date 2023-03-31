@@ -91,6 +91,9 @@ deb-ios-rootful deb-ios-rootless: build-ios
 	@mkdir -p $(INSTALL_ROOT)/Library/MobileSubstrate
 	@ln -s ${INSTALL_PREFIX}/usr/lib/TweakInject $(INSTALL_ROOT)/Library/MobileSubstrate/DynamicLibraries
 
+	@mkdir -p $(INSTALL_ROOT)/usr/share/doc/ellekit
+	@install -m644 LICENSE $(INSTALL_ROOT)/usr/share/doc/ellekit/LICENSE
+
 	@mkdir -p $(STAGE_DIR)/DEBIAN
 	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" packaging/control >$(STAGE_DIR)/DEBIAN/control
 
