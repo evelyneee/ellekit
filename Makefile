@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all deb-ios-rootless deb-ios-rootful
 
 ifneq ($(ONLY_TAG),)
 VERSION := $(shell git describe --tags --abbrev=0 | sed 's/^v//g')
@@ -21,14 +21,6 @@ $(error macOS is not supported yet)
 COMMON_OPTIONS += -destination 'generic/platform=macOS'
 else
 COMMON_OPTIONS += -destination 'generic/platform=iOS'
-endif
-
-ifneq ($(ROOTLESS),)
-INSTALL_PREFIX = /var/jb
-ARCHITECTURE = iphoneos-arm64
-else
-INSTALL_PREFIX = 
-ARCHITECTURE = iphoneos-arm
 endif
 
 ifneq ($(MAC),)
@@ -62,7 +54,13 @@ build-macos:
 	# TODO
 	$(error macOS is not supported yet)
 
-deb-ios: build-ios
+deb-ios-rootful: ARCHITECTURE = iphoneos-arm
+deb-ios-rootful: INSTALL_PREFIX = 
+
+deb-ios-rootless: ARCHITECTURE = iphoneos-arm64
+deb-ios-rootless: INSTALL_PREFIX = /var/jb
+
+deb-ios-rootful deb-ios-rootless: build-ios
 	@rm -rf work
 	@mkdir -p $(STAGE_DIR)
 
@@ -100,6 +98,8 @@ deb-ios: build-ios
 	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
 	
 	@rm -rf work
+
+deb-ios: deb-ios-rootful deb-ios-rootless
 
 deb-macos:
 	# TODO
