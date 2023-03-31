@@ -46,6 +46,9 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
 
+      - name: Build ${{ matrix.name }}
+        run: make ${{ matrix.flags }}
+
       - name: Upload packages
         uses: actions/upload-artifact@v3
         with:
