@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
 
       - name: Select Xcode version (14.2)
         run: |
