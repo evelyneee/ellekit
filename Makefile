@@ -104,7 +104,7 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 deb-ios: deb-ios-rootful deb-ios-rootless
 
-deb-macos:
+deb-macos: build-macos
 	# TODO
 	$(error macOS is not supported yet)
 
@@ -112,4 +112,10 @@ ifneq ($(MAC),)
 deb: deb-macos
 else
 deb: deb-ios
+endif
+
+ifneq ($(MAC),)
+build: build-macos
+else
+build: build-ios
 endif
