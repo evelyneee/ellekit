@@ -149,9 +149,7 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     
     let goodSize = Int(size)
     let machAddr = mach_vm_address_t(UInt(bitPattern: address))
-    
-    print(address)
-    
+        
     let krt1 = custom_mach_vm_protect(
         mach_task_self_,
         machAddr,

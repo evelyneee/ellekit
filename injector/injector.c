@@ -115,12 +115,14 @@ static bool tweak_needinject(const char* orig_path) {
     if (bundles) {
         for (CFIndex i = 0; i < CFArrayGetCount(bundles); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(bundles, i);
-            CFStringRef lowercased = copyAndLowercaseCFString(id);
-            if (CFBundleGetBundleWithIdentifier(id) || CFBundleGetBundleWithIdentifier(lowercased)) {
+            if (id) {
+                CFStringRef lowercased = copyAndLowercaseCFString(id);
+                if (CFBundleGetBundleWithIdentifier(id) || CFBundleGetBundleWithIdentifier(lowercased)) {
+                    CFRelease(lowercased);
+                    goto success;
+                }
                 CFRelease(lowercased);
-                goto success;
             }
-            CFRelease(lowercased);
         }
     }
     
@@ -286,6 +288,9 @@ static void injection_init() {
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
             dlopen(MOBILESAFETY_PATH, RTLD_NOW);
+        }
+        if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.WebKit.WebContent"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+            return; // Filter WebContent
         }
     }
     
