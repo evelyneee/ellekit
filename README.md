@@ -1,4 +1,4 @@
-<h1><img src="https://ellekit.space/logos/logo.png" width="50" alt="App icon" align="left" style="border-radius: 1rem; margin-right: 0.5rem;"/>ElleKit: Elegant Low Level Elements</hi>
+<h1><img src="https://ellekit.space/logos/logo.png" width="50" alt="App icon" align="left" style="border-radius: 1rem; margin-right: 0.5rem; padding-right: 0;"/>ElleKit: Elegant Low Level Elements</hi>
 
 ### What this is
 
