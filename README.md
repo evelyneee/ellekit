@@ -1,3 +1,5 @@
+<img src="https://ellekit.space/logos/logo.png" width="220" alt="App icon" align="left"/>
+
 ##  ElleKit: Elegant Low Level Elements
 
 ### What this is
