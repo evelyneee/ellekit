@@ -258,9 +258,11 @@ static void tweaks_iterate() {
             
             bool ret = tweak_needinject(plist);
             if (ret) {
+                #if !TARGET_OS_OSX
                 if (!access(OLDABI_PATH, F_OK)) {
                     dlopen(OLDABI_PATH, RTLD_NOW);
                 }
+                #endif
                 
                 dlopen(full_path, RTLD_NOW);
                 

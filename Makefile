@@ -1,89 +1,121 @@
-.PHONY: all
+.PHONY: all deb-ios-rootless deb-ios-rootful
 
-VERSION := 0.3
+ifneq ($(ONLY_TAG),)
+VERSION := $(shell git describe --tags --abbrev=0 | sed 's/^v//g')
+else
+VERSION := $(shell git describe --tags --always | sed 's/-/~/' | sed 's/-/\./g' | sed 's/\.g/\./g' | sed 's/^v//g')
+endif
+
+COMMON_OPTIONS = BUILD_DIR="build/" CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration $(CONFIGURATION)
+
+ifneq ($(RELEASE),)
+CONFIGURATION = Release
+DEB_VERSION = $(VERSION)
+else
+CONFIGURATION = Debug
+DEB_VERSION = $(VERSION)+debug
+endif
+
+ifneq ($(MAC),)
+$(error macOS is not supported yet)
+COMMON_OPTIONS += -destination 'generic/platform=macOS'
+else
+COMMON_OPTIONS += -destination 'generic/platform=iOS'
+endif
+
+ifneq ($(MAC),)
+PRODUCTS_DIR = build/$(CONFIGURATION)-macosx
+else
+PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
+endif
+
+STAGE_DIR = work-$(ARCHITECTURE)/stage
+INSTALL_ROOT = $(STAGE_DIR)/$(INSTALL_PREFIX)
+
+# TODO: maybe split each scheme into its own target?
 
 all: deb
 
 clean:
-	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' clean
-	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' clean
-	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' clean
-	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' clean
-	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' clean
+	xcodebuild -scheme ellekit $(COMMON_OPTIONS) clean
+	xcodebuild -scheme injector $(COMMON_OPTIONS) clean
+	xcodebuild -scheme launchd $(COMMON_OPTIONS) clean
+	xcodebuild -scheme loader $(COMMON_OPTIONS) clean
+	xcodebuild -scheme safemode-ui $(COMMON_OPTIONS) clean
 
-release:
-	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
-	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
-	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
-	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
-	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Release
+build-ios:
+	xcodebuild -scheme ellekit $(COMMON_OPTIONS)
+	xcodebuild -scheme injector $(COMMON_OPTIONS)
+	xcodebuild -scheme launchd $(COMMON_OPTIONS)
+	xcodebuild -scheme loader $(COMMON_OPTIONS)
+	xcodebuild -scheme safemode-ui $(COMMON_OPTIONS)
 
-debug:
-	xcodebuild -scheme ellekit -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
-	xcodebuild -scheme injector -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
-	xcodebuild -scheme launchd -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
-	xcodebuild -scheme loader -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
-	xcodebuild -scheme safemode-ui -derivedDataPath build -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration Debug
+build-macos:
+	# TODO
+	$(error macOS is not supported yet)
 
-control:
-	( echo 'Package: ellekit'; \
-      echo 'Name: ElleKit (Beta)'; \
-      echo 'Version: $(VERSION)'; \
-      echo 'Architecture: iphoneos-arm64'; \
-      echo 'Maintainer: Evelyn'; \
-      echo 'Conflicts: com.ex.substitute, org.coolstar.libhooker, science.xnu.substitute, mobilesubstrate'; \
-      echo 'Replaces: com.ex.libsubstitute, org.coolstar.libhooker, mobilesubstrate'; \
-      echo 'Provides: mobilesubstrate (= 99), org.coolstar.libhooker (= 1.6.9)'; \
-      echo 'Author: Evelyn'; \
-      echo 'Section: Tweak Injection'; \
-      echo 'Priority: optional'; \
-      echo 'Description: ElleKit tweak injection libraries and loader'; \
-      echo ' ElleKit tweak injection libraries and loader. Currently in beta,'; \
-      echo ' does not currently include a LaunchDaemon.'; \
-	) > debsource/ellekit/DEBIAN/control
+deb-ios-rootful: ARCHITECTURE = iphoneos-arm
+deb-ios-rootful: INSTALL_PREFIX = 
 
-deb: release
-	sudo tar xf debsource/ellekit.tar.zst -C debsource
-	sudo chown -R $(shell id -u):$(shell id -g) debsource
-	$(MAKE) control
-	cp -RpP build/Build/Products/Release-iphoneos/libellekit.dylib debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	cp -RpP build/Build/Products/Release-iphoneos/libinjector.dylib debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	cp -RpP build/Build/Products/Release-iphoneos/pspawn.dylib debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	cp -RpP build/Build/Products/Release-iphoneos/libsafemode-ui.dylib debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	cp -RpP build/Build/Products/Release-iphoneos/loader debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	ldid -S./loader/taskforpid.xml debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	chmod 0755 debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	sudo chown -R 0:0 debsource/ellekit
-	dpkg-deb -Zzstd -b debsource/ellekit ellekit_$(VERSION)_iphoneos-arm64.deb
-	sudo rm -rf debsource/ellekit
+deb-ios-rootless: ARCHITECTURE = iphoneos-arm64
+deb-ios-rootless: INSTALL_PREFIX = /var/jb
 
-deb_debug: debug
-	sudo tar xf debsource/ellekit.tar.zst -C debsource
-	sudo chown -R $(shell id -u):$(shell id -g) debsource
-	$(MAKE) control
-	cp -RpP build/Build/Products/Debug-iphoneos/libellekit.dylib debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/libellekit.dylib
-	cp -RpP build/Build/Products/Debug-iphoneos/libinjector.dylib debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/libinjector.dylib
-	cp -RpP build/Build/Products/Debug-iphoneos/pspawn.dylib debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/pspawn.dylib
-	cp -RpP build/Build/Products/Debug-iphoneos/libsafemode-ui.dylib debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	ldid -S debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	chmod 0644 debsource/ellekit/var/jb/usr/lib/ellekit/MobileSafety.dylib
-	cp -RpP build/Build/Products/Debug-iphoneos/loader debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	ldid -S./debsource/loader.xml debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	chmod 0755 debsource/ellekit/var/jb/usr/libexec/ellekit/loader
-	sudo chown -R 0:0 debsource/ellekit
-	dpkg-deb -Zzstd -b debsource/ellekit ellekit_$(VERSION)_iphoneos-arm64.deb
-	sudo rm -rf debsource/ellekit
+deb-ios-rootful deb-ios-rootless: build-ios
+	@rm -rf work-$(ARCHITECTURE)
+	@mkdir -p $(STAGE_DIR)
+
+	@# Because BSD install does not support -D
+	@mkdir -p $(INSTALL_ROOT)/usr/lib/ellekit
+	@mkdir -p $(INSTALL_ROOT)/usr/libexec/ellekit
+
+	@install -m644 $(PRODUCTS_DIR)/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libellekit.dylib
+	@install -m644 $(PRODUCTS_DIR)/libinjector.dylib $(INSTALL_ROOT)/usr/lib/ellekit/libinjector.dylib
+	@install -m644 $(PRODUCTS_DIR)/pspawn.dylib $(INSTALL_ROOT)/usr/lib/ellekit/pspawn.dylib
+	@install -m644 $(PRODUCTS_DIR)/libsafemode-ui.dylib $(INSTALL_ROOT)/usr/lib/ellekit/MobileSafety.dylib
+	@install -m755 $(PRODUCTS_DIR)/loader $(INSTALL_ROOT)/usr/libexec/ellekit/loader
+
+	@find $(INSTALL_ROOT)/usr/lib -type f -exec ldid -S {} \;
+	@ldid -S./loader/taskforpid.xml $(INSTALL_ROOT)/usr/libexec/ellekit/loader
+	
+	@ln -s $(INSTALL_PREFIX)/usr/lib/ellekit/libinjector.dylib $(INSTALL_ROOT)/usr/lib/TweakLoader.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libsubstrate.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libhooker.dylib
+
+	@mkdir -p $(INSTALL_ROOT)/etc/rc.d
+	@ln -s ${INSTALL_PREFIX}/usr/libexec/ellekit/loader $(INSTALL_ROOT)/etc/rc.d/ellekit-loader
+
+	@mkdir -p $(INSTALL_ROOT)/usr/lib/TweakInject
+
+	@mkdir -p $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework
+	@ln -s ${INSTALL_PREFIX}/usr/lib/libellekit.dylib $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate
+	@mkdir -p $(INSTALL_ROOT)/Library/MobileSubstrate
+	@ln -s ${INSTALL_PREFIX}/usr/lib/TweakInject $(INSTALL_ROOT)/Library/MobileSubstrate/DynamicLibraries
+
+	@mkdir -p $(INSTALL_ROOT)/usr/share/doc/ellekit
+	@install -m644 LICENSE $(INSTALL_ROOT)/usr/share/doc/ellekit/LICENSE
+
+	@mkdir -p $(STAGE_DIR)/DEBIAN
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" packaging/control >$(STAGE_DIR)/DEBIAN/control
+
+	@mkdir -p packages
+	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
+	
+	@rm -rf work-$(ARCHITECTURE)
+
+deb-ios: deb-ios-rootful deb-ios-rootless
+
+deb-macos: build-macos
+	# TODO
+	$(error macOS is not supported yet)
+
+ifneq ($(MAC),)
+deb: deb-macos
+else
+deb: deb-ios
+endif
+
+ifneq ($(MAC),)
+build: build-macos
+else
+build: build-ios
+endif

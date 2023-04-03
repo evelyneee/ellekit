@@ -1,84 +1,66 @@
 name: CI
 
-env:
-  build_cmd: xcodebuild CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -target
-
 on:
   push:
     branches:
       - main
     paths-ignore:
-      - '**/*.md'
-      - '.gitignore'
-      
+      - "**/*.md"
+      - ".gitignore"
+
   pull_request:
     branches:
       - main
     paths-ignore:
-      - '**/*.md'
-      - '.gitignore'
-      
+      - "**/*.md"
+      - ".gitignore"
+
   workflow_dispatch:
-  
+  release:
+    types: [published]
+
 jobs:
   build:
     name: Build
     runs-on: macos-12
+    strategy:
+      matrix:
+        include:
+          - name: debug
+            flags: ""
+          - name: release
+            flags: "RELEASE=1"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
-      - name: Select Xcode version (14.1)
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+
+      - name: Select Xcode version (14.2)
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app
-      
-      - name: Build library
-        run: |
-          ${{ env.build_cmd }} ellekit
-          
-          mkdir -p ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/build/Release/libellekit.dylib ${{ github.workspace }}/product/libellekit.dylib
-          
-      - name: Upload library to artifacts
+          sudo xcode-select --switch /Applications/Xcode_14.2.app
+
+      - name: Bootstrap Procursus
+        uses: dhinakg/procursus-action@main
+        with:
+          packages: ldid findutils sed coreutils
+          cache: true
+          cache-path: ~/__cache
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Build ${{ matrix.name }}
+        run: make ${{ matrix.flags }}
+
+      - name: Upload packages to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ellekit-library
-          path: ${{ github.workspace }}/product/libellekit.dylib
-      
-      - name: Build injector
-        run: |
-          ${{ env.build_cmd }} injector
-          
-          cp -R ${{ github.workspace }}/build/Release/libinjector.dylib ${{ github.workspace }}/product/libinjector.dylib
-          
-      - name: Upload injector to artifacts
-        uses: actions/upload-artifact@v3
+          name: ${{ matrix.name }} package
+          path: ${{ github.workspace }}/packages/*.deb
+      - name: Upload packages to release
+        if: github.event_name == 'release' && matrix.name == 'release'
+        uses: svenstaro/upload-release-action@2.5.0
         with:
-          name: injector
-          path: ${{ github.workspace }}/product/libinjector.dylib
-          
-      - name: Build loader
-        run: |
-          ${{ env.build_cmd }} loader
-          
-          cp -R ${{ github.workspace }}/build/Release/loader ${{ github.workspace }}/product/loader
-          
-      - name: Upload loader to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: loader
-          path: ${{ github.workspace }}/product/loader
-          
-      - name: Build launchd hook
-        run: |
-          ${{ env.build_cmd }} launchd
-    
-          cp -R ${{ github.workspace }}/build/Release/pspawn.dylib ${{ github.workspace }}/product/pspawn.dylib
-          
-      - name: Upload launchd hook to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: pspawn
-          path: ${{ github.workspace }}/product/pspawn.dylib
-    
+          file: ${{ github.workspace }}/packages/*.deb
+          file_glob: true
