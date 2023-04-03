@@ -32,7 +32,7 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
     } else {
         for img in 0..<_dyld_image_count() {
             if let hdr = _dyld_get_image_header(img) {
-                if #available(iOS 14.0, *) {
+                if #available(macOS 11.0, iOS 14.0, *) {
                     if _dyld_shared_cache_contains_path(_dyld_get_image_name(img)), let symbol = try? ellekit.findPrivateSymbol(image: hdr, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
                         return .init(symbol)
                     }

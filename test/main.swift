@@ -10,10 +10,52 @@ import Foundation
 import ellekit
 import AppKit
 
+var orig1_: UnsafeMutableRawPointer! = nil
+
+@_cdecl("rep1")
+public func rep1(_ x1: UnsafePointer<CChar>) -> Int32 {
+    print(x1)
+    print("called rep 1")
+    let ret = unsafeBitCast(orig1_, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)(x1)
+    return ret
+}
+
+let repcl1: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep1
+
+let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+
+var orig2_: UnsafeMutableRawPointer! = nil
+
+@_cdecl("rep2")
+public func rep2(_ x1: UnsafePointer<CChar>) -> Int32 {
+    print(x1)
+    print("called rep 2")
+    let ret = unsafeBitCast(orig2_, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)(x1)
+    return ret
+}
+
+let repcl2: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep2
+
+let repptr2 = unsafeBitCast(repcl2, to: UnsafeMutableRawPointer.self)
+
 for image in 0..<_dyld_image_count() {
     print(String(cString: _dyld_get_image_name(image)))
-    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_NSDrawMenuBarBackground") {
-        print("_NSDrawMenuBarBackground: \(sym)")
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
+        print("_atoi: \(sym)")
+        
+        let orig1: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr1)!
+        
+        print("orig1", orig1)
+        
+        let orig2: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
+        
+        print("orig1", orig1, "orig2", orig2)
+        
+        orig1_ = orig1
+        orig2_ = orig2
+        
+        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+        
         break
     }
 }

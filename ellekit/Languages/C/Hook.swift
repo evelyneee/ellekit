@@ -29,10 +29,10 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var target = stockTarget.makeReadable()
     let replacement = stockReplacement.makeReadable()
     
-    if let newTarget = hooks[target] {
-        target = newTarget
+    if let newReplacement = hooks[target] {
+        target = newReplacement.makeReadable()
     }
-
+    
     let targetSize = findFunctionSize(target) ?? 6
 
     print("[*] ellekit: Size of target:", targetSize as Any)
@@ -76,7 +76,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     let ret = code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
-        assert(result == 0, "[-] ellekit: Hook failure for \(target) to \(replacement)")
+        assert(result == 0, "ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
         #else
         if result != 0 {
             print("ellekit: Hook failure for \(String(describing: target)) to \(String(describing: target))")
@@ -149,15 +149,15 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     
     let goodSize = Int(size)
     let machAddr = mach_vm_address_t(UInt(bitPattern: address))
-        
+            
     let krt1 = custom_mach_vm_protect(
         mach_task_self_,
         machAddr,
-        0x4000,
+        size,
         0,
         VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
     )
-    
+        
     guard krt1 == KERN_SUCCESS else {
         return Int(krt1)
     }
@@ -167,7 +167,7 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     let err2 = custom_mach_vm_protect(
         mach_task_self_,
         machAddr,
-        0x4000,
+        size,
         0,
         VM_PROT_READ | VM_PROT_EXECUTE
     )

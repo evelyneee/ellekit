@@ -16,7 +16,7 @@ func redirectBranch(_ target: UnsafeMutableRawPointer, _ isn: UInt64, _ ptr: Uns
 
     let originalTarget = UInt64(UInt(bitPattern: target)) + UInt64(pcRel)
 
-    let code = assembleJump(originalTarget, pc: UInt64(UInt(bitPattern: target)), link: false)
+    let code = assembleJump(originalTarget, pc: UInt64(UInt(bitPattern: target)), link: false, big: true)
 
     return code
 }

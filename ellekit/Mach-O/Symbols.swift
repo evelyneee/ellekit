@@ -143,7 +143,7 @@ public func findSymbol(
                 throw SymbolErr.noAddress
             }
             
-            return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))
+            return UnsafeRawPointer(UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))?.makeCallable())
         }
     }
 

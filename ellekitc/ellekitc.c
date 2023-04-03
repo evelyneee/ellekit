@@ -9,7 +9,7 @@
 // MARK: - PAC
 
 void* sign_pointer(void* ptr) {
-#if __arm64e__
+#if __has_feature(ptrauth_calls)
     return ptrauth_sign_unauthenticated(ptrauth_strip(ptr, ptrauth_key_function_pointer), ptrauth_key_function_pointer, 0);
 #else
     return ptr;
@@ -17,7 +17,7 @@ void* sign_pointer(void* ptr) {
 }
 
 void* sign_pc(void* ptr) {
-#if __arm64e__
+#if __has_feature(ptrauth_calls)
     return ptrauth_sign_unauthenticated(ptr, ptrauth_key_process_independent_code, 0x7481);
 #else
     return ptr;
@@ -25,7 +25,7 @@ void* sign_pc(void* ptr) {
 }
 
 void* strip_pointer(void* ptr) {
-#if __arm64e__
+#if __has_feature(ptrauth_calls)
     return ptrauth_strip(ptr, ptrauth_key_function_pointer);
 #else
     return ptr;
