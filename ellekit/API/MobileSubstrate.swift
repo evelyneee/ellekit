@@ -18,26 +18,36 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
     guard let name else { return nil }
     
     if let image {
+        
+        let swiftName = String(cString: name.assumingMemoryBound(to: CChar.self))
+        if swiftName.first == "_", let symbol = dlsym(UnsafeMutableRawPointer(mutating: image), String(swiftName.dropFirst())) {
+            return .init(symbol)
+        }
+        
         #if os(macOS)
-        if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        if let symbol = try? ellekit.findSymbol(image: image, symbol: swiftName) {
             return .init(symbol)
         }
         #else
-        if let symbol = try? ellekit.findSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        if let symbol = try? ellekit.findSymbol(image: image, symbol: swiftName) {
             return .init(symbol)
-        } else if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+        } else if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: swiftName) {
             return .init(symbol)
         }
         #endif
     } else {
         for img in 0..<_dyld_image_count() {
             if let hdr = _dyld_get_image_header(img) {
+                let swiftName = String(cString: name.assumingMemoryBound(to: CChar.self))
+                if swiftName.first == "_", let symbol = dlsym(UnsafeMutableRawPointer(mutating: UnsafeRawPointer(hdr)), String(swiftName.dropFirst())) {
+                    return .init(symbol)
+                }
                 if #available(iOS 14.0, macOS 11.0, *) {
-                    if _dyld_shared_cache_contains_path(_dyld_get_image_name(img)), let symbol = try? ellekit.findPrivateSymbol(image: hdr, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+                    if _dyld_shared_cache_contains_path(_dyld_get_image_name(img)), let symbol = try? ellekit.findPrivateSymbol(image: hdr, symbol: swiftName) {
                         return .init(symbol)
                     }
                 }
-                if let symbol = try? ellekit.findSymbol(image: hdr, symbol: String(cString: name.assumingMemoryBound(to: CChar.self))) {
+                if let symbol = try? ellekit.findSymbol(image: hdr, symbol: swiftName) {
                     return .init(symbol)
                 }
             }
