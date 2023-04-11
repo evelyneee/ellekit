@@ -74,7 +74,6 @@ char *get_last_path_component(const char *path)
     return last_component + 1;
 }
 
-#warning "Add bundle checks, needs choicy code"
 static bool tweak_needinject(const char* orig_path) {
     
     CFStringRef plistPath;
@@ -290,9 +289,6 @@ static void injection_init() {
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
             dlopen(MOBILESAFETY_PATH, RTLD_NOW);
-        }
-        if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.WebKit.WebContent"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-            return; // Filter WebContent
         }
     }
     

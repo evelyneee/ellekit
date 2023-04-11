@@ -14,7 +14,6 @@ var orig1_: UnsafeMutableRawPointer! = nil
 
 @_cdecl("rep1")
 public func rep1(_ x1: UnsafePointer<CChar>) -> Int32 {
-    print(x1)
     print("called rep 1")
     let ret = unsafeBitCast(orig1_, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)(x1)
     return ret
@@ -28,7 +27,6 @@ var orig2_: UnsafeMutableRawPointer! = nil
 
 @_cdecl("rep2")
 public func rep2(_ x1: UnsafePointer<CChar>) -> Int32 {
-    print(x1)
     print("called rep 2")
     let ret = unsafeBitCast(orig2_, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)(x1)
     return ret
@@ -39,24 +37,37 @@ let repcl2: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep2
 let repptr2 = unsafeBitCast(repcl2, to: UnsafeMutableRawPointer.self)
 
 for image in 0..<_dyld_image_count() {
-    print(String(cString: _dyld_get_image_name(image)))
     if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
         print("_atoi: \(sym)")
         
-        let orig1: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr1)!
+        var hook1 = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr1, oldptr: &orig1_, options: nil)
         
-        print("orig1", orig1)
+        let ret1 = LHHookFunctions(&hook1, 1)
         
-        let orig2: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
+        var hook = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr2, oldptr: &orig2_, options: nil)
         
-        print("orig1", orig1, "orig2", orig2)
+        let ret = LHHookFunctions(&hook, 1)
         
-        orig1_ = orig1
-        orig2_ = orig2
+        print("orig1", ret1, ret)
         
+        // let orig2: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
+                        
         print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+
+    }
+    
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoll") {
+        print("_atoll: \(sym)")
         
-        break
+        var hook1 = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr1, oldptr: &orig1_, options: nil)
+        
+        let ret1 = LHHookFunctions(&hook1, 1)
+        
+        var hook = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr2, oldptr: &orig2_, options: nil)
+        
+        let ret = LHHookFunctions(&hook, 1)
+                        
+        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int64).self)(String(UInt64.max)))
     }
 }
 

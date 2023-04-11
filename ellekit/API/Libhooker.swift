@@ -75,9 +75,9 @@ public func LHExecMemory(_ page: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
 }
 
 @_cdecl("LHHookFunctions")
-public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int) -> Int {
+public func LHHookFunctions(_ allHooks: UnsafePointer<LHFunctionHook>, _ count: Int) -> Int {
 
-    let hooksArray = Array(UnsafeBufferPointer(start: hooks, count: count))
+    let hooksArray = Array(UnsafeBufferPointer(start: allHooks, count: count))
 
     var origPageAddress: mach_vm_address_t = 0
     let krt1 = mach_vm_allocate(mach_task_self_, &origPageAddress, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)
@@ -91,13 +91,21 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
     var totalSize = 0
     for targetHook in hooksArray {
 
-        guard let target = targetHook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
+        guard var target = targetHook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
 
-        let functionSize = findFunctionSize(target)
+        if let newReplacement = hooks[target] {
+            target = newReplacement.makeReadable()
+        }
+        
+        let functionSize = findFunctionSize(target) ?? 6
 
+        let branchOffset: UInt64 = (UInt64(UInt(bitPattern: targetHook.replacement)) - UInt64(UInt(bitPattern: target))) / 4
+        
         let (orig, codesize) = getOriginal(
-            target, functionSize, origPageAddress, totalSize,
-            usedBigBranch: false
+            target,
+            functionSize,
+            usedBigBranch: abs(Int(branchOffset) / 1024 / 1024) > 128 && functionSize > 5,
+            shouldBranchAfter: functionSize != 5
         )
 
         totalSize = (totalSize + codesize)
@@ -108,7 +116,7 @@ public func LHHookFunctions(_ hooks: UnsafePointer<LHFunctionHook>, _ count: Int
         }
 
         let _: Void = hook(targetHook.function, targetHook.replacement)
-
+        
         if let orig = targetHook.oldptr {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with orig at \(String(describing: orig))")
         } else {
