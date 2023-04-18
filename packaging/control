@@ -1,5 +1,5 @@
 Package: ellekit
-Name: ElleKit (Beta)
+Name: ElleKit
 Version: @DEB_VERSION@
 Architecture: @DEB_ARCH@
 Maintainer: Dhinak G <dhinak@dhinak.net>
