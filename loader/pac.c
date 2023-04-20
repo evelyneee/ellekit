@@ -90,15 +90,26 @@ char** get_segment_bundles(const char* macho_path) {
             char* segname = strdup(sc.segname);
             printf("segment: %s\n", segname);
             CFURLRef bin_path = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFStringCreateWithCString(kCFAllocatorDefault, segname, kCFStringEncodingASCII), kCFURLPOSIXPathStyle, 0);
-            if (!bin_path) continue;
+            if (!bin_path) {
+                free(segname);
+                continue;
+            }
             CFURLRef path = CFURLCreateCopyDeletingLastPathComponent(kCFAllocatorDefault, bin_path);
-            if (!path) continue;
+            if (!path) {
+                free(segname);
+                continue;
+            }
             CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, path);
-            if (!bundle) continue;
+            if (!bundle) {
+                free(segname);
+                continue;
+            }
             CFStringRef cfid = CFBundleGetIdentifier(bundle);
             const char* id = CFStringGetCStringPtr(cfid, kCFStringEncodingASCII);
-            filenames[filename_count] = (char*)id;
+            filenames[filename_count] = strdup(id);
             filename_count++;
+            CFRelease(bundle);
+            free(segname);
         }
     }
     

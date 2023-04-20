@@ -56,7 +56,7 @@ public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ base
         
         // If this is true we need to override the method
         // Otherwise we can just add the method to the subclass
-        if let origImp = class_getInstanceMethod(baseClass, selector), let hookedImp = class_getInstanceMethod(hookClass, selector) {
+        if let origImp = class_getInstanceMethod(baseClass, selector), let hookedImp = class_getInstanceMethod(targetClass, selector) {
             class_addMethod(baseClass, selector, method_getImplementation(methods[iter]), method_encoding)
             method_exchangeImplementations(hookedImp, origImp)
             
