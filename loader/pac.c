@@ -95,11 +95,13 @@ char** get_segment_bundles(const char* macho_path) {
                 continue;
             }
             CFURLRef path = CFURLCreateCopyDeletingLastPathComponent(kCFAllocatorDefault, bin_path);
+            CFRelease(bin_path);
             if (!path) {
                 free(segname);
                 continue;
             }
             CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, path);
+            CFRelease(path);
             if (!bundle) {
                 free(segname);
                 continue;
