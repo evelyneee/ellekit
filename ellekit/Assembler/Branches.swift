@@ -37,15 +37,23 @@ public class b: Instruction {
         byteArray(from: value)
     }
 
-    let value: Int
+    public let value: Int
 
     public init(_ addr: Int) {
         var base = Self.base
         base |= (addr & 0x3ffffff)
         self.value = reverse(base)
     }
+    
+    public init(_ addr: Int, cond: Cond) {
+        var base = Self.condBase
+        base |= ((addr & 0x3ffffff) << 5)
+        base |= cond.rawValue
+        self.value = reverse(base)
+    }
 
-    static let base = 0b0_00101_00000000000000000000000000
+    static let base = 0b00010100000000000000000000000000
+    static public let condBase = 0b01010100000000000000000000000000
 }
 
 public class bl: Instruction {
@@ -158,16 +166,33 @@ public class cbnz: Instruction {
     }
 }
 
-func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false) -> [UInt8] {
-    let offset = Int(target - pc)
-    if (size > 5 && abs(offset / 1024 / 1024) > 128) || big {
-        let target_addr = Int(UInt64(offset) + pc)
+func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false, page: Bool = false) -> [UInt8] {
+    let target = Int(target)
+    let pc = Int(pc)
+    let offset = target - pc
+    if page {
+        
+        let pageOffset = Int((target & ~0xfff) - (pc & ~0xfff))
+                
+        let addOffset = offset - pageOffset
+        
+        print(pageOffset, addOffset)
+        print(pageOffset + addOffset == offset)
+        
         let codeBuild = [
-            movk(.x16, target_addr % 65536).bytes(),
-            movk(.x16, (target_addr / 65536) % 65536, lsl: 16).bytes(),
-            movk(.x16, ((target_addr / 65536) / 65536) % 65536, lsl: 32).bytes(),
-            movk(.x16, ((target_addr / 65536) / 65536) / 65536, lsl: 48).bytes(),
-            link ? blr(.x16).bytes() : br(.x16).bytes()
+            adrp(.x17, Int(pageOffset)).bytes(),
+            add(.x17, .x17, Int(addOffset)).bytes(),
+            [0x20, 0x00, 0x20, 0xD4],
+            link ? blr(.x17).bytes() : br(.x17).bytes()
+        ]
+        return codeBuild.joined().literal()
+    } else if (size > 5 && abs(offset / 1024 / 1024) > 128) || big {
+        let codeBuild = [
+            movk(.x17, target % 65536).bytes(),
+            movk(.x17, (target / 65536) % 65536, lsl: 16).bytes(),
+            movk(.x17, ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
+            movk(.x17, ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
+            link ? blr(.x17).bytes() : br(.x17).bytes()
         ]
         return codeBuild.joined().literal()
     } else {

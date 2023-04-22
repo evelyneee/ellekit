@@ -17,6 +17,15 @@ extension FlattenSequence {
     }
 }
 
+func signExtend(_ immediate: UInt32, _ offset: UInt8) -> Int32 {
+    var result = Int32(bitPattern: immediate)
+    let signBit = (immediate >> offset) & 0x1
+    for i in (offset + 1) ..< 32 {
+        result |= Int32(signBit << i)
+    }
+    return result
+}
+
 extension Instructions {
     func rebind(formerPC: UInt64, newPC: UInt64) -> [[UInt8]] {
         self
@@ -42,7 +51,17 @@ extension Instructions {
                     
                     return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
                 }
-
+                
+//                if reversed >> 25 == b.condBase >> 25 {
+//
+//                    let opcode = (reversed >> 25)
+//                    let cond = reversed & 0x0f
+//                    let offset = (signExtend(((reversed >> 5) & 0x7ffff), 17))
+//
+//                    guard let target = b.des
+//                    
+//                }
+                
                 if checkBranch(byteArray) {
                     print("Rebinding branch")
                     let imm = (UInt64(disassembleBranchImm(UInt64(instruction))) + formerPC) - newPC

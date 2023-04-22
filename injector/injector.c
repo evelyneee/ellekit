@@ -285,6 +285,8 @@ static void tweaks_iterate() {
 __attribute__((constructor))
 static void injection_init() {
     
+    eklog = os_log_create("red.charlotte.ellekit", "injector");
+    
 #if !TARGET_OS_OSX
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {

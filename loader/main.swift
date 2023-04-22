@@ -130,12 +130,18 @@ set_sp(sp_ptr, &state)
 var thread: thread_t = 0
 var count = mach_msg_type_number_t(MemoryLayout<__darwin_arm_thread_state64>.size / MemoryLayout<UInt32>.size)
 
+#if _ptrauth(_arm64e)
 guard thread_create(task, &thread) == KERN_SUCCESS else {
     print("[-] loader: failed to spawn thread")
     exit(1)
 }
 
-print("[+] loader: started thread")
+if thread == 0 {
+    print("[-] loader: thread is a NULL mach_port")
+    exit(1)
+}
+
+print("[+] loader: started thread:", thread)
 
 let convert = withUnsafeMutablePointer(to: &state, {
     $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<__darwin_arm_thread_state64>.size, { statePtr in
@@ -170,6 +176,25 @@ guard create == KERN_SUCCESS else {
 }
 
 print("[+] loader: set thread state")
+#else
+print("[*] using thread_create_running method")
+guard withUnsafeMutablePointer(to: &state, {
+    $0.withMemoryRebound(to: UInt32.self, capacity: MemoryLayout<__darwin_arm_thread_state64>.size, { statePtr in
+        thread_create_running(task, ARM_THREAD_STATE64, statePtr, count, &thread)
+    })
+}) == KERN_SUCCESS else {
+    print("[-] loader: failed to spawn thread")
+    exit(1)
+}
+
+if thread == 0 {
+    print("[-] loader: thread is a NULL mach_port")
+    exit(1)
+}
+
+print("[+] loader: started thread:", thread)
+
+#endif
 
 DispatchQueue.global().async {
     thread_resume(thread)
@@ -177,6 +202,7 @@ DispatchQueue.global().async {
     sleep(3)
     print("[+] loader: closed thread")
     thread_suspend(thread)
+    thread_terminate(thread)
     print("[i] run `launchctl reboot userspace` to load your tweaks")
     exit(0)
 }

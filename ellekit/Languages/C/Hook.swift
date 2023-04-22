@@ -24,6 +24,7 @@ public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuild
     }
 }
 
+@_cdecl("EKHookFunction")
 public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
 
     var target = stockTarget.makeReadable()
@@ -54,6 +55,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         if exceptionHandler == nil {
              exceptionHandler = .init()
         }
+         print("[*] ellekit: using exception handler method")
         code = [0x20, 0x00, 0x20, 0xD4] // brk #1
     } else { // fastest and simplest branch
         print("[*] ellekit: Small branch")
@@ -72,7 +74,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 5,
         shouldBranchAfter: targetSize != 5
     )
-
+    
     let ret = code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
@@ -114,6 +116,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }
+        print("[*] ellekit: using exception handler method")
         code = [0x20, 0x00, 0x20, 0xD4] // process crash! (brk #1)
     } else {
         print("[*] ellekit: Small branch")

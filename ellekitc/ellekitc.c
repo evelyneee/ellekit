@@ -72,7 +72,10 @@ __attribute__((noinline, naked)) volatile kern_return_t custom_mach_vm_protect(m
     __asm("svc 0x80");
     __asm("ret");
 #else
-    __asm("ret");
+    __asm(".intel_syntax noprefix; \
+           mov rax, 0xFFFFFFFFFFFFFFF2; \
+           syscall; \
+           ret");
 #endif
 }
 
