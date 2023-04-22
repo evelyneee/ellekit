@@ -15,8 +15,6 @@ static int compare(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
 }
 
-os_log_t eklog;
-
 #if TARGET_OS_OSX
 #define TWEAKS_DIRECTORY "/Library/TweakInject/"
 #else
@@ -265,11 +263,7 @@ static void tweaks_iterate() {
                 
                 dlopen(full_path, RTLD_NOW);
                 
-                char* err = dlerror();
-                
-                if (err) {
-                    os_log_with_type(eklog, OS_LOG_TYPE_ERROR, "[libinjector] Got dlopen error: %s", err);
-                }
+                dlerror();
             }
             free(full_path);
             free(plist);
@@ -284,9 +278,7 @@ static void tweaks_iterate() {
 
 __attribute__((constructor))
 static void injection_init() {
-    
-    eklog = os_log_create("red.charlotte.ellekit", "injector");
-    
+        
 #if !TARGET_OS_OSX
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
