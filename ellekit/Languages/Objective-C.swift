@@ -50,7 +50,7 @@ public func hookClassPair(_ targetClass: AnyClass, _ hookClass: AnyClass, _ base
     print("[*] ellekit: \(method_count) methods found in hooked class")
     for iter in 0..<Int(method_count) {
         let selector = method_getName(methods[iter])
-        NSLog("[*] ellekit: hooked method is", sel_getName(selector))
+        print("[*] ellekit: hooked method is", sel_getName(selector))
         
         let method_encoding = method_getTypeEncoding(methods[iter])
         

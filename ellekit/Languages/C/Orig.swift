@@ -95,8 +95,8 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
     var codeBuilder: [UInt8] {
         bytes(unpatched) // First instruction of the function that got hooked
         bytes(assembleJump(target_addr, pc: 0, link: false, big: true).dropLast(4))
-        add(.x17, .x17, usedBigBranch ? 20 : 4) // Jump first instruction (the branch to the replacement)
-        br(.x17)
+        add(.x16, .x16, usedBigBranch ? 20 : 4) // Jump first instruction (the branch to the replacement)
+        br(.x16)
     }
 
     code = codeBuilder

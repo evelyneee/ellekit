@@ -8,7 +8,6 @@
 #include <objc/runtime.h>
 #include <dirent.h>
 #include <dlfcn.h>
-#include <os/log.h>
 #include <mach-o/dyld.h>
 
 static int compare(const void *a, const void *b) {
@@ -205,6 +204,21 @@ success:
     return true;
 }
 
+void logToFile(char* text, char* filename) {
+    FILE *fptr;
+  
+  // Open the file in append mode
+    fptr = fopen(filename, "a+");
+    
+    if (!fptr) { return; }
+  
+  // Write the text to the file
+    fprintf(fptr, "tweak loading: %s\n", text);
+  
+  // Close the file
+    fclose(fptr);
+}
+
 static void tweaks_iterate() {
     DIR *dir;
     struct dirent *ent;
@@ -261,9 +275,9 @@ static void tweaks_iterate() {
                 }
                 #endif
                 
-                dlopen(full_path, RTLD_NOW);
+                logToFile(full_path, "/var/mobile/tweaklog.txt");
                 
-                dlerror();
+                dlopen(full_path, RTLD_NOW);
             }
             free(full_path);
             free(plist);
@@ -278,7 +292,16 @@ static void tweaks_iterate() {
 
 __attribute__((constructor))
 static void injection_init() {
+    
+    char executable[1024];
+    uint32_t size = 1024;
+
+    if (_NSGetExecutablePath(executable, &size) == 0) {
         
+        logToFile("\n\n", "/var/mobile/tweaklog.txt");
+        logToFile(executable, "/var/mobile/tweaklog.txt");
+    }
+    
 #if !TARGET_OS_OSX
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
