@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# from https://theapplewiki.com/wiki/Dev:Packaging
+function finish() {
+    f="${1}"
+
+    # No control fd: bail out
+    [[ -z "${f}" || -z "${CYDIA}" ]] && return
+    cydia=(${CYDIA})
+
+    # Cydia control fd version != 1: bail out
+    [[ ${cydia[1]} -eq 1 ]] || return
+
+    echo "finish:${f}" >&${cydia[0]}
+}
+
+if [ ! -f /var/jb/.installed_dopamine ]; then
+    # run loader on non-Dopamine jailbreaks
+    @INSTALL_ROOT@/usr/libexec/ellekit/loader
+fi
+
+finish reboot
