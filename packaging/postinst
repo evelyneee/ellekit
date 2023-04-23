@@ -14,7 +14,7 @@ function finish() {
     echo "finish:${f}" >&${cydia[0]}
 }
 
-if [ ! -f /var/jb/.installed_dopamine ]; then
+if [ ! -f /var/jb/.installed_dopamine ] && [ ! -f /var/jb/.installed_fugu15max ]; then
     # run loader on non-Dopamine jailbreaks
     @INSTALL_ROOT@/usr/libexec/ellekit/loader
 fi
