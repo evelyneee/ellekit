@@ -53,7 +53,7 @@ public final class ExceptionHandler {
     public func startPortLoop() {
         print("[+] ellekit: starting exception handler")
         self.thread.async { [weak self] in
-            while true { Self.portLoop(self) }
+            Self.portLoop(self)
         }
     }
 
@@ -64,20 +64,22 @@ public final class ExceptionHandler {
             return
         }
         
+        print("Trying")
+        
         let msg_header = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: Int(vm_page_size))
 
         defer { msg_header.deallocate() }
 
         let krt1 = mach_msg(
             msg_header,
-            MACH_RCV_MSG | MACH_RCV_LARGE,
+            MACH_RCV_MSG | MACH_RCV_LARGE | Int32(MACH_MSG_TIMEOUT_NONE),
             0,
             mach_msg_size_t(vm_page_size),
             self.port,
             0,
             0
         )
-
+        
         guard krt1 == KERN_SUCCESS else {
             print("[-] couldn't receive from port:", mach_error_string(krt1) ?? "")
             return
@@ -113,6 +115,8 @@ public final class ExceptionHandler {
             if krt != KERN_SUCCESS {
                 print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
             }
+            
+            Self.portLoop(self)
         }
 
         #if arch(x86_64)
@@ -162,17 +166,15 @@ public final class ExceptionHandler {
                 print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
                 return
             }
+            
+            print("Resuming")
+                        
+            thread_resume(thread_port)
 
         } else {
-            
             thread_suspend(thread_port)
             mach_port_deallocate(mach_task_self_, thread_port)
-            return
         }
         #endif
-
-        thread_resume(thread_port)
-        
-        return
     }
 }

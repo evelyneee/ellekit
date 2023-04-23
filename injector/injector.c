@@ -194,20 +194,18 @@ success:
 }
 
 static void tweaks_iterate() {
-    DIR *dir;
-    struct dirent **entries;
-    char *full_path, *plist;
+    struct dirent **files;
     int n;
 
-    n = scandir(TWEAKS_DIRECTORY, &entries, filter_dylib, alphasort);
+    n = scandir(TWEAKS_DIRECTORY, &files, filter_dylib, alphasort);
     if (n == -1) {
         perror("scandir");
         exit(EXIT_FAILURE);
     }
 
     while (n--) {
-        full_path = append_str(TWEAKS_DIRECTORY, entries[n]->d_name);
-        plist = strndup(full_path, strlen(full_path) - 6);
+        char* full_path = append_str(TWEAKS_DIRECTORY, files[n]->d_name);
+        char* plist = strndup(full_path, strlen(full_path) - 6);
         
         bool ret = tweak_needinject(plist);
         if (ret) {
@@ -224,10 +222,10 @@ static void tweaks_iterate() {
         
         free(full_path);
         free(plist);
-        free(entries[n]);
+        free(files[n]);
     }
     
-    free(entries);
+    free(files);
 }
 
 __attribute__((constructor))

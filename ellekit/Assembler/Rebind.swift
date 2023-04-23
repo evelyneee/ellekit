@@ -75,5 +75,13 @@ extension Instructions {
                 return byteArray
             }
     }
-
+    #if false
+    func hasClobber() -> Bool {
+        self
+            .contains(where: { isn in
+                let isn = CFSwapInt32(combine(isn))
+                let opcode = (isn >> 25)
+            })
+    }
+    #endif
 }

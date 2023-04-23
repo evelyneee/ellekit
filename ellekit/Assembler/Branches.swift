@@ -176,23 +176,20 @@ func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: 
                 
         let addOffset = offset - pageOffset
         
-        print(pageOffset, addOffset)
-        print(pageOffset + addOffset == offset)
-        
         let codeBuild = [
-            adrp(.x17, Int(pageOffset)).bytes(),
-            add(.x17, .x17, Int(addOffset)).bytes(),
+            adrp(.x16, Int(pageOffset)).bytes(),
+            add(.x16, .x16, Int(addOffset)).bytes(),
             [0x20, 0x00, 0x20, 0xD4],
-            link ? blr(.x17).bytes() : br(.x17).bytes()
+            link ? blr(.x16).bytes() : br(.x16).bytes()
         ]
         return codeBuild.joined().literal()
     } else if (size > 5 && abs(offset / 1024 / 1024) > 128) || big {
         let codeBuild = [
-            movk(.x17, target % 65536).bytes(),
-            movk(.x17, (target / 65536) % 65536, lsl: 16).bytes(),
-            movk(.x17, ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
-            movk(.x17, ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
-            link ? blr(.x17).bytes() : br(.x17).bytes()
+            movk(.x16, target % 65536).bytes(),
+            movk(.x16, (target / 65536) % 65536, lsl: 16).bytes(),
+            movk(.x16, ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
+            movk(.x16, ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
+            link ? blr(.x16).bytes() : br(.x16).bytes()
         ]
         return codeBuild.joined().literal()
     } else {
