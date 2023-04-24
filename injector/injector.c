@@ -8,10 +8,11 @@
 #include <objc/runtime.h>
 #include <dirent.h>
 #include <dlfcn.h>
+#include <os/log.h>
 #include <mach-o/dyld.h>
 
-static int compare(const void *a, const void *b) {
-    return strcmp(*(const char **)a, *(const char **)b);
+static int filter_dylib(const struct dirent *entry) {
+    return strcmp(entry->d_name, ".dylib") == 0;
 }
 
 #if TARGET_OS_OSX
@@ -22,30 +23,6 @@ static int compare(const void *a, const void *b) {
 #define OLDABI_PATH "/var/jb/usr/lib/ellekit/OldABI.dylib"
 #endif
 
-CFStringRef copyAndLowercaseCFString(CFStringRef input) {
-    CFMutableStringRef mutableCopy = CFStringCreateMutableCopy(NULL, 0, input);
-    CFStringLowercase(mutableCopy, NULL);
-    return mutableCopy;
-}
-
-char* drop_last_n_chars(const char* str, size_t n) {
-    size_t len = strlen(str);
-
-    if (n >= len) {
-        return NULL;  // invalid input, n is too large
-    }
-
-    char* new_str = malloc(len - n + 1);  // allocate memory for the new string
-    if (new_str == NULL) {
-        return NULL;  // allocation failed
-    }
-
-    strncpy(new_str, str, len - n);  // copy the first len - n characters
-    new_str[len - n] = '\0';  // terminate the new string
-
-    return new_str;
-}
-
 char* append_str(const char* str, const char* append_str) {
     size_t str_len = strlen(str);
     size_t append_str_len = strlen(append_str);
@@ -55,8 +32,8 @@ char* append_str(const char* str, const char* append_str) {
         return NULL;  // allocation failed
     }
 
-    strcpy(new_str, str);  // copy the original string to the new string
-    strcat(new_str, append_str);  // append the new string to the end
+    memcpy(new_str, str, str_len); // copy the original string to the new string
+    strncpy(new_str + str_len, append_str, append_str_len); // append the new string to the end
     new_str[str_len + append_str_len] = '\0';  // terminate the new string
 
     return new_str;
@@ -82,7 +59,7 @@ static bool tweak_needinject(const char* orig_path) {
         
     plistPath = CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingUTF8);
             
-    if (!!access(path, F_OK)) {
+    if (access(path, F_OK) == 0) {
         free(path);
         CFRelease(plistPath);
         return false;
@@ -106,14 +83,29 @@ static bool tweak_needinject(const char* orig_path) {
     CFRelease(plistPath);
                             
     CFDictionaryRef filter = CFDictionaryGetValue(plist, CFSTR("Filter"));
+
+    CFArrayRef versions = CFDictionaryGetValue(filter, CFSTR("CoreFoundationVersion"));
+    if (versions && 
+        ((CFArrayGetCount(versions) == 1 && *((double*)CFArrayGetValueAtIndex(versions, 0)) > kCFCoreFoundationVersionNumber) || (CFArrayGetCount(versions) == 2 &&
+        (*((double*)CFArrayGetValueAtIndex(versions, 0)) > kCFCoreFoundationVersionNumber || *((double*)CFArrayGetValueAtIndex(versions, 1)) <= kCFCoreFoundationVersionNumber)))) {
+
+        CFRelease(plist);
+        return false;
+    }
+
     CFArrayRef bundles = CFDictionaryGetValue(filter, CFSTR("Bundles"));
     
     if (bundles) {
         for (CFIndex i = 0; i < CFArrayGetCount(bundles); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(bundles, i);
             if (id) {
-                CFStringRef lowercased = copyAndLowercaseCFString(id);
-                if (CFBundleGetBundleWithIdentifier(id) || CFBundleGetBundleWithIdentifier(lowercased)) {
+                if (CFBundleGetBundleWithIdentifier(id)) {
+                    goto success;
+                }
+
+                CFMutableStringRef lowercased = CFStringCreateMutableCopy(NULL, 0, id);
+                CFStringLowercase(lowercased, NULL);
+                if (CFBundleGetBundleWithIdentifier(lowercased)) {
                     CFRelease(lowercased);
                     goto success;
                 }
@@ -127,17 +119,21 @@ static bool tweak_needinject(const char* orig_path) {
     if (classes) {
         for (CFIndex i = 0; i < CFArrayGetCount(classes); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(classes, i);
-                                            
-            char* str = malloc(CFStringGetLength(id)+1);
-            
-            CFStringGetCString(id, str, CFStringGetLength(id)+1, kCFStringEncodingASCII);
-                        
-            if (objc_getClass(str)) {
-                free(str);
-                goto success;
+            const char* str = CFStringGetCStringPtr(id, kCFStringEncodingASCII);
+            if (str) {
+                if (objc_getClass(str)) {
+                    goto success;
+                }
             }
-            
-            free(str);
+            else {
+                char* copiedStr = malloc(CFStringGetLength(id)+1);
+                CFStringGetCString(id, copiedStr, CFStringGetLength(id)+1, kCFStringEncodingASCII);
+                if (objc_getClass(copiedStr)) {
+                    free(copiedStr);
+                    goto success;
+                }
+                free(copiedStr);
+            }
         }
     }
     
@@ -152,46 +148,39 @@ static bool tweak_needinject(const char* orig_path) {
             
             for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
                 CFStringRef id = CFArrayGetValueAtIndex(executables, i);
-
-                char* str = malloc(CFStringGetLength(id)+1);
-
-                CFStringGetCString(id, str, CFStringGetLength(id)+1, kCFStringEncodingASCII);
-
-//                printf("opening %s\n", str);
-                
-                if (!strcmp(str, get_last_path_component(executable))) {
-                    free(str);
-                    goto success;
+                const char* str = CFStringGetCStringPtr(id, kCFStringEncodingASCII);
+                if (str) {
+                    if (!strcmp(str, get_last_path_component(executable))) {
+                        goto success;
+                    }
                 }
-
-                free(str);
+                else {
+                    char* copiedStr = malloc(CFStringGetLength(id)+1);
+                    CFStringGetCString(id, copiedStr, CFStringGetLength(id)+1, kCFStringEncodingASCII);
+                    if (!strcmp(copiedStr, get_last_path_component(executable))) {
+                        free(copiedStr);
+                        goto success;
+                    }
+                    free(copiedStr);
+                }
             }
         } else if (CFBundleGetMainBundle()) {
-            for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
-                CFStringRef id = CFArrayGetValueAtIndex(executables, i);
-
-                char *name_str = NULL;
-                CFBundleRef bundle = CFBundleGetMainBundle();
-                CFURLRef url = CFBundleCopyExecutableURL(bundle);
-                if (url) {
-                    CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-                    CFStringRef file_name = CFURLCopyLastPathComponent(url);
-                    if (file_name) {
+            CFBundleRef bundle = CFBundleGetMainBundle();
+            CFURLRef url = CFBundleCopyExecutableURL(bundle);
+            if (url) {
+                CFStringRef file_name = CFURLCopyLastPathComponent(url);
+                if (file_name) {
+                    for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
+                        CFStringRef id = CFArrayGetValueAtIndex(executables, i);
                         if (CFStringCompare(file_name, id, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
                             CFRelease(file_name);
-                            CFRelease(path);
                             CFRelease(url);
-                            free(name_str);
                             goto success;
                         }
-                        CFRelease(file_name);
                     }
-                    CFRelease(path);
-                    CFRelease(url);
+                    CFRelease(file_name);
                 }
-                
-                free(name_str);
-
+                CFRelease(url);
             }
         }
     }
@@ -205,79 +194,46 @@ success:
 }
 
 static void tweaks_iterate() {
-    DIR *dir;
-    struct dirent *ent;
-    char **files;
-    int i, n;
+    struct dirent **files;
+    int n;
 
-    dir = opendir(TWEAKS_DIRECTORY);
-    if (dir == NULL) {
-        perror("opendir");
+    n = scandir(TWEAKS_DIRECTORY, &files, filter_dylib, alphasort);
+    if (n == -1) {
+        perror("scandir");
         exit(EXIT_FAILURE);
     }
 
-    n = 0;
-    while ((ent = readdir(dir)) != NULL) {
-        if (ent->d_type == DT_REG) {
-            n++;
-        }
-    }
-
-    rewinddir(dir);
-    
-    if (n == 0) {
-        return;
-    }
-
-    files = malloc(n * sizeof(char *));
-    if (files == NULL) {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-
-    i = 0;
-    while ((ent = readdir(dir)) != NULL) {
-        if (ent->d_type == DT_REG) {
-            files[i] = strdup(ent->d_name);
-            i++;
-        }
-    }
-
-    qsort(files, n, sizeof(char *), compare);
-
-    for (i = 0; i < n; ++i) {
-        if (!!strstr(files[i], ".dylib")) {
-            
-            char *full_path = append_str(TWEAKS_DIRECTORY, files[i]);
-            
-            char* plist = drop_last_n_chars(full_path, 6);
-            
-            bool ret = tweak_needinject(plist);
-            if (ret) {
-                #if !TARGET_OS_OSX
-                if (!access(OLDABI_PATH, F_OK)) {
-                    dlopen(OLDABI_PATH, RTLD_NOW);
-                }
-                #endif
-                                
-                dlopen(full_path, RTLD_NOW);
+    while (n--) {
+        char* full_path = append_str(TWEAKS_DIRECTORY, files[n]->d_name);
+        char* plist = strndup(full_path, strlen(full_path) - 6);
+        
+        bool ret = tweak_needinject(plist);
+        if (ret) {
+            #if !TARGET_OS_OSX
+            if (!access(OLDABI_PATH, F_OK)) {
+                dlopen(OLDABI_PATH, RTLD_NOW);
             }
-            free(full_path);
-            free(plist);
+            #endif
+            
+            dlopen(full_path, RTLD_NOW);
+            
+            dlerror();
         }
-        free(files[i]);
+        
+        free(full_path);
+        free(plist);
+        free(files[n]);
     }
     
     free(files);
-
-    closedir(dir);
 }
 
 __attribute__((constructor))
 static void injection_init() {
+    
 #if !TARGET_OS_OSX
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
-        if (CFStringCompare(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.SpringBoard"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+        if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
             dlopen(MOBILESAFETY_PATH, RTLD_NOW);
         }
     }
