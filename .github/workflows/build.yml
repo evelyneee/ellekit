@@ -26,10 +26,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: debug
+          - name: iOS debug
             flags: ""
-          - name: release
+          - name: iOS release
             flags: "RELEASE=1"
+          - name: macOS debug
+            flags: "MAC=1"
+          - name: iOS release
+            flags: "MAC=1 RELEASE=1"
 
     steps:
       - name: Checkout

@@ -17,16 +17,15 @@ DEB_VERSION = $(VERSION)+debug
 endif
 
 ifneq ($(MAC),)
-$(error macOS is not supported yet)
 COMMON_OPTIONS += -destination 'generic/platform=macOS'
+PRODUCTS_DIR = build/$(CONFIGURATION)
 else
 COMMON_OPTIONS += -destination 'generic/platform=iOS'
+PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
 endif
 
 ifneq ($(MAC),)
-PRODUCTS_DIR = build/$(CONFIGURATION)-macosx
-else
-PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
+COMMON_OPTIONS += ARCHS="x86_64 arm64e"
 endif
 
 STAGE_DIR = work-$(ARCHITECTURE)/stage
@@ -51,8 +50,11 @@ build-ios:
 	xcodebuild -scheme safemode-ui $(COMMON_OPTIONS)
 
 build-macos:
-	# TODO
-	$(error macOS is not supported yet)
+	xcodebuild -scheme ellekit $(COMMON_OPTIONS)
+	xcodebuild -scheme injector $(COMMON_OPTIONS)
+	xcodebuild -scheme launchd $(COMMON_OPTIONS)
+	# Loader currently broken on Intel
+	# xcodebuild -scheme loader $(COMMON_OPTIONS)
 
 deb-ios-rootful: ARCHITECTURE = iphoneos-arm
 deb-ios-rootful: INSTALL_PREFIX = 
@@ -110,9 +112,61 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 deb-ios: deb-ios-rootful deb-ios-rootless
 
-deb-macos: build-macos
-	# TODO
-	$(error macOS is not supported yet)
+deb-macos-amd64: ARCHITECTURE = darwin-amd64
+deb-macos-amd64: BINARY_ARCH = x86_64
+
+deb-macos-arm64: ARCHITECTURE = darwin-arm64
+deb-macos-arm64: BINARY_ARCH = arm64e
+
+# TODO: add .pkg support?
+
+# Note: on a macOS Procursus installation, dpkg will try to remove /usr/local if ellekit is the only package installed there
+deb-macos-amd64 deb-macos-arm64: INSTALL_PREFIX = 
+deb-macos-amd64 deb-macos-arm64: build-macos
+	@rm -rf work-$(ARCHITECTURE)
+	@mkdir -p $(STAGE_DIR)
+
+	@# Because BSD install does not support -D
+	@mkdir -p $(INSTALL_ROOT)/usr/local/lib/ellekit
+	@mkdir -p $(INSTALL_ROOT)/usr/local/libexec/ellekit
+	@mkdir -p $(INSTALL_ROOT)/Library/TweakInject
+
+	@install -m644 $(PRODUCTS_DIR)/libellekit.dylib $(INSTALL_ROOT)/usr/local/lib/libellekit.dylib
+	@install -m644 $(PRODUCTS_DIR)/libinjector.dylib $(INSTALL_ROOT)/usr/local/lib/ellekit/libinjector.dylib
+	@install -m644 $(PRODUCTS_DIR)/pspawn.dylib $(INSTALL_ROOT)/Library/TweakInject/pspawn.dylib
+	# @install -m755 $(PRODUCTS_DIR)/loader $(INSTALL_ROOT)/usr/local/libexec/ellekit/loader
+
+	# Instead of building twice for arm64 and x86_64, we can just use lipo to thin the binaries
+	@find $(INSTALL_ROOT) -type f -exec lipo -thin $(BINARY_ARCH) {} -output {} \;
+
+	@find $(INSTALL_ROOT)/usr/local/lib $(INSTALL_ROOT)/Library/TweakInject -type f -exec ldid -S {} \;
+	# @ldid -S./loader/taskforpid.xml $(INSTALL_ROOT)/usr/local/libexec/ellekit/loader
+	
+	@ln -s $(INSTALL_PREFIX)/usr/local/lib/libellekit.dylib $(INSTALL_ROOT)/usr/local/lib/libsubstrate.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/local/lib/libellekit.dylib $(INSTALL_ROOT)/usr/local/lib/libhooker.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/local/lib/libellekit.dylib $(INSTALL_ROOT)/usr/local/lib/libblackjack.dylib
+
+	# @mkdir -p $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework
+	# @ln -s ${INSTALL_PREFIX}/usr/lib/libellekit.dylib $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate
+	# @mkdir -p $(INSTALL_ROOT)/Library/MobileSubstrate
+	# @ln -s ${INSTALL_PREFIX}/usr/lib/TweakInject $(INSTALL_ROOT)/Library/MobileSubstrate/DynamicLibraries
+
+	@mkdir -p $(INSTALL_ROOT)/usr/local/share/doc/ellekit
+	@install -m644 LICENSE $(INSTALL_ROOT)/usr/local/share/doc/ellekit/LICENSE
+
+	@mkdir -p $(STAGE_DIR)/DEBIAN
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" packaging/control >$(STAGE_DIR)/DEBIAN/control
+	# TODO: Adjust the postinst script to work with macOS
+	# @sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_ROOT@|$(INSTALL_ROOT)|g" packaging/postinst >$(STAGE_DIR)/DEBIAN/postinst
+	# @sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_ROOT@|$(INSTALL_ROOT)|g" packaging/postrm >$(STAGE_DIR)/DEBIAN/postrm
+	# @chmod 0755 $(STAGE_DIR)/DEBIAN/postinst $(STAGE_DIR)/DEBIAN/postrm
+
+	@mkdir -p packages
+	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
+
+	@rm -rf work-$(ARCHITECTURE)
+
+deb-macos: deb-macos-amd64 deb-macos-arm64
 
 ifneq ($(MAC),)
 deb: deb-macos
