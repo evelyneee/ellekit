@@ -3,7 +3,7 @@
 ifneq ($(ONLY_TAG),)
 VERSION := $(shell git describe --tags --abbrev=0 | sed 's/^v//g')
 else
-VERSION := $(shell git describe --tags --always | sed 's/-/~/' | sed 's/-/\./g' | sed 's/\.g/\./g' | sed 's/^v//g')
+VERSION := $(shell git describe --tags --always | sed 's/-/|/' | sed 's/-/\./g' | sed 's/|/-/' | sed 's/\.g/\./g' | sed 's/^v//g')
 endif
 
 COMMON_OPTIONS = BUILD_DIR="build/" CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration $(CONFIGURATION)
@@ -97,6 +97,9 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 	@mkdir -p $(STAGE_DIR)/DEBIAN
 	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" packaging/control >$(STAGE_DIR)/DEBIAN/control
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_ROOT@|$(INSTALL_ROOT)|g" packaging/postinst >$(STAGE_DIR)/DEBIAN/postinst
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_ROOT@|$(INSTALL_ROOT)|g" packaging/postrm >$(STAGE_DIR)/DEBIAN/postrm
+	@chmod 0755 $(STAGE_DIR)/DEBIAN/postinst $(STAGE_DIR)/DEBIAN/postrm
 
 	@mkdir -p packages
 	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
