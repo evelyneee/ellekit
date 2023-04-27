@@ -12,7 +12,8 @@
 #include <mach-o/dyld.h>
 
 static int filter_dylib(const struct dirent *entry) {
-    return strcmp(entry->d_name, ".dylib") == 0;
+    char* dot = strrchr(entry->d_name, '.');
+    return dot && strcmp(dot, ".dylib") == 0;
 }
 
 #if TARGET_OS_OSX
@@ -58,8 +59,8 @@ static bool tweak_needinject(const char* orig_path) {
     char* path = append_str(orig_path, ".plist");
         
     plistPath = CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingUTF8);
-            
-    if (access(path, F_OK) == 0) {
+
+    if (!access(path, F_OK)) {
         free(path);
         CFRelease(plistPath);
         return false;
