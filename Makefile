@@ -3,7 +3,7 @@
 ifneq ($(ONLY_TAG),)
 VERSION := $(shell git describe --tags --abbrev=0 | sed 's/^v//g')
 else
-VERSION := $(shell git describe --tags --always | sed 's/-/~/' | sed 's/-/\./g' | sed 's/\.g/\./g' | sed 's/^v//g')
+VERSION := $(shell git describe --tags --always | sed 's/-/|/' | sed 's/-/\./g' | sed 's/|/-/' | sed 's/\.g/\./g' | sed 's/^v//g')
 endif
 
 COMMON_OPTIONS = BUILD_DIR="build/" CODE_SIGNING_ALLOWED="NO" CODE_SIGNING_REQUIRED="NO" CODE_SIGN_IDENTITY="" -configuration $(CONFIGURATION)
