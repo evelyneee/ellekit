@@ -9,6 +9,7 @@
 import Foundation
 import ellekit
 import AppKit
+import Darwin
 
 var orig1_: UnsafeMutableRawPointer! = nil
 
@@ -36,6 +37,19 @@ let repcl2: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep2
 
 let repptr2 = unsafeBitCast(repcl2, to: UnsafeMutableRawPointer.self)
 
+var socketorig: UnsafeMutableRawPointer! = nil
+
+@_cdecl("socketrep")
+public func socketrep(_ x0: Int32, _ x1: Int32, _ x2: Int32) -> Int32 {
+    print("called socket")
+    let ret = unsafeBitCast(socketorig, to: (@convention (c) (Int32, Int32, Int32) -> Int32).self)(x0, x1, x2)
+    return ret
+}
+
+let socketrepcl: @convention (c) (Int32, Int32, Int32) -> Int32 = socketrep
+
+let socketrepptr = unsafeBitCast(socketrepcl, to: UnsafeMutableRawPointer.self)
+
 for image in 0..<_dyld_image_count() {
     if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
         print("_atoi: \(sym)")
@@ -55,13 +69,18 @@ for image in 0..<_dyld_image_count() {
         print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
     }
     
-    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoll") {
-        print("_atoll: \(sym)")
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_socket") {
+        print("_socket: \(sym)")
         
-        hook(UnsafeMutableRawPointer(mutating: sym), repptr1)!
-        hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
-                        
-        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+        UnsafeRawPointer(bitPattern: (UInt(bitPattern: sym) & 0x0000007fffffffff))?.hexDump(0x400)
+        
+        let ret1 = socket(32, 1, 2)
+        
+        socketorig = hook(UnsafeMutableRawPointer(mutating: sym), socketrepptr)!
+                              
+        let ret = socket(32, 1, 2)
+                
+        print(ret1, ret)
     }
 }
 
@@ -218,9 +237,12 @@ print("Found bundles for MobileSMS:", msms.prefix(2))
 #endif
 
 print("--------- Finding bundles for thick Mach-O ---------")
-let substrate = try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib")
+for path in try FileManager.default.contentsOfDirectory(atPath: "/usr/local/bin/") {
+    
+    let substrate = try? ellekit.getLinkedBundleIDs(file: "/usr/local/bin/"+path)
 
-print("Found bundles for libsubstrate:", substrate)
+    print("Found bundles for \((path as NSString).lastPathComponent):", substrate)
+}
 
 print(try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
 

@@ -166,7 +166,7 @@ public class cbnz: Instruction {
     }
 }
 
-func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false, page: Bool = false) -> [UInt8] {
+func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false, page: Bool = false, jmpReg: Register = .x16) -> [UInt8] {
     let target = Int(target)
     let pc = Int(pc)
     let offset = target - pc
@@ -177,19 +177,19 @@ func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: 
         let addOffset = offset - pageOffset
         
         let codeBuild = [
-            adrp(.x16, Int(pageOffset)).bytes(),
-            add(.x16, .x16, Int(addOffset)).bytes(),
+            adrp(jmpReg, Int(pageOffset)).bytes(),
+            add(jmpReg, jmpReg, Int(addOffset)).bytes(),
             [0x20, 0x00, 0x20, 0xD4],
-            link ? blr(.x16).bytes() : br(.x16).bytes()
+            link ? blr(jmpReg).bytes() : br(jmpReg).bytes()
         ]
         return codeBuild.joined().literal()
     } else if (size > 5 && abs(offset / 1024 / 1024) > 128) || big {
         let codeBuild = [
-            movk(.x16, target % 65536).bytes(),
-            movk(.x16, (target / 65536) % 65536, lsl: 16).bytes(),
-            movk(.x16, ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
-            movk(.x16, ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
-            link ? blr(.x16).bytes() : br(.x16).bytes()
+            movk(jmpReg, target % 65536).bytes(),
+            movk(jmpReg, (target / 65536) % 65536, lsl: 16).bytes(),
+            movk(jmpReg, ((target / 65536) / 65536) % 65536, lsl: 32).bytes(),
+            movk(jmpReg, ((target / 65536) / 65536) / 65536, lsl: 48).bytes(),
+            link ? blr(jmpReg).bytes() : br(jmpReg).bytes()
         ]
         return codeBuild.joined().literal()
     } else {

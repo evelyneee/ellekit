@@ -20,7 +20,7 @@ var closeExceptionPort = false
 public final class ExceptionHandler {
 
     let port: mach_port_t
-    let thread = DispatchQueue(label: "ellekit_exc_port")
+    var thread: DispatchQueue? = nil
 
     public init() {
         var targetPort = mach_port_t()
@@ -52,7 +52,8 @@ public final class ExceptionHandler {
 
     public func startPortLoop() {
         print("[+] ellekit: starting exception handler")
-        self.thread.async { [weak self] in
+        self.thread = DispatchQueue(label: "ellekit_exc_port", attributes: .concurrent)
+        self.thread?.async { [weak self] in
             Self.portLoop(self)
         }
     }
@@ -63,9 +64,7 @@ public final class ExceptionHandler {
             print("ellekit: exception handler deallocated.")
             return
         }
-        
-        print("Trying")
-        
+                
         let msg_header = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: Int(vm_page_size))
 
         defer { msg_header.deallocate() }
@@ -90,6 +89,19 @@ public final class ExceptionHandler {
             .withMemoryRebound(to: exception_raise_request.self, capacity: Int(vm_page_size)) { $0.pointee }
 
         let thread_port = req.thread.name
+        
+        if thread_port == mach_thread_self() {
+            // somehow the exc handler crashed
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // we pray
+                self.startPortLoop()
+            }
+            thread_terminate(thread_port)
+            
+            // why are we here
+            
+            fatalError()
+        }
 
         defer {
             var reply = exception_raise_reply()
@@ -113,7 +125,9 @@ public final class ExceptionHandler {
             )
 
             if krt != KERN_SUCCESS {
-                print("[-] error sending reply to exception: ", mach_error_string(krt) ?? "")
+                if let err = mach_error_string(krt) {
+                    print("[-] error sending reply to exception: ", err)
+                }
             }
             
             Self.portLoop(self)
@@ -166,14 +180,11 @@ public final class ExceptionHandler {
                 print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
                 return
             }
-            
-            print("Resuming")
-                        
+                                    
             thread_resume(thread_port)
 
         } else {
-            thread_suspend(thread_port)
-            mach_port_deallocate(mach_task_self_, thread_port)
+            thread_terminate(thread_port)
         }
         #endif
     }

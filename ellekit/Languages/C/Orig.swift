@@ -9,12 +9,12 @@ import ellekitc
 #endif
 
 // PAC: strip before calling this function and sign the result afterwards
-func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: mach_vm_address_t? = nil, _ totalSize: Int? = nil, usedBigBranch: Bool = false, shouldBranchAfter: Bool = true) -> (UnsafeMutableRawPointer?, Int) {
+func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: mach_vm_address_t? = nil, _ totalSize: Int? = nil, usedBigBranch: Bool = false, shouldBranchAfter: Bool = true, jmpReg: Register = .x16) -> (UnsafeMutableRawPointer?, Int) {
 
     var unpatched = target.withMemoryRebound(to: UInt8.self, capacity: usedBigBranch ? 20 : 4, { ptr in
         Array(UnsafeMutableBufferPointer(start: ptr, count: usedBigBranch ? 20 : 4))
     })
-
+    
     let target_addr = UInt64(UInt(bitPattern: target))
 
     if size == 1 {
@@ -94,9 +94,9 @@ func getOriginal(_ target: UnsafeMutableRawPointer, _ size: Int? = nil, _ addr: 
     @InstructionBuilder
     var codeBuilder: [UInt8] {
         bytes(unpatched) // First instruction of the function that got hooked
-        bytes(assembleJump(target_addr, pc: 0, link: false, big: true).dropLast(4))
-        add(.x16, .x16, usedBigBranch ? 20 : 4) // Jump first instruction (the branch to the replacement)
-        br(.x16)
+        bytes(assembleJump(target_addr, pc: 0, link: false, big: true, jmpReg: jmpReg).dropLast(4))
+        add(jmpReg, jmpReg, usedBigBranch ? 20 : 4) // Jump first instruction (the branch to the replacement)
+        br(jmpReg)
     }
 
     code = codeBuilder

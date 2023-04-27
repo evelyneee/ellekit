@@ -30,6 +30,10 @@
 		9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E4DE2D9294FF19200889C2A /* ptrauth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DE2D6294FEF7200889C2A /* ptrauth.swift */; };
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
+		9E68822129F5739200F9908F /* Clobber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E68822029F5739200F9908F /* Clobber.swift */; };
+		9E68822229F58FD200F9908F /* Clobber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E68822029F5739200F9908F /* Clobber.swift */; };
+		9E68822329F9DB2C00F9908F /* dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4195982972248600062F0E /* dyld.swift */; };
+		9E68822429F9DB3200F9908F /* Symbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E96A5CA295A3548000EDC43 /* Symbols.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
 		9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF8F2960EA9000D0D186 /* Logger.swift */; };
@@ -179,6 +183,7 @@
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E5B3E7429A4369000F6EECC /* xpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
+		9E68822029F5739200F9908F /* Clobber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clobber.swift; sourceTree = "<group>"; };
 		9E698575290DFB5000408E14 /* Libhooker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libhooker.swift; sourceTree = "<group>"; };
 		9E698578290EC91700408E14 /* Sizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sizing.swift; sourceTree = "<group>"; };
 		9E6EBF8F2960EA9000D0D186 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -368,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				9EC2B2E0296B96350079379D /* Batch.swift */,
+				9E68822029F5739200F9908F /* Clobber.swift */,
 				9E92AAA3290D4A1C0018604C /* Hook.swift */,
 				9E48019E2911EB20007E433F /* Orig.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
@@ -805,6 +811,7 @@
 				9E7DE7E9295293D2008E8BB4 /* entry.swift in Sources */,
 				9E70D387295FCA5B00B284F6 /* Register.swift in Sources */,
 				9E70D393295FCA5B00B284F6 /* Hook.swift in Sources */,
+				9E68822429F9DB3200F9908F /* Symbols.swift in Sources */,
 				9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */,
 				9E70D395295FCA5B00B284F6 /* Rebind.swift in Sources */,
 				9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */,
@@ -816,9 +823,11 @@
 				9E6EBF942960EB2600D0D186 /* Logger.swift in Sources */,
 				9E70D38D295FCA5B00B284F6 /* ptrauth.swift in Sources */,
 				9E70D394295FCA5B00B284F6 /* Global.swift in Sources */,
+				9E68822229F58FD200F9908F /* Clobber.swift in Sources */,
 				9E70D392295FCA5B00B284F6 /* Bits.swift in Sources */,
 				9E82D898295383A5008A8F0A /* envp.swift in Sources */,
 				9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */,
+				9E68822329F9DB2C00F9908F /* dyld.swift in Sources */,
 				9E70D38E295FCA5B00B284F6 /* Execute.swift in Sources */,
 				9E70D38B295FCA5B00B284F6 /* Globals.swift in Sources */,
 				9E4A6D9C297B427900E5387E /* routines.s in Sources */,
@@ -844,6 +853,7 @@
 				9E4801AE2913ED56007E433F /* Globals.swift in Sources */,
 				9E92AAAD290D4E7A0018604C /* MobileSubstrate.swift in Sources */,
 				9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */,
+				9E68822129F5739200F9908F /* Clobber.swift in Sources */,
 				9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
