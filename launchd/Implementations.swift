@@ -114,16 +114,15 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        if let bundleID = findBundleID(path: path) {
+        if Preferences.shared?.fastMode ?? false {
+            addDYLDEnv(injectorPath)
+        } else if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
             var dylibs = [String]()
             
-            var injectedBundles = [String]()
-            
-            // my macho parser isn't that good yet!
-            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0)
+            let injectedBundles = (try? getLinkedPaths(file: path)) ?? ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
             
             tprint("loaded bundles", injectedBundles)
                         

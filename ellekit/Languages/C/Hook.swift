@@ -35,6 +35,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     }
     
     let targetSize = findFunctionSize(target) ?? 6
+    let safeReg = findSafeRegister(target)
 
     print("[*] ellekit: Size of target:", targetSize as Any)
 
@@ -50,7 +51,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
          let target_addr = UInt64(UInt(bitPattern: replacement))
 
-         code = assembleJump(target_addr, pc: 0, link: false, big: true)
+         code = assembleJump(target_addr, pc: 0, link: false, big: true, jmpReg: Register.x(safeReg))
      } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
         if exceptionHandler == nil {
              exceptionHandler = .init()
@@ -72,7 +73,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         target,
         targetSize,
         usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 5,
-        shouldBranchAfter: targetSize != 5
+        shouldBranchAfter: targetSize != 5,
+        jmpReg: Register.x(safeReg)
     )
     
     let ret = code.withUnsafeBufferPointer { buf in

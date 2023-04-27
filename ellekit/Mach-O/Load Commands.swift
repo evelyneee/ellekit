@@ -35,112 +35,80 @@ enum LinkPathError: Error {
 
 public func getLinkedPaths(file path: String) throws -> [String] {
         
-    guard FileManager.default.fileExists(atPath: path) else { throw LinkPathError.badPath }
+    guard let handle = fopen(path, "r") else {
+        throw LinkPathError.badPath
+    }
     
-    guard var handle = FileHandle(forReadingAtPath: path) else { return [] }
-        
-    var headerData = handle.readData(ofLength: MemoryLayout<mach_header_64>.size)
+    defer { handle.close() }
     
-    guard var machHeaderPointer = headerData.withUnsafeBytes({ $0.baseAddress }) else { return [] }
+    var machHeaderPointer = handle
+        .readData(ofLength: MemoryLayout<mach_header_64>.size)
+    
+    var baseOffset: UInt32 = 0
+    
+    defer { machHeaderPointer.deallocate() }
     
     if machHeaderPointer.assumingMemoryBound(to: mach_header_64.self).pointee.magic == FAT_CIGAM {
         // we have a fat binary
         // get our current cpu subtype
-        let nslices = machHeaderPointer
-            .advanced(by: 0x4)
+        let nslices = handle
+            .seek(toFileOffset: 0x4)
+            .readData(ofLength: MemoryLayout<UInt32>.size)
             .assumingMemoryBound(to: UInt32.self)
             .pointee.bigEndian
-        
+                        
         for i in 0..<nslices {
+            let slice_ptr = handle
+                .seek(toFileOffset: UInt64(8 + (Int(i) * 20)))
+                .readData(ofLength: MemoryLayout<fat_arch>.size)
+                .assumingMemoryBound(to: fat_arch.self)
             
-            handle.seek(toFileOffset: UInt64(8 + (Int(i) * 20)))
-                        
-            let sliceData = handle.readData(ofLength: MemoryLayout<fat_arch>.size)
+            let slice = slice_ptr.pointee
             
-            guard var slice = sliceData.withUnsafeBytes({ $0.baseAddress })?.assumingMemoryBound(to: fat_arch.self).pointee else { return [] }
-                        
-            #if arch(arm64)
-            if slice.cputype.bigEndian == CPU_TYPE_ARM64 { // hope that there's no arm64 and arm64e subtype
-                handle.seek(toFileOffset: UInt64(slice.offset.bigEndian))
-                
-                var headerData = handle.readData(ofLength: MemoryLayout<mach_header_64>.size)
-                
-                if let newHeader = headerData.withUnsafeBytes({ $0.baseAddress })?.assumingMemoryBound(to: mach_header_64.self).pointee {
-                    let readSize = Int(newHeader.sizeofcmds)
-                    
-                    handle.seek(toFileOffset: UInt64(slice.offset.bigEndian) + UInt64(MemoryLayout<mach_header_64>.size))
-                    
-                    let cmdData = handle.readData(ofLength: readSize)
-                    
-                    headerData.append(cmdData)
-                }
-                
-                machHeaderPointer = headerData.withUnsafeBytes({ $0.baseAddress! })
-                break
-            }
-            #else
-            if slice.cputype.bigEndian == CPU_TYPE_X86_64 {
-                handle.seek(toFileOffset: UInt64(slice.offset.bigEndian))
-                
-                var headerData = handle.readData(ofLength: MemoryLayout<mach_header_64>.size)
-                
-                if let newHeader = headerData.withUnsafeBytes({ $0.baseAddress })?.assumingMemoryBound(to: mach_header_64.self).pointee {
-                    let readSize = Int(newHeader.sizeofcmds)
-                    
-                    handle.seek(toFileOffset: UInt64(slice.offset.bigEndian) + UInt64(MemoryLayout<mach_header_64>.size))
-                    
-                    let cmdData = handle.readData(ofLength: readSize)
-                    
-                    headerData.append(cmdData)
-                }
-                
-                machHeaderPointer = headerData.withUnsafeBytes({ $0.baseAddress! })
-                break
-            }
-            #endif
+            defer { slice_ptr.deallocate() }
+                            
+            machHeaderPointer = handle.seek(toFileOffset: UInt64(slice.offset.bigEndian)).readData(ofLength: MemoryLayout<mach_header_64>.size)
+            baseOffset = slice.offset.bigEndian
         }
-    } else {
-        
-        let newHeader = machHeaderPointer.assumingMemoryBound(to: mach_header_64.self).pointee
-        
-        let readSize = Int(newHeader.sizeofcmds)
-        
-        let cmdData = handle.readData(ofLength: readSize)
-                
-        headerData.append(cmdData)
-        
-        machHeaderPointer = headerData.withUnsafeBytes { $0.baseAddress! }
     }
     
     let machHeader = machHeaderPointer.assumingMemoryBound(to: mach_header_64.self).pointee
+                
+    guard machHeader.ncmds < 0x4000 && machHeader.magic == MH_MAGIC_64 else { throw LinkPathError.badMachO }
             
-    guard machHeader.ncmds < 0x4000 else { throw LinkPathError.badMachO }
-        
-    // Read the load commands
-    var command = machHeaderPointer.advanced(by: MemoryLayout<mach_header_64>.size)
-        
     var allPaths = [String]()
-        
+    var commandOffset: UInt32 = 0
+    
     // Iterate over the load commands
     for _ in 0..<machHeader.ncmds {
-        let load_command = command.assumingMemoryBound(to: load_command.self).pointee
+        let load_command = handle
+            .seek(toFileOffset: UInt64(baseOffset + 0x20 + commandOffset))
+            .readData(ofLength: MemoryLayout<load_command>.size)
+            .assumingMemoryBound(to: load_command.self)
+                
+        defer { load_command.deallocate() }
         
-        if load_command.cmd == LC_LOAD_DYLIB {
-            let dylib_command_pointer = command
-            let dylib_command = dylib_command_pointer.assumingMemoryBound(to: dylib_command.self).pointee
+        if load_command.pointee.cmd == LC_LOAD_DYLIB {
+            let dylib_command = handle
+                .seek(toFileOffset: UInt64(baseOffset + 0x20 + commandOffset))
+                .readData(ofLength: MemoryLayout<dylib_command>.size)
+                .assumingMemoryBound(to: dylib_command.self)
             
-            let cString = dylib_command_pointer
-                .advanced(by: Int(dylib_command.dylib.name.offset))
-                .assumingMemoryBound(to: CChar.self)
+            defer { dylib_command.deallocate() }
+            
+            let cString = handle
+                .seek(toFileOffset: UInt64(baseOffset + 0x20 + commandOffset + dylib_command.pointee.dylib.name.offset))
+                .readData(ofLength: 1024)
+                .assumingMemoryBound(to: UInt8.self)
+            
+            defer { cString.deallocate() }
             
             let path = String(cString: cString)
             
             allPaths.append(path)
         }
-        
-        guard load_command.cmdsize <= 0x4000 else { break }
-                
-        command = command.advanced(by: Int(load_command.cmdsize))
+                        
+        commandOffset += UInt32(load_command.pointee.cmdsize)
     }
         
     return allPaths

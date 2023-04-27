@@ -7,6 +7,7 @@ import Foundation
 class Preferences {
     
     var suite: UserDefaults
+    static var shared: Preferences? = .init()
     
     init?() {
         if let suite = UserDefaults(suiteName: "ellekit") {
@@ -16,9 +17,9 @@ class Preferences {
         }
     }
     
-    var enabled: Bool {
+    var enabled: Bool? {
         get {
-            suite.bool(forKey: "Enabled")
+            suite.value(forKey: "Enabled") as? Bool
         }
         set(newValue) {
             suite.set(newValue, forKey: "Enabled")
@@ -40,6 +41,15 @@ class Preferences {
         }
         set(newValue) {
             suite.set(newValue, forKey: "Blacklist")
+        }
+    }
+    
+    var fastMode: Bool {
+        get {
+            suite.bool(forKey: "FastMode")
+        }
+        set(newValue) {
+            suite.set(newValue, forKey: "FastMode")
         }
     }
 }

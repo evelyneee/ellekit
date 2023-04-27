@@ -29,7 +29,7 @@ func signExtend(_ immediate: UInt32, _ offset: UInt8) -> Int32 {
 extension Instructions {
     func rebind(formerPC: UInt64, newPC: UInt64) -> [[UInt8]] {
         self
-            .compactMap { byteArray in
+            .compactMap { (byteArray) -> [UInt8]? in
                 let instruction = combine(byteArray)
 
                 if instruction == 0x7F2303D5 {
@@ -58,8 +58,20 @@ extension Instructions {
 //                    let cond = reversed & 0x0f
 //                    let offset = (signExtend(((reversed >> 5) & 0x7ffff), 17))
 //
-//                    guard let target = b.des
-//                    
+//                    print("uwu", offset, newPC, formerPC, String(format: "%02X", ))
+//
+//                    /* About to do something really evil, but whatever
+//                     Rebind layout:
+//                     b.cond #8
+//                     b #...big branch size + 4
+//                     big branch
+//                    */
+//
+//                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
+//                    return b(8, cond: .init(Int(cond))).bytes() +
+//                    b((jump.count / 4) + 4).bytes() +
+//                        jump
+//
 //                }
                 
                 if checkBranch(byteArray) {
@@ -75,13 +87,4 @@ extension Instructions {
                 return byteArray
             }
     }
-    #if false
-    func hasClobber() -> Bool {
-        self
-            .contains(where: { isn in
-                let isn = CFSwapInt32(combine(isn))
-                let opcode = (isn >> 25)
-            })
-    }
-    #endif
 }
