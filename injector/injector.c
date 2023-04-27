@@ -13,7 +13,7 @@
 
 static int filter_dylib(const struct dirent *entry) {
     char* dot = strrchr(entry->d_name, '.');
-    return dot && strcmp(dot, ".dylib") == 0;
+    return dot && strcmp(dot + 1, "dylib") == 0;
 }
 
 #if TARGET_OS_OSX
@@ -212,11 +212,11 @@ static void tweaks_iterate() {
         if (ret) {
             #if !TARGET_OS_OSX
             if (!access(OLDABI_PATH, F_OK)) {
-                dlopen(OLDABI_PATH, RTLD_NOW);
+                dlopen(OLDABI_PATH, RTLD_LAZY);
             }
             #endif
             
-            dlopen(full_path, RTLD_NOW);
+            dlopen(full_path, RTLD_LAZY);
             
             dlerror();
         }
