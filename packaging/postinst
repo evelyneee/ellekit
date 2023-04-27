@@ -19,4 +19,4 @@ if [ ! -f /var/jb/.installed_dopamine ] && [ ! -f /var/jb/.installed_fugu15max ]
     @INSTALL_ROOT@/usr/libexec/ellekit/loader
 fi
 
-finish reboot
+finish usreboot

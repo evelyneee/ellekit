@@ -14,4 +14,4 @@ function finish() {
     echo "finish:${f}" >&${cydia[0]}
 }
 
-finish reboot
+finish usreboot
