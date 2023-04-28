@@ -16,7 +16,7 @@ function finish() {
 
 if [ ! -f /var/jb/.installed_dopamine ] && [ ! -f /var/jb/.installed_fugu15max ]; then
     # run loader on non-Dopamine jailbreaks
-    @INSTALL_ROOT@/usr/libexec/ellekit/loader
+    @INSTALL_PREFIX@/usr/libexec/ellekit/loader
 fi
 
 finish usreboot
