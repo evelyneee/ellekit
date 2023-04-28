@@ -317,3 +317,5 @@ test3()
 //let orig: UnsafeMutableRawPointer? = hook(dlsym(dlopen(nil, RTLD_NOW), "free"), dlsym(dlopen(nil, RTLD_NOW), "free_c_orig"))
 //
 //free_orig = unsafeBitCast(orig, to: freebody?.self)
+
+print("test bp")

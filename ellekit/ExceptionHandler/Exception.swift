@@ -80,7 +80,6 @@ public final class ExceptionHandler {
         )
         
         guard krt1 == KERN_SUCCESS else {
-            print("[-] couldn't receive from port:", mach_error_string(krt1) ?? "")
             return
         }
 
@@ -93,14 +92,7 @@ public final class ExceptionHandler {
         if thread_port == mach_thread_self() {
             // somehow the exc handler crashed
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // we pray
-                self.startPortLoop()
-            }
-            thread_terminate(thread_port)
-            
-            // why are we here
-            
-            fatalError()
+            fatalError("Exception handler stack overflow blocked")
         }
 
         defer {
@@ -114,7 +106,7 @@ public final class ExceptionHandler {
             reply.NDR = req.NDR
             reply.RetCode = KERN_SUCCESS
 
-            let krt = mach_msg(
+            mach_msg(
                 &reply.Head,
                 1,
                 reply.Head.msgh_size,
@@ -123,12 +115,6 @@ public final class ExceptionHandler {
                 MACH_MSG_TIMEOUT_NONE,
                 mach_port_name_t(MACH_PORT_NULL)
             )
-
-            if krt != KERN_SUCCESS {
-                if let err = mach_error_string(krt) {
-                    print("[-] error sending reply to exception: ", err)
-                }
-            }
             
             Self.portLoop(self)
         }
@@ -146,7 +132,7 @@ public final class ExceptionHandler {
         }
 
         guard krt2 == KERN_SUCCESS else {
-            print("[-] couldn't get state for thread:", mach_error_string(krt1) ?? "")
+            print("[-] couldn't get state for thread")
             return
         }
 
@@ -177,14 +163,13 @@ public final class ExceptionHandler {
             })
 
             guard krt_set == KERN_SUCCESS else {
-                print("[-] couldn't set state for thread:", mach_error_string(krt1) ?? "")
+                print("[-] couldn't set state for thread")
                 return
             }
                                     
             thread_resume(thread_port)
-
         } else {
-            thread_terminate(thread_port)
+            exit(1) // idk what i should do
         }
         #endif
     }
