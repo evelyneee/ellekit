@@ -11,6 +11,8 @@
 #include <os/log.h>
 #include <mach-o/dyld.h>
 
+extern void NSLog(CFStringRef, ...);
+
 static int filter_dylib(const struct dirent *entry) {
     char* dot = strrchr(entry->d_name, '.');
     return dot && strcmp(dot + 1, "dylib") == 0;
@@ -49,7 +51,10 @@ char *get_last_path_component(const char *path)
     return last_component + 1;
 }
 
-static bool tweak_needinject(const char* orig_path) {
+#define MAX_TWEAKMANAGERS 20 // this is very reasonable
+char* tweakManagers[MAX_TWEAKMANAGERS];
+
+static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
     
     CFStringRef plistPath;
     CFURLRef url;
@@ -84,6 +89,13 @@ static bool tweak_needinject(const char* orig_path) {
     CFRelease(plistPath);
                             
     CFDictionaryRef filter = CFDictionaryGetValue(plist, CFSTR("Filter"));
+    
+    CFBooleanRef tweakManager = CFDictionaryGetValue(plist, CFSTR("IsTweakManager"));
+    
+    if (tweakManager != NULL) {
+        
+        *isTweakManager = CFBooleanGetValue(tweakManager);
+    }
 
     CFArrayRef versions = CFDictionaryGetValue(filter, CFSTR("CoreFoundationVersion"));
     if (versions && 
@@ -194,36 +206,61 @@ success:
     return true;
 }
 
+int
+alphasort2 (const struct dirent **a, const struct dirent **b)
+{
+  return -strcoll ((*a)->d_name, (*b)->d_name);
+}
+
 static void tweaks_iterate() {
     struct dirent **files;
     int n;
 
-    n = scandir(TWEAKS_DIRECTORY, &files, filter_dylib, alphasort);
+    n = scandir(TWEAKS_DIRECTORY, &files, filter_dylib, alphasort2);
     if (n == -1) {
         perror("scandir");
-        exit(EXIT_FAILURE);
+        return;
     }
 
     while (n--) {
-        char* full_path = append_str(TWEAKS_DIRECTORY, files[n]->d_name);
-        char* plist = strndup(full_path, strlen(full_path) - 6);
         
-        bool ret = tweak_needinject(plist);
-        if (ret) {
-            #if !TARGET_OS_OSX
-            if (!access(OLDABI_PATH, F_OK)) {
-                dlopen(OLDABI_PATH, RTLD_LAZY);
+        if (*(files[n]->d_name)) {
+            char* full_path = append_str(TWEAKS_DIRECTORY, files[n]->d_name);
+            char* plist = strndup(full_path, strlen(full_path) - 6);
+            
+            bool isTweakManager = false;
+            bool ret = tweak_needinject(plist, &isTweakManager);
+                        
+            if (ret) {
+                if (isTweakManager) {
+                    int i;
+                    for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++); // find the end of the array
+                    
+                    if (i == MAX_TWEAKMANAGERS) return; // array is full
+                    tweakManagers[i] = malloc(strlen(full_path) + 1); // allocate memory for the new string
+                    strcpy(tweakManagers[i], full_path); // copy the string into the new memory location
+                } else {
+                    int i;
+                    for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++) {
+                        dlopen(tweakManagers[i], RTLD_LAZY);
+                    }
+                }
+                
+                #if !TARGET_OS_OSX
+                if (!access(OLDABI_PATH, F_OK)) {
+                    dlopen(OLDABI_PATH, RTLD_LAZY);
+                }
+                #endif
+                
+                dlopen(full_path, RTLD_LAZY);
+                
+                dlerror();
             }
-            #endif
             
-            dlopen(full_path, RTLD_LAZY);
-            
-            dlerror();
+            free(full_path);
+            free(plist);
+            free(files[n]);
         }
-        
-        free(full_path);
-        free(plist);
-        free(files[n]);
     }
     
     free(files);

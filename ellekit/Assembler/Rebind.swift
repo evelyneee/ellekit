@@ -29,7 +29,8 @@ func signExtend(_ immediate: UInt32, _ offset: UInt8) -> Int32 {
 extension Instructions {
     func rebind(formerPC: UInt64, newPC: UInt64) -> [[UInt8]] {
         self
-            .compactMap { (byteArray) -> [UInt8]? in
+            .enumerated()
+            .compactMap { (index, byteArray) -> [UInt8]? in
                 let instruction = combine(byteArray)
 
                 if instruction == 0x7F2303D5 {
@@ -52,27 +53,16 @@ extension Instructions {
                     return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
                 }
                 
-//                if reversed >> 25 == b.condBase >> 25 {
-//
-//                    let opcode = (reversed >> 25)
-//                    let cond = reversed & 0x0f
-//                    let offset = (signExtend(((reversed >> 5) & 0x7ffff), 17))
-//
-//                    print("uwu", offset, newPC, formerPC, String(format: "%02X", ))
-//
-//                    /* About to do something really evil, but whatever
-//                     Rebind layout:
-//                     b.cond #8
-//                     b #...big branch size + 4
-//                     big branch
-//                    */
-//
-//                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
-//                    return b(8, cond: .init(Int(cond))).bytes() +
-//                    b((jump.count / 4) + 4).bytes() +
-//                        jump
-//
-//                }
+                if reversed >> 25 == b.condBase >> 25 {
+
+                    let cond = reversed & 0xf
+                    let offset = Int((signExtend(((reversed >> 5) & 0x7ffff), 17))) * 4 + 4*index
+                    
+                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
+                    return b(8 / 4, cond: .init(Int(cond))).bytes() +
+                    b((jump.count / 4) / 4).bytes() +
+                        jump
+                }
                 
                 if checkBranch(byteArray) {
                     print("Rebinding branch")

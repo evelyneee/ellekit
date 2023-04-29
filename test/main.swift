@@ -11,6 +11,30 @@ import ellekit
 import AppKit
 import Darwin
 
+#if false
+@_cdecl("rep1")
+public func rep1(_ x1: UnsafePointer<CChar>) {
+    print("called rep 1", String(cString: x1))
+}
+
+let repcl1: @convention(c) (UnsafePointer<CChar>) -> Void = rep1
+
+let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+
+let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
+
+hardwareHook(atoiptr, repptr1)
+
+DispatchQueue.global().async {
+    print("start")
+    sleep(1)
+    atoi("4")
+}
+
+dispatchMain()
+
+#endif
+
 var orig1_: UnsafeMutableRawPointer! = nil
 
 @_cdecl("rep1")
@@ -50,24 +74,38 @@ let socketrepcl: @convention (c) (Int32, Int32, Int32) -> Int32 = socketrep
 
 let socketrepptr = unsafeBitCast(socketrepcl, to: UnsafeMutableRawPointer.self)
 
+var writeorig: UnsafeMutableRawPointer! = nil
+
+@_cdecl("writerep")
+public func writerep(_ x0: Int32, _ x1: UnsafeRawPointer, _ x2: Int32) -> Int32 {
+    print("called write")
+    let ret = unsafeBitCast(writeorig, to: (@convention (c) (Int32, UnsafeRawPointer, Int32) -> Int32).self)(x0, x1, x2)
+    return ret
+}
+
+let writerepcl: @convention (c) (Int32, UnsafeRawPointer, Int32) -> Int32 = writerep
+
+let writerepptr = unsafeBitCast(writerepcl, to: UnsafeMutableRawPointer.self)
+
+
 for image in 0..<_dyld_image_count() {
-    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
-        print("_atoi: \(sym)")
-        
-        var hook1 = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr1, oldptr: &orig1_, options: nil)
-        
-        let ret1 = LHHookFunctions(&hook1, 1)
-        
-        var hook = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr2, oldptr: &orig2_, options: nil)
-        
-        let ret = LHHookFunctions(&hook, 1)
-        
-        print("orig1", ret1, ret)
-        
-        // let orig2: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
-                        
-        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
-    }
+//    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
+//        print("_atoi: \(sym)")
+//
+//        var hook1 = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr1, oldptr: &orig1_, options: nil)
+//
+//        let ret1 = LHHookFunctions(&hook1, 1)
+//
+//        var hook = LHFunctionHook(function: UnsafeMutableRawPointer(mutating: sym), replacement: repptr2, oldptr: &orig2_, options: nil)
+//
+//        let ret = LHHookFunctions(&hook, 1)
+//
+//        print("orig1", ret1, ret)
+//
+//        // let orig2: UnsafeMutableRawPointer = hook(UnsafeMutableRawPointer(mutating: sym), repptr2)!
+//
+//        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+//    }
     
     if let sym = MSFindSymbol(_dyld_get_image_header(image), "_socket") {
         print("_socket: \(sym)")
@@ -77,12 +115,24 @@ for image in 0..<_dyld_image_count() {
         let ret1 = socket(32, 1, 2)
         
         socketorig = hook(UnsafeMutableRawPointer(mutating: sym), socketrepptr)!
-                              
+        UnsafeRawPointer(bitPattern: (UInt(bitPattern: socketorig) & 0x0000007fffffffff))?.hexDump(0x400)
+        
         let ret = socket(32, 1, 2)
                 
         print(ret1, ret)
     }
+    
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_read") {
+        print("_read: \(sym)")
+                        
+        writeorig = hook(UnsafeMutableRawPointer(mutating: sym), writerepptr)!
+        
+        let ret = read(STDIN_FILENO, malloc(4), 5)
+                
+        print(ret)
+    }
 }
+#if false
 
 func demangle(symbol: UnsafePointer<Int8>) -> String? {
     if let demangledNamePtr = _stdlib_demangleImpl(
@@ -275,6 +325,8 @@ print(
     atoi("3"),
     origRes
 )
+
+#endif
 
 print("--------- Begin NSPop test ---------")
 

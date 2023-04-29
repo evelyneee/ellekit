@@ -47,13 +47,13 @@ public class b: Instruction {
     
     public init(_ addr: Int, cond: Cond) {
         var base = Self.condBase
-        base |= ((addr & 0x3ffffff) << 5)
+        base |= ((addr & 0x7ffff) << 5)
         base |= cond.rawValue
         self.value = reverse(base)
     }
 
     static let base = 0b00010100000000000000000000000000
-    static public let condBase = 0b01010100000000000000000000000000
+    static public let condBase = 0b0101010_0_0000000000000000000_0_0000
 }
 
 public class bl: Instruction {

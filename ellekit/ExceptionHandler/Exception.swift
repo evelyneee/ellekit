@@ -106,7 +106,7 @@ public final class ExceptionHandler {
             reply.NDR = req.NDR
             reply.RetCode = KERN_SUCCESS
 
-            mach_msg(
+            mach_msg (
                 &reply.Head,
                 1,
                 reply.Head.msgh_size,

@@ -99,7 +99,7 @@ public func LHHookFunctions(_ allHooks: UnsafePointer<LHFunctionHook>, _ count: 
         
         let functionSize = findFunctionSize(target) ?? 6
 
-        let branchOffset: UInt64 = (UInt64(UInt(bitPattern: targetHook.replacement)) - UInt64(UInt(bitPattern: target))) / 4
+        let branchOffset: UInt64 = (UInt64(UInt(bitPattern: targetHook.replacement.makeReadable())) - UInt64(UInt(bitPattern: target))) / 4
         
         let (orig, codesize) = getOriginal(
             target,

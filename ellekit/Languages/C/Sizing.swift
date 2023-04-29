@@ -14,7 +14,7 @@ func checkBranch(_ opcode: UInt64) -> Bool {
     } else if opcode >> 25 == bl.base >> 25 {
         return false
     } else if opcode >> 25 == b.condBase >> 25 {
-        return true
+        return false
     }
 
     return false

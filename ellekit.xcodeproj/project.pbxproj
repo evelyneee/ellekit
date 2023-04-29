@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E2D4F512938389B00EF6619 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F502938389B00EF6619 /* main.swift */; };
 		9E2D4F562938391C00EF6619 /* libellekit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; };
@@ -98,6 +99,8 @@
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
 		9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; };
 		9EC2B2E6296C89920079379D /* Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E5296C89920079379D /* Replacements.swift */; };
+		9ECAA39229FC61720024CB07 /* JITLess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAA39129FC61720024CB07 /* JITLess.swift */; };
+		9ECAA39429FC625F0024CB07 /* JITLess.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAA39329FC625F0024CB07 /* JITLess.c */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
 		9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
 /* End PBXBuildFile section */
@@ -156,6 +159,8 @@
 /* Begin PBXFileReference section */
 		9E080FA2294AA5A000EDC301 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../../../../usr/local/lib; sourceTree = "<group>"; };
 		9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libes-injector.dylib"; path = "../../../../usr/local/lib/libes-injector.dylib"; sourceTree = "<group>"; };
+		9E12F78F29FD52860021CB75 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		9E12F79129FD528F0021CB75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		9E18B75429C4F58900714AB8 /* injector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = injector.h; sourceTree = "<group>"; };
 		9E18B75529C4F58900714AB8 /* injector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = injector.c; sourceTree = "<group>"; };
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -224,6 +229,8 @@
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EC2B2E0296B96350079379D /* Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Batch.swift; sourceTree = "<group>"; };
 		9EC2B2E5296C89920079379D /* Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Replacements.swift; sourceTree = "<group>"; };
+		9ECAA39129FC61720024CB07 /* JITLess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JITLess.swift; sourceTree = "<group>"; };
+		9ECAA39329FC625F0024CB07 /* JITLess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = JITLess.c; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
 		9ED5277E29673BC9009319AA /* button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = button.swift; sourceTree = "<group>"; };
 		9ED5278129673C0F009319AA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -249,6 +256,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +289,7 @@
 		9E19B23A291812EA00F8C4C7 /* ellekitc */ = {
 			isa = PBXGroup;
 			children = (
+				9ECAA39329FC625F0024CB07 /* JITLess.c */,
 				9E19B240291814CB00F8C4C7 /* ellekitc.c */,
 				9E4A6D9A297B427900E5387E /* routines.s */,
 				9E19B23C2918139300F8C4C7 /* include */,
@@ -311,6 +320,8 @@
 		9E2D4F552938391C00EF6619 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E12F79129FD528F0021CB75 /* Foundation.framework */,
+				9E12F78F29FD52860021CB75 /* CoreFoundation.framework */,
 				9ED5278129673C0F009319AA /* IOKit.framework */,
 				9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */,
 				9E080FA2294AA5A000EDC301 /* lib */,
@@ -412,6 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
+				9ECAA39129FC61720024CB07 /* JITLess.swift */,
 				9E4801A02911EB29007E433F /* C */,
 			);
 			path = Languages;
@@ -868,7 +880,9 @@
 				9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
 				9E96A5CB295A3548000EDC43 /* Symbols.swift in Sources */,
+				9ECAA39429FC625F0024CB07 /* JITLess.c in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
+				9ECAA39229FC61720024CB07 /* JITLess.swift in Sources */,
 				9E92AAB1290D4E7A0018604C /* Register.swift in Sources */,
 				9E4801AB2913E2E9007E433F /* Exception.swift in Sources */,
 				9E4DE2D8294FF0D500889C2A /* ptrauth.swift in Sources */,
@@ -916,14 +930,14 @@
 		9E2D4F522938389B00EF6619 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = arm64;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -936,14 +950,14 @@
 		9E2D4F532938389B00EF6619 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = arm64;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
