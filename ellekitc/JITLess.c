@@ -23,17 +23,114 @@ void* hook1;
 void* hook1rep;
 
 __attribute__((naked))
-static void orig1(void) {
+extern void orig1(void) {
+#if __arm64__
     __asm__ volatile(
-                     "extern hook1\n"
-                     "adr x16, hook1\n"
-                     "ldr x16, [x16]\n"
+                     ".extern _hook1\n"
+                     "adrp x16, _hook1@PAGE\n"
+                     "ldr x16, [x16, _hook1@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __has_feature(ptrauth_calls)
+#if __arm64e__
                      "pacibsp\n"
 #endif
                      "br x16\n"
                      );
+#endif
+}
+
+void* hook2;
+void* hook2rep;
+
+__attribute__((naked))
+static void orig2(void) {
+#if __arm64__
+    __asm__ volatile(
+                     ".extern _hook2\n"
+                     "adrp x16, _hook2@PAGE\n"
+                     "ldr x16, [x16, _hook2@PAGEOFF]\n"
+                     "add x16, x16, #4\n"
+#if __arm64e__
+                     "pacibsp\n"
+#endif
+                     "br x16\n"
+                     );
+#endif
+}
+
+void* hook3;
+void* hook3rep;
+
+__attribute__((naked))
+static void orig3(void) {
+#if __arm64__
+    __asm__ volatile(
+                     ".extern _hook3\n"
+                     "adrp x16, _hook3@PAGE\n"
+                     "ldr x16, [x16, _hook3@PAGEOFF]\n"
+                     "add x16, x16, #4\n"
+#if __arm64e__
+                     "pacibsp\n"
+#endif
+                     "br x16\n"
+                     );
+#endif
+}
+
+void* hook4;
+void* hook4rep;
+
+__attribute__((naked))
+static void orig4(void) {
+#if __arm64__
+    __asm__ volatile(
+                     ".extern _hook4\n"
+                     "adrp x16, _hook4@PAGE\n"
+                     "ldr x16, [x16, _hook4@PAGEOFF]\n"
+                     "add x16, x16, #4\n"
+#if __arm64e__
+                     "pacibsp\n"
+#endif
+                     "br x16\n"
+                     );
+#endif
+}
+
+void* hook5;
+void* hook5rep;
+
+__attribute__((naked))
+static void orig5(void) {
+#if __arm64__
+    __asm__ volatile(
+                     ".extern _hook5\n"
+                     "adrp x16, _hook5@PAGE\n"
+                     "ldr x16, [x16, _hook5@PAGEOFF]\n"
+                     "add x16, x16, #4\n"
+#if __arm64e__
+                     "pacibsp\n"
+#endif
+                     "br x16\n"
+                     );
+#endif
+}
+
+void* hook6;
+void* hook6rep;
+
+__attribute__((naked))
+static void orig6(void) {
+#if __arm64__
+    __asm__ volatile(
+                     ".extern _hook6\n"
+                     "adrp x16, _hook6@PAGE\n"
+                     "ldr x16, [x16, _hook6@PAGEOFF]\n"
+                     "add x16, x16, #4\n"
+#if __arm64e__
+                     "pacibsp\n"
+#endif
+                     "br x16\n"
+                     );
+#endif
 }
 
 struct arm_debug_state64
@@ -50,25 +147,104 @@ struct arm_debug_state64
    (sizeof (struct arm_debug_state64)/sizeof(uint32_t)))
 
 struct arm_debug_state64 globalDebugState = {};
-void EKJITLessHook(void* target, void* replacement, void** orig) {
+
+void EKJITLessHook(void* _target, void* _replacement, void** orig) {
     
     EKLaunchExceptionHandler();
     
+    void* target = (void*)((uint64_t)_target & 0x0000007fffffffff);
+    void* replacement = (void*)((uint64_t)_replacement & 0x0000007fffffffff);
+    
     EKAddHookToRegistry(target, replacement);
             
+    uint32_t firstISN = *(uint32_t*)target;
+    
+    printf("pacibsp? : %02X\n", firstISN);
+    
+    if (hookCount == 6) {
+        return;
+    }
+    
     switch (hookCount) {
         case 0:
             hook1 = target;
             hook1rep = replacement;
             
-            globalDebugState.bvr[0] = ((uint64_t)target & 0x0000007fffffffff);
+            globalDebugState.bvr[0] = (uint64_t)target;
             globalDebugState.bcr[0] = 0x1e5;
             
-            if (!orig) {
-                *orig = target;
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig1;
             }
             
             printf("[+] ellekit: hook #1 set\n");
+            
+            break;
+        case 1:
+            hook2 = target;
+            hook2rep = replacement;
+            
+            globalDebugState.bvr[1] = (uint64_t)target;
+            globalDebugState.bcr[1] = 0x1e5;
+            
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig2;
+            }
+            
+            printf("[+] ellekit: hook #2 set\n");
+            break;
+        case 2:
+            hook3 = target;
+            hook3rep = replacement;
+            
+            globalDebugState.bvr[2] = (uint64_t)target;
+            globalDebugState.bcr[2] = 0x1e5;
+            
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig3;
+            }
+            
+            printf("[+] ellekit: hook #3 set\n");
+            break;
+        case 3:
+            hook4 = target;
+            hook4rep = replacement;
+            
+            globalDebugState.bvr[3] = (uint64_t)target;
+            globalDebugState.bcr[3] = 0x1e5;
+            
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig4;
+            }
+            
+            printf("[+] ellekit: hook #4 set\n");
+            break;
+        case 4:
+            hook5 = target;
+            hook5rep = replacement;
+            
+            globalDebugState.bvr[4] = (uint64_t)target;
+            globalDebugState.bcr[4] = 0x1e5;
+            
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig5;
+            }
+            
+            printf("[+] ellekit: hook #5 set\n");
+            break;
+        case 5:
+            hook6 = target;
+            hook6rep = replacement;
+            
+            globalDebugState.bvr[5] = (uint64_t)target;
+            globalDebugState.bcr[5] = 0x1e5;
+            
+            if (orig && firstISN == 0xD503237F) {
+                *orig = &orig6;
+            }
+            
+            printf("[+] ellekit: hook #6 set\n");
+            break;
     }
     
     hookCount++;

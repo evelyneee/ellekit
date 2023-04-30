@@ -18,6 +18,11 @@ static int filter_dylib(const struct dirent *entry) {
     return dot && strcmp(dot + 1, "dylib") == 0;
 }
 
+static int isApp(const char* path) {
+    char* dot = strrchr(path, '.');
+    return dot && memcmp(dot + 1, "app", 4) == 0;
+}
+
 #if TARGET_OS_OSX
 #define TWEAKS_DIRECTORY "/Library/TweakInject/"
 #else
@@ -93,7 +98,6 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
     CFBooleanRef tweakManager = CFDictionaryGetValue(plist, CFSTR("IsTweakManager"));
     
     if (tweakManager != NULL) {
-        
         *isTweakManager = CFBooleanGetValue(tweakManager);
     }
 
@@ -244,17 +248,17 @@ static void tweaks_iterate() {
                     for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++) {
                         dlopen(tweakManagers[i], RTLD_LAZY);
                     }
+                    
+                    #if !TARGET_OS_OSX
+                    if (!access(OLDABI_PATH, F_OK)) {
+                        dlopen(OLDABI_PATH, RTLD_LAZY);
+                    }
+                    #endif
+
+                    dlopen(full_path, RTLD_LAZY);
+
+                    dlerror();
                 }
-                
-                #if !TARGET_OS_OSX
-                if (!access(OLDABI_PATH, F_OK)) {
-                    dlopen(OLDABI_PATH, RTLD_LAZY);
-                }
-                #endif
-                
-                dlopen(full_path, RTLD_LAZY);
-                
-                dlerror();
             }
             
             free(full_path);

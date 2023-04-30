@@ -930,7 +930,7 @@
 		9E2D4F522938389B00EF6619 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64;
+				ARCHS = arm64e;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -950,7 +950,7 @@
 		9E2D4F532938389B00EF6619 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64;
+				ARCHS = arm64e;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;

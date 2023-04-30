@@ -17,4 +17,4 @@ public func addHookToRegistry(_ target: UnsafeMutableRawPointer, _ replacement: 
 }
 
 @_silgen_name("EKJITLessHook")
-public func hardwareHook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPointer)
+public func hardwareHook(_ target: UnsafeMutableRawPointer, _ replacement: UnsafeMutableRawPointer, _ orig: UnsafeMutablePointer<UnsafeMutableRawPointer?>?)

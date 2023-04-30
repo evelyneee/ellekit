@@ -11,29 +11,54 @@ import ellekit
 import AppKit
 import Darwin
 
-#if false
 @_cdecl("rep1")
-public func rep1(_ x1: UnsafePointer<CChar>) {
+public func rep1(_ x1: UnsafePointer<CChar>) -> Int32 {
     print("called rep 1", String(cString: x1))
+    return 41
 }
 
-let repcl1: @convention(c) (UnsafePointer<CChar>) -> Void = rep1
+let repcl1: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep1
 
 let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
 
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
 
-hardwareHook(atoiptr, repptr1)
+print(atoiptr)
 
-DispatchQueue.global().async {
-    print("start")
-    sleep(1)
-    atoi("4")
+var orig: UnsafeMutableRawPointer? = nil
+
+hardwareHook(atoiptr, repptr1, &orig)
+
+print("start")
+print("ORIG:", unsafeBitCast(orig, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+print("REPLACEMENT:", unsafeBitCast(atoiptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+
+@_cdecl("rep2")
+public func rep2(_ x1: UnsafePointer<CChar>) -> Int32 {
+    print("called rep 2", String(cString: x1))
+    return 41
 }
 
-dispatchMain()
+let repcl2: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep1
 
-#endif
+let repptr2 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+
+let atollptr = dlsym(dlopen(nil, RTLD_NOW), "puts")!
+
+print(atollptr)
+
+var orig2: UnsafeMutableRawPointer? = nil
+
+hardwareHook(atollptr, repptr2, &orig2)
+
+print("start")
+
+if let orig2 {
+    print("ORIG:", unsafeBitCast(orig2, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
+}
+print("REPLACEMENT:", unsafeBitCast(atollptr, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
+
+#if false
 
 var orig1_: UnsafeMutableRawPointer! = nil
 
@@ -371,3 +396,4 @@ test3()
 //free_orig = unsafeBitCast(orig, to: freebody?.self)
 
 print("test bp")
+#endif
