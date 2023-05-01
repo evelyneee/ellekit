@@ -11,6 +11,7 @@ import ellekit
 import AppKit
 import Darwin
 
+#if false
 @_cdecl("rep1")
 public func rep1(_ x1: UnsafePointer<CChar>) -> Int32 {
     print("called rep 1", String(cString: x1))
@@ -57,6 +58,27 @@ if let orig2 {
     print("ORIG:", unsafeBitCast(orig2, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
 }
 print("REPLACEMENT:", unsafeBitCast(atollptr, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
+
+#endif
+
+@_cdecl("rep1")
+public func rep1() {
+    print("called rep 1")
+}
+
+let repcl1: @convention(c) () -> Void = rep1
+
+let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+
+let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "test_weirdfunc")!
+
+print(atoiptr)
+
+let orig = hook(atoiptr, repptr1)!
+
+print("start")
+print("ORIG:", unsafeBitCast(orig, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+print("REPLACEMENT:", unsafeBitCast(atoiptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 
 #if false
 

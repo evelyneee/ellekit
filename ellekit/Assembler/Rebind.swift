@@ -21,7 +21,7 @@ func signExtend(_ immediate: UInt32, _ offset: UInt8) -> Int32 {
     var result = Int32(bitPattern: immediate)
     let signBit = (immediate >> offset) & 0x1
     for i in (offset + 1) ..< 32 {
-        result |= Int32(signBit << i)
+        result |= Int32(bitPattern: signBit << i)
     }
     return result
 }
@@ -32,13 +32,13 @@ extension Instructions {
             .enumerated()
             .compactMap { (index, byteArray) -> [UInt8]? in
                 let instruction = combine(byteArray)
-
+                
                 if instruction == 0x7F2303D5 {
                     return byteArray
                 }
                 
                 let reversed = instruction.reverse()
-                                
+                                                
                 if reversed & 0x9F000000 == 0x10000000 { // adr
                     return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
                 }
@@ -56,10 +56,32 @@ extension Instructions {
                 if reversed >> 25 == b.condBase >> 25 {
 
                     let cond = reversed & 0xf
-                    let offset = Int((signExtend(((reversed >> 5) & 0x7ffff), 17))) * 4 + 4*index
-                    
-                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
+                    let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
+
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
                     return b(8 / 4, cond: .init(Int(cond))).bytes() +
+                    b((jump.count / 4) / 4).bytes() +
+                        jump
+                }
+                
+                if reversed >> 25 == (cbz.base | (1 << 31)) >> 25 {
+
+                    let register = reversed & 0x1f
+                    let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
+                                        
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
+                    return cbz(.x(Int(register)), 8 / 4).bytes() +
+                    b((jump.count / 4) / 4).bytes() +
+                        jump
+                }
+                
+                if reversed >> 25 == (cbnz.base | (1 << 31)) >> 25 {
+
+                    let register = reversed & 0x1f
+                    let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
+                                        
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
+                    return cbnz(.x(Int(register)), 8 / 4).bytes() +
                     b((jump.count / 4) / 4).bytes() +
                         jump
                 }

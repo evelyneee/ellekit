@@ -270,5 +270,9 @@ void EKJITLessHook(void* _target, void* _replacement, void** orig) {
         thread_t thread = act_list[i];
         
         thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT);
+        
+        mach_port_deallocate(mach_task_self_, thread);
     }
+    
+    mach_vm_deallocate(mach_task_self_, (mach_vm_address_t)act_list, listCnt * sizeof(thread_t));
 }
