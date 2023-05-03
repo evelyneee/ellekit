@@ -40,10 +40,12 @@ extension Instructions {
                 let reversed = instruction.reverse()
                                                 
                 if reversed & 0x9F000000 == 0x10000000 { // adr
+                    print("rebinded adr")
                     return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
                 }
 
                 if reversed & 0x9F000000 == 0x90000000 { // adrp
+                    print("rebinded adrp")
                     guard let target = adrp.destination(reversed, formerPC) else {
                         return nil
                     }
@@ -54,18 +56,18 @@ extension Instructions {
                 }
                 
                 if reversed >> 25 == b.condBase >> 25 {
-
+                    print("rebinded b.cond")
                     let cond = reversed & 0xf
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
 
-                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
+                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
                     return b(8 / 4, cond: .init(Int(cond))).bytes() +
-                    b((jump.count / 4) / 4).bytes() +
+                    b((jump.count + 4) / 4).bytes() +
                         jump
                 }
                 
                 if reversed >> 25 == (cbz.base | (1 << 31)) >> 25 {
-
+                    print("rebinded cbz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
                                         
@@ -76,7 +78,7 @@ extension Instructions {
                 }
                 
                 if reversed >> 25 == (cbnz.base | (1 << 31)) >> 25 {
-
+                    print("rebinded cbnz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
                                         

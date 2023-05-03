@@ -232,6 +232,7 @@
 		9ECAA39129FC61720024CB07 /* JITLess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JITLess.swift; sourceTree = "<group>"; };
 		9ECAA39329FC625F0024CB07 /* JITLess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = JITLess.c; sourceTree = "<group>"; };
 		9ED080C929417AA900A81AF1 /* launchd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = launchd.swift; sourceTree = "<group>"; };
+		9ED504822A0083660084FD9A /* mach.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mach.h; sourceTree = "<group>"; };
 		9ED5277E29673BC9009319AA /* button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = button.swift; sourceTree = "<group>"; };
 		9ED5278129673C0F009319AA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -304,6 +305,7 @@
 				9E6EBFA0296239B500D0D186 /* dyld.h */,
 				9E5B3E7429A4369000F6EECC /* xpc.h */,
 				9E49622E29BD326600B1FB2B /* sandbox.h */,
+				9ED504822A0083660084FD9A /* mach.h */,
 			);
 			path = include;
 			sourceTree = "<group>";

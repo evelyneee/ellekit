@@ -58,29 +58,26 @@ if let orig2 {
     print("ORIG:", unsafeBitCast(orig2, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
 }
 print("REPLACEMENT:", unsafeBitCast(atollptr, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
-
 #endif
 
-@_cdecl("rep1")
-public func rep1() {
-    print("called rep 1")
+@_cdecl("weirdfuncrep1")
+public func weirdfuncrep1() {
+    print("called weird func rep 1")
 }
 
-let repcl1: @convention(c) () -> Void = rep1
+let weirdfuncrepcl1: @convention(c) () -> Void = weirdfuncrep1
 
-let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+let weirdfuncrepptr1 = unsafeBitCast(weirdfuncrepcl1, to: UnsafeMutableRawPointer.self)
 
-let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "test_weirdfunc")!
+let test_weirdfuncptr = dlsym(dlopen(nil, RTLD_NOW), "test_weirdfunc")!
 
-print(atoiptr)
+print(test_weirdfuncptr)
 
-let orig = hook(atoiptr, repptr1)!
+let orig_weirdfunc = hook(test_weirdfuncptr, weirdfuncrepptr1)!
 
 print("start")
-print("ORIG:", unsafeBitCast(orig, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
-print("REPLACEMENT:", unsafeBitCast(atoiptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
-
-#if false
+print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 
 var orig1_: UnsafeMutableRawPointer! = nil
 
@@ -173,6 +170,8 @@ for image in 0..<_dyld_image_count() {
         print("_read: \(sym)")
                         
         writeorig = hook(UnsafeMutableRawPointer(mutating: sym), writerepptr)!
+        
+        UnsafeRawPointer(bitPattern: (UInt(bitPattern: writeorig) & 0x0000007fffffffff))?.hexDump(0x400)
         
         let ret = read(STDIN_FILENO, malloc(4), 5)
                 
@@ -418,4 +417,3 @@ test3()
 //free_orig = unsafeBitCast(orig, to: freebody?.self)
 
 print("test bp")
-#endif

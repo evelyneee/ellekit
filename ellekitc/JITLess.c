@@ -13,6 +13,7 @@
 #include <mach/thread_act.h>
 #include <mach/thread_state.h>
 #include <mach/thread_status.h>
+#include "include/mach.h"
 
 extern void EKLaunchExceptionHandler(void);
 extern void EKAddHookToRegistry(void* target, void* replacement);
