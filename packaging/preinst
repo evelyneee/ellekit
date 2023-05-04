@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+abort() {
+    echo "Error: $*" >&2
+    exit 1
+}
+
+OLDPATH="@INSTALL_PREFIX@/Library/MobileSubstrate/DynamicLibraries"
+NEWPATH="@INSTALL_PREFIX@/usr/lib/TweakInject"
+
+if [ "$1" != "install" ]; then
+    exit 0
+fi
+
+if ! [ -d "$NEWPATH" ]; then
+    if [ -e "$NEWPATH" ]; then
+        # WTF?
+        abort "TweakInject exists and is not a directory"
+    fi
+    mkdir "$NEWPATH" || abort "Failed to create TweakInject directory"
+fi
+
+if ! [ -L "$OLDPATH" ]; then
+    if [ -e "$OLDPATH" ]; then
+        # WTF?
+        abort "DynamicLibraries exists and is not a symlink"
+    fi
+    if [ -d "$OLDPATH" ]; then
+        mv -a "$OLDPATH"/* "$NEWPATH" || abort "Failed to copy DynamicLibraries to TweakInject"
+        rm -rf "$OLDPATH" || abort "Failed to remove DynamicLibraries"
+    fi
+    mkdir -p "@INSTALL_PREFIX@/Library/MobileSubstrate" || abort "Failed to create MobileSubstrate directory"
+    ln -s "$NEWPATH" "$OLDPATH" || abort "Failed to symlink DynamicLibraries to TweakInject"
+fi
+
+exit 0
