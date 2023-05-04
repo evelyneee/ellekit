@@ -66,7 +66,7 @@ public func getLinkedPaths(file path: String) throws -> [String] {
             let slice = slice_ptr.pointee
             
             defer { slice_ptr.deallocate() }
-                            
+                                        
             machHeaderPointer = handle.seek(toFileOffset: UInt64(slice.offset.bigEndian)).readData(ofLength: MemoryLayout<mach_header_64>.size)
             baseOffset = slice.offset.bigEndian
         }

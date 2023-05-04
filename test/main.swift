@@ -166,6 +166,7 @@ for image in 0..<_dyld_image_count() {
         print(ret1, ret)
     }
     
+    #if false
     if let sym = MSFindSymbol(_dyld_get_image_header(image), "_read") {
         print("_read: \(sym)")
                         
@@ -177,6 +178,7 @@ for image in 0..<_dyld_image_count() {
                 
         print(ret)
     }
+    #endif
 }
 #if false
 
@@ -328,14 +330,15 @@ let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Downloads/prng
 print("Found bundles for MobileSMS:", msms.prefix(2))
 
 print("--------- Finding bundles for thick Mach-O ---------")
-for path in try FileManager.default.contentsOfDirectory(atPath: "/usr/local/bin/") {
+let dirPath = "/Volumes/SkyEcho19E241.D79OS/sbin/"
+for path in try FileManager.default.contentsOfDirectory(atPath: dirPath) {
     
-    let substrate = try? ellekit.getLinkedBundleIDs(file: "/usr/local/bin/"+path)
+    let substrate = try? ellekit.getLinkedBundleIDs(file: dirPath+path)
 
     print("Found bundles for \((path as NSString).lastPathComponent):", substrate)
 }
 
-print(try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
+print(try? ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
 
 #if false
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoll")!

@@ -69,8 +69,7 @@ func spawn_replacement(
         "mobile_assertion_agent",
         "watchdog",
         "webkit",
-        "jailbreakd",
-        "mobile_diagnostics_relay",
+        "jailbreakd"
     ]
     .map { path.contains($0) }
     .contains(true)
@@ -78,7 +77,7 @@ func spawn_replacement(
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
     // since we cache tweaks, a respring will forcefully refresh it
-    // we also *not anymore* spawn safe mode after
+    // we also *not anymore* spawn safe mode after
     let springboard = path == "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
@@ -115,22 +114,22 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        /*
-        if true {
-            addDYLDEnv(injectorPath)
-        } else
-         */
-        tprint("inserting injector for executable:", path)
-        addDYLDEnv(injectorPath)
-        
-        /*if let bundleID = findBundleID(path: path) {
+        if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
             var dylibs = [String]()
             
-            let injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
-            // (try? getLinkedPaths(file: path)) ??
+            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
+            
+            // my macho parser isn't that good yet...
+            if let bundleIDs = try? getLinkedBundleIDs(file: path) {
+                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
+            }
+            
+//            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0)
+
+            
             tprint("loaded bundles", injectedBundles)
                         
             if !safeMode {
@@ -160,14 +159,23 @@ func spawn_replacement(
             let executableName = (path as NSString).lastPathComponent
             tprint("using exec name \(path) \(executableName)")
             
-            //try? getLinkedPaths(file: path)) ??
-            let injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
+            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
             
-            tprint("loaded bundles", injectedBundles)
+            // my macho parser isn't that good yet...
+            if let bundleIDs = try? getLinkedBundleIDs(file: path) {
+                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
+            }
             
             let tweaks = tweaks
-                .filter { $0.executables.contains(executableName.lowercased()) }
-                .map(\.path)
+                .compactMap {
+                    if $0.executables.contains(executableName.lowercased()) {
+                        return $0.path
+                    }
+                    if $0.bundles.contains(where: { injectedBundles.contains($0) }) {
+                         return $0.path
+                    }
+                    return nil
+                }
             
             tprint("got tweaks \(executableName) \(tweaks)")
             
@@ -176,7 +184,7 @@ func spawn_replacement(
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }
-        }*/
+        }
         
     } else {
         tprint("no tweaks \(path)")
