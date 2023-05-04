@@ -249,7 +249,6 @@ calculateTime {
     }
 }
 
-#if false
 print("--------- Finding DhinakG's symbol -----------")
 
 dlopen("/System/Library/PrivateFrameworks/DeviceIdentity.framework/Versions/A/DeviceIdentity", RTLD_NOW)
@@ -309,14 +308,12 @@ let _posix_spawn_sym = try ellekit.findSymbol(image: libkernel, symbol: "_posix_
 let _memcpy_sym = try ellekit.findSymbol(image: libkernel, symbol: "_memcpy")!
 print("Symbols found: \(_posix_spawn_sym) \(_memcpy_sym)")
 
-#if false
 // normal dylib test
 print("--------- Hooking a findSymbol result ---------")
 dlopen("/usr/local/lib/libsubstrate.dylib", RTLD_NOW)
 let libsubstrate = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")!
 let _MSHookFunction_sym = try ellekit.findSymbol(image: libsubstrate, symbol: "_MSHookFunction")!
 let _:Void = ellekit.hook(.init(mutating: _MSHookFunction_sym), .init(mutating: _memcpy_sym))
-#endif
 
 print("--------- Finding _main in myself ---------")
 // selftest
@@ -324,13 +321,11 @@ let self_bin = try ellekit.openImage(image: ProcessInfo.processInfo.processName)
 let _main_self_sym = try ellekit.findSymbol(image: self_bin, symbol: "_main")!
 print("_main:", _main_self_sym)
 
-#if false
 print("--------- Finding bundles for thin Mach-O ---------")
 // MobileSMS
-let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Library/Developer/Xcode/DerivedData/ellekit-dhqjqjjllmssnfdtbktrsblfipvk/Build/Products/Debug-iphoneos/MobileSMS")
+let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Downloads/prng_seedctl")
 
 print("Found bundles for MobileSMS:", msms.prefix(2))
-#endif
 
 print("--------- Finding bundles for thick Mach-O ---------")
 for path in try FileManager.default.contentsOfDirectory(atPath: "/usr/local/bin/") {
@@ -342,6 +337,7 @@ for path in try FileManager.default.contentsOfDirectory(atPath: "/usr/local/bin/
 
 print(try ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
 
+#if false
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoll")!
 
 @_cdecl("rep")

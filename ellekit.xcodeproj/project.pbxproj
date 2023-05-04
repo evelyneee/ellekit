@@ -24,7 +24,6 @@
 		9E489EC02929793D00F81BBD /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E489EBE292978E400F81BBD /* Slide.swift */; };
 		9E495EAE29CF800C00420457 /* injector.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B75529C4F58900714AB8 /* injector.c */; };
 		9E495EAF29CF800E00420457 /* injector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E18B75429C4F58900714AB8 /* injector.h */; };
-		9E49623329C39F8600B1FB2B /* prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E49623229C39F8600B1FB2B /* prefs.swift */; };
 		9E4A6D9B297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4A6D9C297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
 		9E4A6D9D297B427900E5387E /* routines.s in Sources */ = {isa = PBXBuildFile; fileRef = 9E4A6D9A297B427900E5387E /* routines.s */; };
@@ -184,7 +183,6 @@
 		9E489EBE292978E400F81BBD /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		9E495EAA29CF800100420457 /* libinjector.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libinjector.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E49622E29BD326600B1FB2B /* sandbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sandbox.h; sourceTree = "<group>"; };
-		9E49623229C39F8600B1FB2B /* prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prefs.swift; sourceTree = "<group>"; };
 		9E4A6D9A297B427900E5387E /* routines.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = routines.s; sourceTree = "<group>"; };
 		9E4DE2D6294FEF7200889C2A /* ptrauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ptrauth.swift; sourceTree = "<group>"; };
 		9E5B3E7429A4369000F6EECC /* xpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
@@ -449,7 +447,6 @@
 				9E7DE7E8295293D2008E8BB4 /* entry.swift */,
 				9E82D897295383A5008A8F0A /* envp.swift */,
 				9E7DE812295296A9008E8BB4 /* Implementations.swift */,
-				9E49623229C39F8600B1FB2B /* prefs.swift */,
 				9EC2B2E5296C89920079379D /* Replacements.swift */,
 				9E7DE81029529688008E8BB4 /* Rebinds.swift */,
 				9E7DE81429529888008E8BB4 /* Tweak.swift */,
@@ -829,7 +826,6 @@
 				9E7DE81529529888008E8BB4 /* Tweak.swift in Sources */,
 				9E70D395295FCA5B00B284F6 /* Rebind.swift in Sources */,
 				9E70D388295FCA5B00B284F6 /* Slide.swift in Sources */,
-				9E49623329C39F8600B1FB2B /* prefs.swift in Sources */,
 				9E70D396295FCA5B00B284F6 /* Orig.swift in Sources */,
 				9E6FBB352953F0F3007B28FC /* Rebinds.swift in Sources */,
 				9EC2B2E6296C89920079379D /* Replacements.swift in Sources */,

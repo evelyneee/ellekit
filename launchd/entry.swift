@@ -43,7 +43,7 @@ let insideLaunchd = ProcessInfo.processInfo.processName.contains("launchd")
 @_cdecl("launchd_entry")
 public func entry() {
     tprint("Hello world from", ProcessInfo.processInfo.processName, "running as", getuid())
-    
+        
     loadPath()
     
     do {

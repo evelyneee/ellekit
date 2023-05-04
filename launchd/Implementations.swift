@@ -69,7 +69,8 @@ func spawn_replacement(
         "mobile_assertion_agent",
         "watchdog",
         "webkit",
-        "jailbreakd"
+        "jailbreakd",
+        "mobile_diagnostics_relay",
     ]
     .map { path.contains($0) }
     .contains(true)
@@ -114,16 +115,22 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        if Preferences.shared?.fastMode ?? false {
+        /*
+        if true {
             addDYLDEnv(injectorPath)
-        } else if let bundleID = findBundleID(path: path) {
+        } else
+         */
+        tprint("inserting injector for executable:", path)
+        addDYLDEnv(injectorPath)
+        
+        /*if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
             var dylibs = [String]()
             
-            let injectedBundles = (try? getLinkedPaths(file: path)) ?? ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
-            
+            let injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
+            // (try? getLinkedPaths(file: path)) ??
             tprint("loaded bundles", injectedBundles)
                         
             if !safeMode {
@@ -153,6 +160,11 @@ func spawn_replacement(
             let executableName = (path as NSString).lastPathComponent
             tprint("using exec name \(path) \(executableName)")
             
+            //try? getLinkedPaths(file: path)) ??
+            let injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
+            
+            tprint("loaded bundles", injectedBundles)
+            
             let tweaks = tweaks
                 .filter { $0.executables.contains(executableName.lowercased()) }
                 .map(\.path)
@@ -164,7 +176,7 @@ func spawn_replacement(
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }
-        }
+        }*/
         
     } else {
         tprint("no tweaks \(path)")
