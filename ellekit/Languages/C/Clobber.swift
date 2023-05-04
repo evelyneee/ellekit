@@ -32,8 +32,8 @@ func findSafeRegister(_ fn: UnsafeMutableRawPointer) -> Int {
         return 16
     } else if !clobbers.contains(17) {
         return 17
-    } else if !clobbers.contains(18) {
-        return 18
+    } else if !clobbers.contains(15) {
+        return 15
     }
     
     return 16 // hope for the best

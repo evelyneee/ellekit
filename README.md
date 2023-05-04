@@ -1,4 +1,4 @@
-##  ElleKit: Elegant Low Level Elements
+##  ElleKit
 
 ### What this is
 
@@ -18,6 +18,10 @@
 - macOS Ventura (arm64e)
 - iOS 16.1 (arm64)
 - iOS 16.1 (arm64e)
+
+### Used by
+- Dopamine (jailbreak for A12-A15 + M1 on iOS 15.0-15.4.1)
+- palera1n (jailbreak for A7-A11 on iOS 14.0-16.5+)
 
 ### Usage
 
