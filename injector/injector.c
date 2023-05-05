@@ -102,12 +102,34 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
     }
 
     CFArrayRef versions = CFDictionaryGetValue(filter, CFSTR("CoreFoundationVersion"));
-    if (versions && 
-        ((CFArrayGetCount(versions) == 1 && *((double*)CFArrayGetValueAtIndex(versions, 0)) > kCFCoreFoundationVersionNumber) || (CFArrayGetCount(versions) == 2 &&
-        (*((double*)CFArrayGetValueAtIndex(versions, 0)) > kCFCoreFoundationVersionNumber || *((double*)CFArrayGetValueAtIndex(versions, 1)) <= kCFCoreFoundationVersionNumber)))) {
+    if (versions) {
 
-        CFRelease(plist);
-        return false;
+        if (CFArrayGetCount(versions) == 1) {
+            CFTypeRef value = CFArrayGetValueAtIndex(versions, 0);
+            if (CFGetTypeID(value) == CFNumberGetTypeID()) {
+                double version;
+                CFNumberGetValue((CFNumberRef)value, kCFNumberDoubleType, &version);
+                if (version > kCFCoreFoundationVersionNumber) {
+                    CFRelease(plist);
+                    return false;
+                }
+            }
+        }
+        
+        if (CFArrayGetCount(versions) == 2) {
+            CFTypeRef value1 = CFArrayGetValueAtIndex(versions, 0);
+            CFTypeRef value2 = CFArrayGetValueAtIndex(versions, 0);
+            if (CFGetTypeID(value1) == CFNumberGetTypeID() || CFGetTypeID(value2) == CFNumberGetTypeID()) {
+                double version1;
+                double version2;
+                CFNumberGetValue((CFNumberRef)value1, kCFNumberDoubleType, &version1);
+                CFNumberGetValue((CFNumberRef)value2, kCFNumberDoubleType, &version2);
+                if (version1 > kCFCoreFoundationVersionNumber || version2 <= kCFCoreFoundationVersionNumber) {
+                    CFRelease(plist);
+                    return false;
+                }
+            }
+        }
     }
 
     CFArrayRef bundles = CFDictionaryGetValue(filter, CFSTR("Bundles"));

@@ -8,6 +8,7 @@ import os.log
 var selfPath: String = "/usr/lib/system/libdyld.dylib"
 var sbHookPath: String = "/usr/lib/system/libdyld.dylib"
 var injectorPath: String = "/usr/lib/system/libdyld.dylib"
+var rootless = true
 
 func loadPath() {
     if let path = loadDLaddrPath() {
@@ -25,6 +26,9 @@ func loadPath() {
     }
     sbHookPath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/MobileSafety.dylib")
     injectorPath = selfPath.components(separatedBy: "/").dropLast().joined(separator: "/").appending("/libinjector.dylib")
+    if selfPath.hasPrefix("/usr/lib") {
+        rootless = false
+    }
 }
 
 func loadDLaddrPath() -> String? {

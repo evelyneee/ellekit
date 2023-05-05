@@ -6,6 +6,8 @@
 #include <ptrauth.h>
 #endif
 
+#include <mach/message.h>
+
 // MARK: - PAC
 
 void* sign_pointer(void* ptr) {
@@ -41,10 +43,10 @@ extern int shared_region_check(void* address);
 
 // This is taken from Substitute, because I don't write C, and I can't use va_list in Swift
 
-extern int sandbox_check(pid_t, const char *, int type, ...);
+extern int sandbox_check_by_audit_token(audit_token_t au, pid_t, const char *, int type, ...);
 
-extern int hook_sandbox_check(pid_t pid, const char *op, int type, ...);
-int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
+extern int hook_sandbox_check(audit_token_t au, pid_t pid, const char *op, int type, ...);
+int hook_sandbox_check(audit_token_t au, pid_t pid, const char *op, int type, ...) {
     va_list ap;
     va_start(ap, type);
     long blah[5];
@@ -58,7 +60,7 @@ int hook_sandbox_check(pid_t pid, const char *op, int type, ...) {
             return 0;
         }
     }
-    return sandbox_check(pid, op, type, blah[0], blah[1], blah[2], blah[3], blah[4]);
+    return sandbox_check_by_audit_token(au, pid, op, type, blah[0], blah[1], blah[2], blah[3], blah[4]);
 }
 
 #include <mach/arm/kern_return.h>

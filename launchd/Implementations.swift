@@ -69,7 +69,9 @@ func spawn_replacement(
         "mobile_assertion_agent",
         "watchdog",
         "webkit",
-        "jailbreakd"
+        "jailbreakd",
+        "loader",
+        "mount"
     ]
     .map { path.contains($0) }
     .contains(true)
@@ -123,7 +125,7 @@ func spawn_replacement(
             var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
             
             // my macho parser isn't that good yet...
-            if let bundleIDs = try? getLinkedBundleIDs(file: path) {
+            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
                 injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
             }
             
@@ -162,7 +164,7 @@ func spawn_replacement(
             var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
             
             // my macho parser isn't that good yet...
-            if let bundleIDs = try? getLinkedBundleIDs(file: path) {
+            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
                 injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
             }
             
