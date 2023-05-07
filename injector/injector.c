@@ -13,6 +13,8 @@
 
 extern void NSLog(CFStringRef, ...);
 
+static bool rootless = false;
+
 static int filter_dylib(const struct dirent *entry) {
     char* dot = strrchr(entry->d_name, '.');
     return dot && strcmp(dot + 1, "dylib") == 0;
@@ -26,9 +28,12 @@ static int isApp(const char* path) {
 #if TARGET_OS_OSX
 #define TWEAKS_DIRECTORY "/Library/TweakInject/"
 #else
-#define TWEAKS_DIRECTORY "/var/jb/usr/lib/TweakInject/"
-#define MOBILESAFETY_PATH "/var/jb/usr/lib/ellekit/MobileSafety.dylib"
-#define OLDABI_PATH "/var/jb/usr/lib/ellekit/OldABI.dylib"
+#define TWEAKS_DIRECTORY_ROOTFUL "/usr/lib/TweakInject/"
+#define TWEAKS_DIRECTORY_ROOTLESS "/var/jb/usr/lib/TweakInject/"
+#define MOBILESAFETY_PATH_ROOTFUL "/usr/lib/ellekit/MobileSafety.dylib"
+#define MOBILESAFETY_PATH_ROOTLESS "/var/jb/usr/lib/ellekit/MobileSafety.dylib"
+#define OLDABI_PATH_ROOTFUL "/usr/lib/ellekit/OldABI.dylib"
+#define OLDABI_PATH_ROOTLESS "/var/jb/usr/lib/ellekit/OldABI.dylib"
 #endif
 
 char* append_str(const char* str, const char* append_str) {
@@ -80,7 +85,10 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
     
     url = CFURLCreateWithFileSystemPath(kCFAllocatorSystemDefault, plistPath, kCFURLPOSIXPathStyle, false);
         
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if (url && CFURLCreateDataAndPropertiesFromResource(kCFAllocatorSystemDefault, url, &data, NULL, NULL, NULL)) {
+#pragma clang diagnostic pop
         plist = CFPropertyListCreateWithData(kCFAllocatorSystemDefault, data, kCFPropertyListImmutable, NULL, NULL);
         CFRelease(data);
     } else {
@@ -238,11 +246,15 @@ alphasort2 (const struct dirent **a, const struct dirent **b)
   return -strcoll ((*a)->d_name, (*b)->d_name);
 }
 
-static void tweaks_iterate() {
+static void tweaks_iterate(void) {
     struct dirent **files;
     int n;
 
-    n = scandir(TWEAKS_DIRECTORY, &files, filter_dylib, alphasort2);
+    if (rootless) {
+        n = scandir(TWEAKS_DIRECTORY_ROOTLESS, &files, filter_dylib, alphasort2);
+    } else {
+        n = scandir(TWEAKS_DIRECTORY_ROOTFUL, &files, filter_dylib, alphasort2);
+    }
     if (n == -1) {
         perror("scandir");
         return;
@@ -251,7 +263,12 @@ static void tweaks_iterate() {
     while (n--) {
         
         if (*(files[n]->d_name)) {
-            char* full_path = append_str(TWEAKS_DIRECTORY, files[n]->d_name);
+            char* full_path;
+            if (rootless) {
+                full_path = append_str(TWEAKS_DIRECTORY_ROOTLESS, files[n]->d_name);
+            } else {
+                full_path = append_str(TWEAKS_DIRECTORY_ROOTFUL, files[n]->d_name);
+            }
             char* plist = strndup(full_path, strlen(full_path) - 6);
             
             bool isTweakManager = false;
@@ -272,8 +289,14 @@ static void tweaks_iterate() {
                     }
                     
                     #if !TARGET_OS_OSX
-                    if (!access(OLDABI_PATH, F_OK)) {
-                        dlopen(OLDABI_PATH, RTLD_LAZY);
+                    if (rootless) {
+                        if (!access(OLDABI_PATH_ROOTLESS, F_OK)) {
+                            dlopen(OLDABI_PATH_ROOTLESS, RTLD_LAZY);
+                        }
+                    } else {
+                        if (!access(OLDABI_PATH_ROOTFUL, F_OK)) {
+                            dlopen(OLDABI_PATH_ROOTFUL, RTLD_LAZY);
+                        }
                     }
                     #endif
 
@@ -293,17 +316,25 @@ static void tweaks_iterate() {
 }
 
 __attribute__((constructor))
-static void injection_init() {
+static void injection_init(void) {
     
 #if !TARGET_OS_OSX
-    if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
-        if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
-            dlopen(MOBILESAFETY_PATH, RTLD_NOW);
-        }
-    }
-    
     if (!access("/var/mobile/.eksafemode", F_OK)) {
         return;
+    }
+    
+    if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
+        rootless = true;
+    }
+    
+    if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
+        if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
+            if (rootless) {
+                dlopen(MOBILESAFETY_PATH_ROOTLESS, RTLD_NOW);
+            } else {
+                dlopen(MOBILESAFETY_PATH_ROOTFUL, RTLD_NOW);
+            }
+        }
     }
 #endif
     

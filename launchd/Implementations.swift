@@ -41,6 +41,41 @@ func findBundleID(path: String) -> String? {
     return nil
 }
 
+let iOS16Blacklist = [
+    "launchd", // no
+    "fairplayd", // not in libexec
+    "logd", // no
+    "configd", // no
+    "mobiletimerd", // no
+    "keybagd", // no
+    "thermalmonitord",
+    "sleepd", // maybe
+    "timed",
+    "rapportd",
+    "mtmmergeprops",
+    "jbloader",
+    "ptpd",
+    "distnoted",
+    "remoted",
+    "IOMFB_fdr_loader",
+    "fseventsd",
+    "usermanagerd",
+    "notifyd",
+    "dash",
+    "uicache",
+    "routined",
+    "accessoryupdated",
+    "softwareupdated",
+    "familynotificationd",
+    "wcd",
+    "contextstored",
+    "axassetsd",
+    "healthd",
+    "tccd",
+    "biomed",
+    "cloudpaird",
+]
+
 @inline(never)
 func spawn_replacement(
     _ p: Bool,
@@ -63,18 +98,26 @@ func spawn_replacement(
     tprint("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
         
     let launchd = path.contains("xpcproxy") || path.contains("launchd")
+        
+    // this time: removing mediaserverd, removing containermanagerd, securityd, cfprefsd, installd, lockdownd,  nfcd, afcd, runningboardd
     
-    let blacklisted = [
+    var blacklist = [
         "BlastDoor",
         "mobile_assertion_agent",
         "watchdog",
         "webkit",
         "jailbreakd",
         "loader",
-        "mount"
+        "GSSCred",
     ]
-    .map { path.contains($0) }
-    .contains(true)
+    
+    if #available(iOS 16.0, *) {
+        blacklist.insert(contentsOf: iOS16Blacklist, at: 0)
+    }
+
+    let blacklisted = blacklist
+        .map { path.lowercased().contains($0.lowercased()) }
+        .contains(true)
     
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
@@ -116,7 +159,27 @@ func spawn_replacement(
         
         tprint("injecting tweaks \(path)")
         
-        if let bundleID = findBundleID(path: path) {
+        addDYLDEnv(injectorPath)
+        
+        let POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE = 0x48
+        let POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE = 0x4C
+        
+        #warning("Offset is wrong for 16.x")
+        
+//        if let attrStruct = spawnattr?.pointee {
+//            let memlimit_active = attrStruct.advanced(by: Int(POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE)).load(as: Int32.self)
+//            if memlimit_active != -1 {
+//                attrStruct.advanced(by: Int(POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE)).storeBytes(of: memlimit_active * 3, as: Int32.self)
+//            }
+//            let memlimit_inactive = attrStruct.advanced(by: Int(POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE)).load(as: Int32.self)
+//            if memlimit_inactive != -1 {
+//                attrStruct.advanced(by: Int(POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE)).storeBytes(of: memlimit_inactive * 3, as: Int32.self)
+//            }
+//        }
+        
+        tprint("removed jetsam")
+        
+        /*if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
@@ -186,7 +249,7 @@ func spawn_replacement(
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }
-        }
+        }*/
         
     } else {
         tprint("no tweaks \(path)")
