@@ -319,14 +319,6 @@ __attribute__((constructor))
 static void injection_init(void) {
     
 #if !TARGET_OS_OSX
-    if (!access("/var/mobile/.eksafemode", F_OK)) {
-        return;
-    }
-    
-    if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
-        rootless = true;
-    }
-    
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
             if (rootless) {
@@ -335,6 +327,14 @@ static void injection_init(void) {
                 dlopen(MOBILESAFETY_PATH_ROOTFUL, RTLD_NOW);
             }
         }
+    }
+    
+    if (!access("/var/mobile/.eksafemode", F_OK)) {
+        return;
+    }
+    
+    if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
+        rootless = true;
     }
 #endif
     
