@@ -153,11 +153,11 @@ public func findPrivateSymbol(
             .assumingMemoryBound(to: dyld_cache_local_symbols_entry.self)
 
         let entry = entryPtr.pointee
-        
+                
         if UnsafeRawPointer(bitPattern: UInt(check + entry.dylibOffset)) == machHeaderPointer {
             symInfo.nlistOffset = entry.nlistStartIndex * UInt32(MemoryLayout<nlist_64>.size) + symInfo.nlistOffset
             symInfo.nlistCount = entry.nlistCount
-            
+                        
             break
         }
         
@@ -173,8 +173,8 @@ public func findPrivateSymbol(
     let cSymbolName = strdup((symbolName as NSString).utf8String)
     
     defer { free(cSymbolName) }
-    
-    for idx in 0..<(symInfo.nlistCount) { // idk why but the last symbols are always invalid
+        
+    for idx in 0..<(symInfo.nlistCount) {
                         
         let symbolPtr = handle
             .seek(toFileOffset: UInt64(entry.localSymbolsOffset + UInt64(symInfo.nlistOffset)) + UInt64(idx) * UInt64(MemoryLayout<nlist_64>.size))
@@ -198,12 +198,12 @@ public func findPrivateSymbol(
         defer {
             free(name)
         }
-        
+                        
         if strcmp(name, cSymbolName) == 0 {
             return UnsafeRawPointer(bitPattern: UInt(bitPattern: machHeaderPointer.advanced(by: Int(symbol.n_value - slide))))
         }
     }
     
-    throw SymbolErr.noSymbol
+    return nil
 }
 

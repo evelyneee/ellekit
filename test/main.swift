@@ -219,6 +219,7 @@ extension FixedWidthInteger {
         ((self>>24)&0xff) | ((self<<8)&0xff0000) | ((self>>8)&0xff00) | ((self<<24)&0xff000000)
     }
 }
+#endif
 
 // CF tests
 let image2 = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
@@ -251,6 +252,7 @@ calculateTime {
     }
 }
 
+#if false
 print("--------- Finding DhinakG's symbol -----------")
 
 dlopen("/System/Library/PrivateFrameworks/DeviceIdentity.framework/Versions/A/DeviceIdentity", RTLD_NOW)
@@ -259,9 +261,10 @@ calculateTime {
     print(try? ellekit.findPrivateSymbol(
         image: devID,
         symbol: "_isSupportedDeviceIdentityClient",
-        overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+        overrideCachePath: "/Users/charlotte/Downloads/iPhone12,3,iPhone12,5_16.4.1_20E252_Restore/dyld_shared_cache_arm64e.symbols"
     )!) // private sym
 }
+#endif
 
 print("--------- Finding objc_direct symbol ---------")
 // CF tests
@@ -271,7 +274,7 @@ calculateTime {
         try! ellekit.findPrivateSymbol(
             image: image,
             symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]",
-            overrideCachePath: "/Users/charlotte/Downloads/iPhone15,3_16.2_20C65_Restore/dyld_shared_cache_arm64e.symbols"
+            overrideCachePath: "/Users/charlotte/Downloads/iPhone12,3,iPhone12,5_16.4.1_20E252_Restore/dyld_shared_cache_arm64e.symbols"
         )! // private sym
     )
 }
@@ -281,7 +284,6 @@ let symbol = try ellekit.findSymbol(
     symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]"
 )! // private sym
 print("Symbol found:", symbol)
-#endif
 
 print("--------- Finding Capt's symbol ---------")
 for image in 0..<_dyld_image_count() {
@@ -302,6 +304,12 @@ for image in 0..<_dyld_image_count() {
         }
     }
 }
+
+print("--------- Finding non-existent symbols ---------")
+
+let null = MSFindSymbol(try ellekit.openImage(image: "/usr/lib/system/libsystem_kernel.dylib")!, "AAAAAAA")
+
+print(null)
 
 print("--------- Finding posix_spawn and memcpy symbols ---------")
 // libkernel tests
@@ -330,12 +338,11 @@ let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Downloads/prng
 print("Found bundles for MobileSMS:", msms.prefix(2))
 
 print("--------- Finding bundles for thick Mach-O ---------")
-let dirPath = "/Volumes/SkyEcho19E241.D79OS/sbin/"
+let dirPath = "/usr/sbin/"
 for path in try FileManager.default.contentsOfDirectory(atPath: dirPath) {
     
-    let substrate = try? ellekit.getLinkedBundleIDs(file: dirPath+path)
+    _ = try? ellekit.getLinkedBundleIDs(file: dirPath+path)
 
-    print("Found bundles for \((path as NSString).lastPathComponent):", substrate)
 }
 
 print(try? ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))

@@ -46,12 +46,15 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var code = [UInt8]()
 
     // fast big branch option
-    if targetSize > 5 && abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize > 4 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
 
          let target_addr = UInt64(UInt(bitPattern: replacement))
-
-         code = assembleJump(target_addr, pc: 0, link: false, big: true, jmpReg: Register.x(safeReg))
+        
+         //code = assembleJump(target_addr, pc: 0, link: false, big: true, jmpReg: Register.x(safeReg))
+        code = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
+                br(.x16).bytes() +
+                split(from: target_addr)
      } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
         if exceptionHandler == nil {
              exceptionHandler = .init()
@@ -72,8 +75,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     let orig = getOriginal(
         target,
         targetSize,
-        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 5,
-        shouldBranchAfter: targetSize != 5,
+        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 4,
+        shouldBranchAfter: targetSize != 4,
         jmpReg: Register.x(safeReg)
     )
     
@@ -96,6 +99,17 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     return orig.0?.makeCallable()
 }
 
+private func split(from uint64: UInt64) -> [UInt8] {
+    var result = [UInt8]()
+    
+    for i in 0..<8 {
+        let byte = UInt8((uint64 >> (i * 8)) & 0xFF)
+        result.append(byte)
+    }
+    
+    return result
+}
+
 public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
 
     let target = originalTarget.makeReadable()
@@ -108,12 +122,16 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
     var code = [UInt8]()
 
-    if targetSize > 5 && abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize > 4 && abs(branchOffset / 1024 / 1024) > 128 {
         print("[*] Big branch")
 
         let target_addr = UInt64(UInt(bitPattern: replacement))
 
-        code = assembleJump(target_addr, pc: 0, link: false, big: true)
+        //code = assembleJump(target_addr, pc: 0, link: false, big: true)
+        
+        code = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
+                br(.x16).bytes() +
+                split(from: target_addr)
     } else if abs(branchOffset / 1024 / 1024) > 128 {
         if exceptionHandler == nil {
             exceptionHandler = .init()
