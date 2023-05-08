@@ -41,7 +41,7 @@ class Rebinds {
         var rebindinds = [
             rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
             rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil),
-            // rebinding(name: strdup("sandbox_check_by_audit_token"), replacement: sandbox_check_replacement, replaced: nil),
+            rebinding(name: strdup("sandbox_check_by_audit_token"), replacement: sandbox_check_replacement, replaced: nil),
         ]
         
         let index = (0..<_dyld_image_count())
@@ -57,7 +57,7 @@ class Rebinds {
             rebind_symbols_image(
                 unsafeBitCast(_dyld_get_image_header(index), to: UnsafeMutableRawPointer.self),
                 _dyld_get_image_vmaddr_slide(index),
-                buf.baseAddress, 2
+                buf.baseAddress, 3
             )
         }
     }

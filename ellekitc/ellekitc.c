@@ -41,26 +41,34 @@ extern int shared_region_check(void* address);
 #include <string.h>
 #include <sys/fcntl.h>
 
-// This is taken from Substitute, because I don't write C, and I can't use va_list in Swift
+// This is taken from tihmstar/jbinit, because I don't write C, and I can't use va_list in Swift
 
-extern int sandbox_check_by_audit_token(audit_token_t au, pid_t, const char *, int type, ...);
+extern int sandbox_check_by_audit_token(audit_token_t au, const char *operation, int sandbox_filter_type, ...);
 
-extern int hook_sandbox_check(audit_token_t au, pid_t pid, const char *op, int type, ...);
-int hook_sandbox_check(audit_token_t au, pid_t pid, const char *op, int type, ...) {
-    va_list ap;
-    va_start(ap, type);
-    long blah[5];
-    for (int i = 0; i < 5; i++)
-        blah[i] = va_arg(ap, long);
-    va_end(ap);
-    if (!strcmp(op, "mach-lookup")) {
-        const char *name = (void *) blah[0];
-        if (!memcmp(name, "cy:", 3) || !memcmp(name, "lh:", 3)) {
-            /* always allow */
-            return 0;
+extern int hook_sandbox_check(audit_token_t au, const char *operation, int sandbox_filter_type, ...);
+int hook_sandbox_check(audit_token_t au, const char *operation, int sandbox_filter_type, ...) {
+    va_list a;
+    va_start(a, sandbox_filter_type);
+    const char *name = va_arg(a, const char *);
+    const void *arg2 = va_arg(a, void *);
+    const void *arg3 = va_arg(a, void *);
+    const void *arg4 = va_arg(a, void *);
+    const void *arg5 = va_arg(a, void *);
+    const void *arg6 = va_arg(a, void *);
+    const void *arg7 = va_arg(a, void *);
+    const void *arg8 = va_arg(a, void *);
+    const void *arg9 = va_arg(a, void *);
+    const void *arg10 = va_arg(a, void *);
+    va_end(a);
+    if (name && operation) {
+        if (strcmp(operation, "mach-lookup") == 0) {
+            if (strncmp((char *)name, "cy:", 3) == 0 || strncmp((char *)name, "lh:", 3) == 0) {
+                /* always allow */
+                return 0;
+            }
         }
     }
-    return sandbox_check_by_audit_token(au, pid, op, type, blah[0], blah[1], blah[2], blah[3], blah[4]);
+    return sandbox_check_by_audit_token(au, operation, sandbox_filter_type, name, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
 }
 
 #include <mach/arm/kern_return.h>
