@@ -31,8 +31,19 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
         #else
         if let symbol = try? ellekit.findSymbol(image: image, symbol: swiftName) {
             return .init(symbol)
-        } else if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: swiftName) {
-            return .init(symbol)
+        }
+        if #available(iOS 14.0, tvOS 14.0, watchOS 7.0, *) {
+            var info = Dl_info()
+            dladdr(image, &info)
+            if info.dli_fname != nil && _dyld_shared_cache_contains_path(info.dli_fname) {
+                if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: swiftName) {
+                    return .init(symbol)
+                }
+            }
+        } else {
+            if let symbol = try? ellekit.findPrivateSymbol(image: image, symbol: swiftName) {
+                return .init(symbol)
+            }
         }
         #endif
     } else {

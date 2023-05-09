@@ -26,7 +26,15 @@ public func patchFunction(_ function: UnsafeMutableRawPointer, @InstructionBuild
 
 @_cdecl("EKHookFunction")
 public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
-
+    
+    /*
+    guard isDebugged() else {
+        var orig: UnsafeMutableRawPointer? = nil
+        hardwareHook(stockTarget, stockReplacement, &orig)
+        return orig
+    }
+     */
+    
     var target = stockTarget.makeReadable()
     let replacement = stockReplacement.makeReadable()
     

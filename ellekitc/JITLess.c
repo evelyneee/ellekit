@@ -31,9 +31,7 @@ extern void orig1(void) {
                      "adrp x16, _hook1@PAGE\n"
                      "ldr x16, [x16, _hook1@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif
@@ -50,9 +48,7 @@ static void orig2(void) {
                      "adrp x16, _hook2@PAGE\n"
                      "ldr x16, [x16, _hook2@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif
@@ -69,9 +65,7 @@ static void orig3(void) {
                      "adrp x16, _hook3@PAGE\n"
                      "ldr x16, [x16, _hook3@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif
@@ -88,9 +82,7 @@ static void orig4(void) {
                      "adrp x16, _hook4@PAGE\n"
                      "ldr x16, [x16, _hook4@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif
@@ -107,9 +99,7 @@ static void orig5(void) {
                      "adrp x16, _hook5@PAGE\n"
                      "ldr x16, [x16, _hook5@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif
@@ -126,9 +116,7 @@ static void orig6(void) {
                      "adrp x16, _hook6@PAGE\n"
                      "ldr x16, [x16, _hook6@PAGEOFF]\n"
                      "add x16, x16, #4\n"
-#if __arm64e__
                      "pacibsp\n"
-#endif
                      "br x16\n"
                      );
 #endif

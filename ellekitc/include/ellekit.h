@@ -166,4 +166,14 @@ extern void dmb_sy();
 #define CS_SIGNED                       0x20000000  /* process has a signature (may have gone invalid) */
 #define CS_DEV_CODE                     0x40000000  /* code is dev signed, cannot be loaded into prod signed code */
 
+#include <sys/types.h>
+/* csops  operations */
+#define    CS_OPS_STATUS        0    /* return status */
+#define    CS_OPS_MARKINVALID    1    /* invalidate process */
+#define    CS_OPS_MARKHARD        2    /* set HARD flag */
+#define    CS_OPS_MARKKILL        3    /* set KILL flag (sticky) */
+#define    CS_OPS_PIDPATH        4    /* get executable's pathname */
+#define    CS_OPS_CDHASH        5    /* get code directory hash */
 
+/* code sign operations */
+extern int csops(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);

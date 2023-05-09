@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9E2470482A0AF35200D36A94 /* Debugged.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470472A0AF35200D36A94 /* Debugged.swift */; };
+		9E24704A2A0AFF9400D36A94 /* Dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470492A0AFF9400D36A94 /* Dyld.swift */; };
+		9E24704B2A0AFF9700D36A94 /* Dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470492A0AFF9400D36A94 /* Dyld.swift */; };
 		9E2D4F512938389B00EF6619 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F502938389B00EF6619 /* main.swift */; };
 		9E2D4F562938391C00EF6619 /* libellekit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; };
 		9E2D4F572938391C00EF6619 /* libellekit.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9E92AAA9290D4E680018604C /* libellekit.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		9E2D4F5E293A9F6200EF6619 /* Rebind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D4F5C293A9F2300EF6619 /* Rebind.swift */; };
 		9E33C553298EA581006FD5DD /* hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E33C552298EA581006FD5DD /* hex.swift */; };
-		9E4195992972248600062F0E /* dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4195982972248600062F0E /* dyld.swift */; };
 		9E480192291090A3007E433F /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9E48019A29109B96007E433F /* Bits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019829109B83007E433F /* Bits.swift */; };
 		9E48019D2910A076007E433F /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
@@ -32,7 +34,6 @@
 		9E6403C4293D353400142198 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E381C3C293D1C88004D36B2 /* main.swift */; };
 		9E68822129F5739200F9908F /* Clobber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E68822029F5739200F9908F /* Clobber.swift */; };
 		9E68822229F58FD200F9908F /* Clobber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E68822029F5739200F9908F /* Clobber.swift */; };
-		9E68822329F9DB2C00F9908F /* dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4195982972248600062F0E /* dyld.swift */; };
 		9E68822429F9DB3200F9908F /* Symbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E96A5CA295A3548000EDC43 /* Symbols.swift */; };
 		9E698577290E015E00408E14 /* Libhooker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698575290DFB5000408E14 /* Libhooker.swift */; };
 		9E69857A290ECAE500408E14 /* Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E698578290EC91700408E14 /* Sizing.swift */; };
@@ -166,13 +167,14 @@
 		9E19B2392918118300F8C4C7 /* ellekit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ellekit.h; sourceTree = "<group>"; };
 		9E19B240291814CB00F8C4C7 /* ellekitc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ellekitc.c; sourceTree = "<group>"; };
 		9E19B24C2919D82900F8C4C7 /* Usage.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Usage.md; sourceTree = "<group>"; };
+		9E2470472A0AF35200D36A94 /* Debugged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debugged.swift; sourceTree = "<group>"; };
+		9E2470492A0AFF9400D36A94 /* Dyld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dyld.swift; sourceTree = "<group>"; };
 		9E2D4F4E2938389B00EF6619 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E2D4F502938389B00EF6619 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9E2D4F5C293A9F2300EF6619 /* Rebind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rebind.swift; sourceTree = "<group>"; };
 		9E33C552298EA581006FD5DD /* hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hex.swift; sourceTree = "<group>"; };
 		9E381C3A293D1C87004D36B2 /* loader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = loader; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E381C3C293D1C88004D36B2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		9E4195982972248600062F0E /* dyld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dyld.swift; sourceTree = "<group>"; };
 		9E48019029108EF0007E433F /* PAC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAC.swift; sourceTree = "<group>"; };
 		9E48019829109B83007E433F /* Bits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bits.swift; sourceTree = "<group>"; };
 		9E48019B2910A04E007E433F /* Objective-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Objective-C.swift"; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 			children = (
 				9EC2B2E0296B96350079379D /* Batch.swift */,
 				9E68822029F5739200F9908F /* Clobber.swift */,
+				9E2470472A0AF35200D36A94 /* Debugged.swift */,
 				9E92AAA3290D4A1C0018604C /* Hook.swift */,
 				9E48019E2911EB20007E433F /* Orig.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
@@ -518,7 +521,7 @@
 		9E96A5C9295A352F000EDC43 /* Mach-O */ = {
 			isa = PBXGroup;
 			children = (
-				9E4195982972248600062F0E /* dyld.swift */,
+				9E2470492A0AFF9400D36A94 /* Dyld.swift */,
 				9E96A603295BC0E3000EDC43 /* Image.swift */,
 				9E96A5CA295A3548000EDC43 /* Symbols.swift */,
 				9E6EBF99296136A300D0D186 /* Load Commands.swift */,
@@ -837,7 +840,7 @@
 				9E70D392295FCA5B00B284F6 /* Bits.swift in Sources */,
 				9E82D898295383A5008A8F0A /* envp.swift in Sources */,
 				9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */,
-				9E68822329F9DB2C00F9908F /* dyld.swift in Sources */,
+				9E24704B2A0AFF9700D36A94 /* Dyld.swift in Sources */,
 				9E70D38E295FCA5B00B284F6 /* Execute.swift in Sources */,
 				9E70D38B295FCA5B00B284F6 /* Globals.swift in Sources */,
 				9E4A6D9C297B427900E5387E /* routines.s in Sources */,
@@ -867,11 +870,12 @@
 				9EA0CC7E293AEA550000E9AA /* Global.swift in Sources */,
 				9E92AAB4290D4E7A0018604C /* General.swift in Sources */,
 				9E92AAAF290D4E7A0018604C /* Hook.swift in Sources */,
+				9E24704A2A0AFF9400D36A94 /* Dyld.swift in Sources */,
 				9E480192291090A3007E433F /* PAC.swift in Sources */,
 				9E6EBF9A296136A300D0D186 /* Load Commands.swift in Sources */,
+				9E2470482A0AF35200D36A94 /* Debugged.swift in Sources */,
 				9E4801A12911EB37007E433F /* Orig.swift in Sources */,
 				9E6EBF902960EA9000D0D186 /* Logger.swift in Sources */,
-				9E4195992972248600062F0E /* dyld.swift in Sources */,
 				9E96A604295BC0E3000EDC43 /* Image.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,

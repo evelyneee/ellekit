@@ -50,7 +50,7 @@ extension FileHandleC {
     @inline(__always)
     func readData(ofLength count: Int) -> UnsafeMutableRawPointer {
         let alloc = malloc(count)
-        let ret = fread(alloc, 1, count, self)
+        fread(alloc, 1, count, self)
         return alloc!
     }
     
