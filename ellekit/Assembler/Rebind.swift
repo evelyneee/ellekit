@@ -88,13 +88,13 @@ extension Instructions {
                         jump
                 }
                 
-                if checkBranch(byteArray) {
+                if checkBranchLink(byteArray) {
                     print("Rebinding branch")
                     let imm = (UInt64(disassembleBranchImm(UInt64(instruction))) + formerPC) - newPC
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
-                        return assembleJump(imm + newPC, pc: newPC, link: true)
+                        return assembleJump(imm + newPC, pc: newPC, link: true, big: true)
                     } else { // b
-                        return assembleJump(imm + newPC, pc: newPC, link: false)
+                        return assembleJump(imm + newPC, pc: newPC, link: false, big: true)
                     }
                 }
 

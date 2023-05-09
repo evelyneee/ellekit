@@ -131,6 +131,18 @@ let writerepcl: @convention (c) (Int32, UnsafeRawPointer, Int32) -> Int32 = writ
 
 let writerepptr = unsafeBitCast(writerepcl, to: UnsafeMutableRawPointer.self)
 
+var unlinkorig: UnsafeMutableRawPointer! = nil
+
+@_cdecl("unlinkrep")
+public func unlinkrep(_ x0: UnsafePointer<CChar>) -> Int32 {
+    print("called unlink", String(cString: x0))
+    let ret = unsafeBitCast(unlinkorig, to: (@convention(c) (UnsafePointer<CChar>) -> Int32).self)(x0)
+    return ret
+}
+
+let unlinkrepcl: @convention(c) (UnsafePointer<CChar>) -> Int32 = unlinkrep
+
+let unlinkrepptr = unsafeBitCast(unlinkrepcl, to: UnsafeMutableRawPointer.self)
 
 for image in 0..<_dyld_image_count() {
 //    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
@@ -179,6 +191,18 @@ for image in 0..<_dyld_image_count() {
         print(ret)
     }
     #endif
+    
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_unlink") {
+        print("_unlink: \(sym)")
+                        
+        UnsafeRawPointer(bitPattern: (UInt(bitPattern: writeorig) & 0x0000007fffffffff))?.hexDump(0x400)
+        
+        unlinkorig = hook(UnsafeMutableRawPointer(mutating: sym), unlinkrepptr)!
+        
+        let ret = unlink("/var/jb/")
+                
+        print(ret)
+    }
 }
 #if false
 

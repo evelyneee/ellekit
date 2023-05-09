@@ -4,7 +4,7 @@
 
 import Foundation
 
-func checkBranch(_ opcode: UInt64) -> Bool {
+func checkBranchUncond(_ opcode: UInt64) -> Bool {
 
     let opcode = reverse(UInt32(opcode))
             
@@ -20,12 +20,29 @@ func checkBranch(_ opcode: UInt64) -> Bool {
     return false
 }
 
+func checkBranchLink(_ isn: [UInt8]) -> Bool {
+
+    let isn: UInt64 = (UInt64(isn[3]) | UInt64(isn[2]) << 8 | UInt64(isn[1]) << 16 | UInt64(isn[0]) << 24)
+    let opcode = reverse(UInt32(isn))
+            
+    // 42
+    if opcode >> 25 == b.base >> 25 {
+        return true
+    } else if opcode >> 25 == bl.base >> 25 {
+        return true
+    } else if opcode >> 25 == b.condBase >> 25 {
+        return false
+    }
+
+    return false
+}
+
 func checkBranch(_ isn: [UInt8]) -> Bool {
     let isn: UInt64 = (UInt64(isn[3]) | UInt64(isn[2]) << 8 | UInt64(isn[1]) << 16 | UInt64(isn[0]) << 24)
     if isn == 0x7F2303D5 { // ignore pacibsp
         return false
     }
-    return checkBranch(isn)
+    return checkBranchUncond(isn)
 }
 
 func findFunctionSize(_ target: UnsafeMutableRawPointer) -> Int? {
