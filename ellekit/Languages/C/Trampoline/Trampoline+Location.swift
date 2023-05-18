@@ -10,19 +10,20 @@ extension Trampoline {
             let isnptr = self.base.advanced(by: isnIdx * 4).assumingMemoryBound(to: UInt32.self)
             let isn = isnptr.pointee
                         
+            print(String(format: "isn: %02X", isn))
+            
             if isn == 0xD503237F {
-                
                 print("[+] trampoline: found pacibsp", isnptr)
-                
+
                 let size = findFunctionSize(UnsafeMutableRawPointer(mutating: isnptr.advanced(by: 4)), max: 15) ?? 16
-                                
+
                 if size > 8 {
                     print("[+] trampoline: found trampoline victim", isnptr)
                     return UnsafeMutableRawPointer(isnptr)
                 }
             }
             
-            if isn == 0xC0035FD6 { // found a ret
+            if isn == 0xD65F03C0 { // found a ret
                 
                 print("[+] trampoline: found ret")
                 
