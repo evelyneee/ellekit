@@ -4,11 +4,11 @@
 
 import Foundation
 
-func findSafeRegister(_ fn: UnsafeMutableRawPointer) -> Int {
+func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
     
     var clobbers: [UInt32] = []
     
-    let instructions: [UInt32] = fn.withMemoryRebound(to: UInt32.self, capacity: 5, { ptr in
+    let instructions: [UInt32] = fn.withMemoryRebound(to: UInt32.self, capacity: isns ?? 5, { ptr in
         Array(UnsafeMutableBufferPointer(start: ptr, count: 5))
     })
     

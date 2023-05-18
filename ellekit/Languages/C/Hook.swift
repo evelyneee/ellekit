@@ -64,11 +64,20 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
                 br(.x16).bytes() +
                 split(from: target_addr)
      } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
-        if exceptionHandler == nil {
-             exceptionHandler = .init()
-        }
+         
+         if let tramp = Trampoline(
+            base: target,
+            target: replacement
+         ) {
+             print("[+] ellekit: using trampoline method")
+             
+             return tramp.orig
+         }
+         if exceptionHandler == nil {
+              exceptionHandler = .init()
+         }
          print("[*] ellekit: using exception handler method")
-        code = [0x20, 0x00, 0x20, 0xD4] // brk #1
+         code = [0x20, 0x00, 0x20, 0xD4] // brk #1
     } else { // fastest and simplest branch
         print("[*] ellekit: Small branch")
         @InstructionBuilder
@@ -107,7 +116,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     return orig.0?.makeCallable()
 }
 
-private func split(from uint64: UInt64) -> [UInt8] {
+func split(from uint64: UInt64) -> [UInt8] {
     var result = [UInt8]()
     
     for i in 0..<8 {

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
+		9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
+		9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E2470482A0AF35200D36A94 /* Debugged.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470472A0AF35200D36A94 /* Debugged.swift */; };
 		9E24704A2A0AFF9400D36A94 /* Dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470492A0AFF9400D36A94 /* Dyld.swift */; };
@@ -161,6 +163,8 @@
 		9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libes-injector.dylib"; path = "../../../../usr/local/lib/libes-injector.dylib"; sourceTree = "<group>"; };
 		9E12F78F29FD52860021CB75 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		9E12F79129FD528F0021CB75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trampoline+Location.swift"; sourceTree = "<group>"; };
+		9E18B4AB2A142EAA002E471A /* Trampoline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trampoline.swift; sourceTree = "<group>"; };
 		9E18B75429C4F58900714AB8 /* injector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = injector.h; sourceTree = "<group>"; };
 		9E18B75529C4F58900714AB8 /* injector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = injector.c; sourceTree = "<group>"; };
 		9E19B22D2918011800F8C4C7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -287,6 +291,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E18B4AA2A142E91002E471A /* Trampoline */ = {
+			isa = PBXGroup;
+			children = (
+				9E18B4AB2A142EAA002E471A /* Trampoline.swift */,
+				9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */,
+			);
+			path = Trampoline;
+			sourceTree = "<group>";
+		};
 		9E19B23A291812EA00F8C4C7 /* ellekitc */ = {
 			isa = PBXGroup;
 			children = (
@@ -392,6 +405,7 @@
 				9E48019E2911EB20007E433F /* Orig.swift */,
 				9E698578290EC91700408E14 /* Sizing.swift */,
 				9E489EBE292978E400F81BBD /* Slide.swift */,
+				9E18B4AA2A142E91002E471A /* Trampoline */,
 			);
 			path = C;
 			sourceTree = "<group>";
@@ -880,7 +894,9 @@
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,
 				9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */,
+				9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,
+				9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */,
 				9E96A5CB295A3548000EDC43 /* Symbols.swift in Sources */,
 				9ECAA39429FC625F0024CB07 /* JITLess.c in Sources */,
 				9E92AAB0290D4E7A0018604C /* Math.swift in Sources */,
@@ -1072,6 +1088,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_OPTIMIZATION_LEVEL = s;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";

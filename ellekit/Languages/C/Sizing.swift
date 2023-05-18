@@ -45,10 +45,10 @@ func checkBranch(_ isn: [UInt8]) -> Bool {
     return checkBranchUncond(isn)
 }
 
-func findFunctionSize(_ target: UnsafeMutableRawPointer) -> Int? {
+func findFunctionSize(_ target: UnsafeMutableRawPointer, max: Int = 20) -> Int? {
 
-    let instructions: [UInt8] = target.withMemoryRebound(to: UInt8.self, capacity: 4 * 5, { ptr in
-        Array(UnsafeMutableBufferPointer(start: ptr, count: 4 * 5))
+    let instructions: [UInt8] = target.withMemoryRebound(to: UInt8.self, capacity: max, { ptr in
+        Array(UnsafeMutableBufferPointer(start: ptr, count: max))
     })
     let isns: [[UInt8]] = (0..<(instructions.count / 4)).map { offset in
         let base = offset*4

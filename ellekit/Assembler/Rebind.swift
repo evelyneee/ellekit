@@ -51,7 +51,7 @@ extension Instructions {
                     }
                     
                     let register = reversed.bits(0...4)
-                    
+                                        
                     return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
                 }
                 

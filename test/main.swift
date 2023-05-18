@@ -13,14 +13,29 @@ import Darwin
 
 #if false
 @_cdecl("rep1")
-public func rep1(_ x1: UnsafePointer<CChar>) -> Int32 {
-    print("called rep 1", String(cString: x1))
-    return 41
+public func rep1() {
+    print("called rep 1")
 }
 
-let repcl1: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep1
+let repcl1: @convention(c) () -> Void = rep1
 
 let repptr1 = unsafeBitCast(repcl1, to: UnsafeMutableRawPointer.self)
+
+let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!
+
+let tramp = Trampoline(
+    base: UnsafeMutableRawPointer(bitPattern: (UInt(bitPattern: nspopptr) & 0x0000007fffffffff))!,
+    target: UnsafeMutableRawPointer(bitPattern: (UInt(bitPattern: repptr1) & 0x0000007fffffffff))!
+)
+
+print(NSRecursiveLock.init())
+
+unsafeBitCast(nspopptr.makeCallable(), to: (@convention (c) () -> Void).self)()
+//unsafeBitCast(tramp!.orig?.makeCallable(), to: (@convention (c) () -> Void).self)()
+#endif
+
+
+#if false
 
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
 
