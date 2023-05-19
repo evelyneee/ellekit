@@ -10,6 +10,8 @@
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
 		9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
 		9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
+		9E18B4AD2A16BA86002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
+		9E18B4AE2A16BA88002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
 		9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
 		9E2470482A0AF35200D36A94 /* Debugged.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470472A0AF35200D36A94 /* Debugged.swift */; };
 		9E24704A2A0AFF9400D36A94 /* Dyld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2470492A0AFF9400D36A94 /* Dyld.swift */; };
@@ -851,12 +853,14 @@
 				9E70D38D295FCA5B00B284F6 /* ptrauth.swift in Sources */,
 				9E70D394295FCA5B00B284F6 /* Global.swift in Sources */,
 				9E68822229F58FD200F9908F /* Clobber.swift in Sources */,
+				9E18B4AE2A16BA88002E471A /* Trampoline+Location.swift in Sources */,
 				9E70D392295FCA5B00B284F6 /* Bits.swift in Sources */,
 				9E82D898295383A5008A8F0A /* envp.swift in Sources */,
 				9E7DE813295296A9008E8BB4 /* Implementations.swift in Sources */,
 				9E24704B2A0AFF9700D36A94 /* Dyld.swift in Sources */,
 				9E70D38E295FCA5B00B284F6 /* Execute.swift in Sources */,
 				9E70D38B295FCA5B00B284F6 /* Globals.swift in Sources */,
+				9E18B4AD2A16BA86002E471A /* Trampoline.swift in Sources */,
 				9E4A6D9C297B427900E5387E /* routines.s in Sources */,
 				9E70D390295FCA5B00B284F6 /* Sizing.swift in Sources */,
 				9E70D38C295FCA5B00B284F6 /* Exception.swift in Sources */,
@@ -954,6 +958,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				EXCLUDED_ARCHS = "";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -974,6 +979,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				EXCLUDED_ARCHS = "";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;

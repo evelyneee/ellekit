@@ -180,13 +180,10 @@ for image in 0..<_dyld_image_count() {
     
     if let sym = MSFindSymbol(_dyld_get_image_header(image), "_socket") {
         print("_socket: \(sym)")
-        
-        UnsafeRawPointer(bitPattern: (UInt(bitPattern: sym) & 0x0000007fffffffff))?.hexDump(0x400)
-        
+                
         let ret1 = socket(32, 1, 2)
         
         socketorig = hook(UnsafeMutableRawPointer(mutating: sym), socketrepptr)!
-        UnsafeRawPointer(bitPattern: (UInt(bitPattern: socketorig) & 0x0000007fffffffff))?.hexDump(0x400)
         
         let ret = socket(32, 1, 2)
                 
@@ -198,9 +195,7 @@ for image in 0..<_dyld_image_count() {
         print("_read: \(sym)")
                         
         writeorig = hook(UnsafeMutableRawPointer(mutating: sym), writerepptr)!
-        
-        UnsafeRawPointer(bitPattern: (UInt(bitPattern: writeorig) & 0x0000007fffffffff))?.hexDump(0x400)
-        
+                
         let ret = read(STDIN_FILENO, malloc(4), 5)
                 
         print(ret)

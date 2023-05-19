@@ -42,6 +42,9 @@ func checkBranch(_ isn: [UInt8]) -> Bool {
     if isn == 0x7F2303D5 { // ignore pacibsp
         return false
     }
+    if isn == 0xC0035FD6 { // ret is a branch to lr
+        return true
+    }
     return checkBranchUncond(isn)
 }
 

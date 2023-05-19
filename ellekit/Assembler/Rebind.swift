@@ -38,7 +38,9 @@ extension Instructions {
                 }
                 
                 let reversed = instruction.reverse()
-                                                
+                            
+                // MARK: - adr(p)
+                
                 if reversed & 0x9F000000 == 0x10000000 { // adr
                     print("rebinded adr")
                     return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
@@ -55,6 +57,8 @@ extension Instructions {
                     return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
                 }
                 
+                // MARK: - b.cond
+                
                 if reversed >> 25 == b.condBase >> 25 {
                     print("rebinded b.cond")
                     let cond = reversed & 0xf
@@ -65,6 +69,8 @@ extension Instructions {
                     b((jump.count + 4) / 4).bytes() +
                         jump
                 }
+                
+                // MARK: - 64-bit CBZ/CBNZ
                 
                 if reversed >> 25 == (cbz.base | (1 << 31)) >> 25 {
                     print("rebinded cbz")
@@ -87,6 +93,32 @@ extension Instructions {
                     b((jump.count / 4) / 4).bytes() +
                         jump
                 }
+                
+                // MARK: - 32-bit CBZ/CBNZ
+                
+                if reversed >> 25 == (cbz.base) >> 25 {
+                    print("rebinded 32-bit cbz")
+                    let register = reversed & 0x1f
+                    let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
+                                        
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
+                    return cbz(.w(Int(register)), 8 / 4).bytes() +
+                    b((jump.count / 4) / 4).bytes() +
+                        jump
+                }
+                
+                if reversed >> 25 == (cbnz.base) >> 25 {
+                    print("rebinded 32-bit cbnz")
+                    let register = reversed & 0x1f
+                    let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
+                                        
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
+                    return cbnz(.w(Int(register)), 8 / 4).bytes() +
+                    b((jump.count / 4) / 4).bytes() +
+                        jump
+                }
+                
+                // MARK: - Plain branches
                 
                 if checkBranchLink(byteArray) {
                     print("Rebinding branch")
