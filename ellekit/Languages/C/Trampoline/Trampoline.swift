@@ -89,5 +89,4 @@ public struct Trampoline {
     public func buildHook() {
         let _: Void = hook(self.base, self.trampoline.advanced(by: 16)) // hook base to tramp + 16 which jumps to the replacement... ellekit /should/ use simple branching for the tiny hook
     }
-
 }

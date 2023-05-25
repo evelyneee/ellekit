@@ -23,12 +23,10 @@ _dmb_sy:
 .align 4
 .skip 16384
 _test_weirdfunc:
-    nop
     mov x3, #1
     cbnz x3, _dmb_sy
-    mov x3, #0
     cbz x3, _dmb_sy
-    nop
+    cbnz w3, _dmb_sy
     ret
 .skip 16384
 

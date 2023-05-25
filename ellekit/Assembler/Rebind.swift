@@ -72,7 +72,7 @@ extension Instructions {
                 
                 // MARK: - 64-bit CBZ/CBNZ
                 
-                if reversed >> 25 == (cbz.base | (1 << 31)) >> 25 {
+                if reversed >> 24 == (cbz.base | (1 << 31)) >> 24 {
                     print("rebinded cbz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
@@ -83,7 +83,7 @@ extension Instructions {
                         jump
                 }
                 
-                if reversed >> 25 == (cbnz.base | (1 << 31)) >> 25 {
+                if reversed >> 24 == (cbnz.base | (1 << 31)) >> 24 {
                     print("rebinded cbnz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
@@ -96,7 +96,7 @@ extension Instructions {
                 
                 // MARK: - 32-bit CBZ/CBNZ
                 
-                if reversed >> 25 == (cbz.base) >> 25 {
+                if reversed >> 24 == (cbz.base) >> 24 {
                     print("rebinded 32-bit cbz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
@@ -107,7 +107,7 @@ extension Instructions {
                         jump
                 }
                 
-                if reversed >> 25 == (cbnz.base) >> 25 {
+                if reversed >> 24 == (cbnz.base) >> 24 {
                     print("rebinded 32-bit cbnz")
                     let register = reversed & 0x1f
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))

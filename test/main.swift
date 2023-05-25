@@ -34,7 +34,6 @@ unsafeBitCast(nspopptr.makeCallable(), to: (@convention (c) () -> Void).self)()
 //unsafeBitCast(tramp!.orig?.makeCallable(), to: (@convention (c) () -> Void).self)()
 #endif
 
-
 #if false
 
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoi")!
@@ -88,11 +87,11 @@ let test_weirdfuncptr = dlsym(dlopen(nil, RTLD_NOW), "test_weirdfunc")!
 
 print(test_weirdfuncptr)
 
-let orig_weirdfunc = hook(test_weirdfuncptr, weirdfuncrepptr1)!
+let orig_weirdfunc = hook(test_weirdfuncptr, dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!)!
 
 print("start")
 print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
-print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+//print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 
 var orig1_: UnsafeMutableRawPointer! = nil
 
