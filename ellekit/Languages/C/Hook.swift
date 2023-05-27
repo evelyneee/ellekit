@@ -64,10 +64,6 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
                 br(.x16).bytes() +
                 split(from: target_addr)
      } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
-        #if DEBUG
-        #warning("FIX TRAMPOLINES")
-        #endif
-        #if false
          if let tramp = Trampoline(
             base: target,
             target: replacement
@@ -76,7 +72,6 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
              
              return tramp.orig
          }
-         #endif
          if exceptionHandler == nil {
               exceptionHandler = .init()
          }
@@ -154,10 +149,6 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
                 br(.x16).bytes() +
                 split(from: target_addr)
     } else if abs(branchOffset / 1024 / 1024) > 128 {
-        #if DEBUG
-        #warning("FIX TRAMPOLINES")
-        #endif
-        #if false
         if Trampoline(
            base: target,
            target: replacement
@@ -166,7 +157,6 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
             
             return;
         }
-        #endif
         if exceptionHandler == nil {
             exceptionHandler = .init()
         }

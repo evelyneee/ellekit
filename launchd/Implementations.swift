@@ -262,11 +262,19 @@ func spawn_replacement(
         tprint("no tweaks \(path)")
     }
     
+    #if os(macOS)
+    let file_extension = sandbox_extension_issue_file(
+        APP_SANDBOX_READ_WRITE,
+        ("/Library/TweakInject" as NSString).resolvingSymlinksInPath,
+        0
+    )
+    #else
     let file_extension = sandbox_extension_issue_file(
         APP_SANDBOX_READ,
         ("/var/jb" as NSString).resolvingSymlinksInPath,
         0
     )
+    #endif
         
     if let exten = file_extension {
         tprint("got extension", String(cString: exten))
