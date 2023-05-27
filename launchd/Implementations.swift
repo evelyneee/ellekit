@@ -127,6 +127,11 @@ func spawn_replacement(
     let safeMode = FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode")
     
     func addDYLDEnv(_ envKey: String) {
+        
+        guard !envKey.isEmpty else {
+            return
+        }
+        
         if let firstEnvIndex, envKey != envp[firstEnvIndex] {
             let previousEnvKey = envp[firstEnvIndex].dropFirst("DYLD_INSERT_LIBRARIES=".count) // gives us the path
             envp[firstEnvIndex] = "DYLD_INSERT_LIBRARIES="+envKey + ":" + previousEnvKey
@@ -157,6 +162,7 @@ func spawn_replacement(
         
     } else if !blacklisted {
         
+        #if !os(macOS)
         tprint("injecting tweaks \(path)")
         
         addDYLDEnv(injectorPath)
@@ -176,21 +182,22 @@ func spawn_replacement(
 //                attrStruct.advanced(by: Int(POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE)).storeBytes(of: memlimit_inactive * 3, as: Int32.self)
 //            }
 //        }
+        #else
         
         tprint("removed jetsam")
         
-        /*if let bundleID = findBundleID(path: path) {
+        if let bundleID = findBundleID(path: path) {
             
             tprint("found bundle \(path) \(bundleID)")
                               
             var dylibs = [String]()
             
-            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
+            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security", "com.apple.appkit"]
             
-            // my macho parser isn't that good yet...
-            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
-                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
-            }
+//            // my macho parser isn't that good yet...
+//            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
+//                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
+//            }
             
 //            injectedBundles.insert(contentsOf: ["com.apple.uikit", "com.apple.foundation", "com.apple.security"], at: 0)
 
@@ -224,12 +231,12 @@ func spawn_replacement(
             let executableName = (path as NSString).lastPathComponent
             tprint("using exec name \(path) \(executableName)")
             
-            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security"]
-            
-            // my macho parser isn't that good yet...
-            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
-                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
-            }
+            var injectedBundles = ["com.apple.uikit", "com.apple.foundation", "com.apple.security", "com.apple.appkit"]
+           
+//            // my macho parser isn't that good yet...
+//            if rootless, let bundleIDs = try? getLinkedBundleIDs(file: path) {
+//                injectedBundles.insert(contentsOf: bundleIDs.map { $0.lowercased() }, at: 0)
+//            }
             
             let tweaks = tweaks
                 .compactMap {
@@ -249,8 +256,8 @@ func spawn_replacement(
                 tprint("adding env \(env)")
                 addDYLDEnv(env)
             }
-        }*/
-        
+        }
+        #endif
     } else {
         tprint("no tweaks \(path)")
     }

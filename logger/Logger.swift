@@ -34,7 +34,11 @@ private struct TextLog: TextOutputStream {
     static var shared = TextLog()
     
     private var enableLogging: Bool {
+        #if !os(macOS)
         FileManager.default.fileExists(atPath: "/private/var/mobile/.ekenablelogging")
+        #else
+        FileManager.default.fileExists(atPath: "/Library/TweakInject.ekenablelogging")
+        #endif
     }
     
     func write(_ string: String) {
