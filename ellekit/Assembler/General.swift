@@ -230,10 +230,11 @@ class adrp: Instruction {
 
     public init(_ rt: Register, _ label: Int = 0) {
         var base = Self.base
-        let immlow = (label / 4096)
-        let immhigh = (label >> 2)
-        base |= immlow << 29
-        base |= immhigh << 5
+        let imm = (label >> 12)
+        let immlow = ((imm & 0x3) >> 29)
+        let immhigh = ((imm >> 2) & 0x7ffff) << 5
+        base |= immlow
+        base |= immhigh
         base |= rt.value
         self.value = reverse(base)
     }

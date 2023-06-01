@@ -166,20 +166,24 @@ public class cbnz: Instruction {
     }
 }
 
+#if DEBUG
+public func _assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false, page: Bool = false, jmpReg: Register = .x16) -> [UInt8] {
+    assembleJump(target, pc: pc, size: size, link: link, big: big, page: page, jmpReg: jmpReg)
+}
+#endif
 func assembleJump(_ target: UInt64, pc: UInt64, size: Int = 5, link: Bool, big: Bool = false, page: Bool = false, jmpReg: Register = .x16) -> [UInt8] {
     let target = Int(target)
     let pc = Int(pc)
     let offset = target - pc
     if page {
         
-        let pageOffset = Int((target & ~0xfff) - (pc & ~0xfff))
+        let pageOffset = Int((target & ~0x3fff) - (pc & ~0x3fff))
                 
-        let addOffset = offset - pageOffset
+        let movkImm = target - (target & ~0xffff)
         
         let codeBuild = [
             adrp(jmpReg, Int(pageOffset)).bytes(),
-            add(jmpReg, jmpReg, Int(addOffset)).bytes(),
-            [0x20, 0x00, 0x20, 0xD4],
+            movk(jmpReg, movkImm % 65536).bytes(),
             link ? blr(jmpReg).bytes() : br(jmpReg).bytes()
         ]
         return codeBuild.joined().literal()

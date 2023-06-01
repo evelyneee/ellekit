@@ -72,6 +72,7 @@ if let orig2 {
     print("ORIG:", unsafeBitCast(orig2, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
 }
 print("REPLACEMENT:", unsafeBitCast(atollptr, to: (@convention (c) (UnsafePointer<CChar>) -> Void).self)("4"))
+
 #endif
 
 @_cdecl("weirdfuncrep1")
@@ -87,11 +88,11 @@ let test_weirdfuncptr = dlsym(dlopen(nil, RTLD_NOW), "test_weirdfunc")!
 
 print(test_weirdfuncptr)
 
-let orig_weirdfunc = hook(test_weirdfuncptr, dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!)!
+let orig_weirdfunc = hook(test_weirdfuncptr, dlsym(dlopen(nil, RTLD_NOW), "atoi")!)!
 
 print("start")
 print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
-//print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 
 var orig1_: UnsafeMutableRawPointer! = nil
 

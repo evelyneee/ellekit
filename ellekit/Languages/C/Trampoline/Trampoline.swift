@@ -14,6 +14,11 @@ public struct Trampoline {
     
     // PAC: strip before initializing
     public init?(base: UnsafeMutableRawPointer, target: UnsafeMutableRawPointer) {
+        
+        #if !DEBUG
+        return nil
+        #endif
+        
         stopAllThreads()
         
         defer { resumeAllThreads() }
@@ -66,6 +71,8 @@ public struct Trampoline {
             print("[-] trampoline: couldn't get orig for victim function")
             return nil
         }
+        
+        hooks[self.trampoline] = orig
         
         let origJump: [UInt8] = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
         br(.x16).bytes() +

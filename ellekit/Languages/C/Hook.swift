@@ -39,7 +39,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     let replacement = stockReplacement.makeReadable()
     
     if let newReplacement = hooks[target] {
-        target = newReplacement.makeReadable()
+        return hook(newReplacement.makeReadable(), replacement)
     }
     
     let targetSize = findFunctionSize(target) ?? 6
@@ -53,25 +53,41 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
     var code = [UInt8]()
 
+    var branchAfter: Bool = false
+    
     // fast big branch option
-    if targetSize > 4 && abs(branchOffset / 1024 / 1024) > 128 {
+    if targetSize >= 3 && abs(branchOffset / 1024 / 1024 / 1024) < 4 {
+         print("[*] adrp branch")
+
+        let target_addr = UInt64(UInt(bitPattern: target))
+        let replacement_addr = UInt64(UInt(bitPattern: replacement))
+        
+        code = assembleJump(replacement_addr, pc: target_addr, link: false, page: true, jmpReg: Register.x(safeReg))
+        
+        if targetSize == 3 {
+            branchAfter = true
+        }
+        
+     } else if targetSize >= 4 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
 
-         let target_addr = UInt64(UInt(bitPattern: replacement))
+        let target_addr = UInt64(UInt(bitPattern: target))
         
-         //code = assembleJump(target_addr, pc: 0, link: false, big: true, jmpReg: Register.x(safeReg))
         code = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
                 br(.x16).bytes() +
                 split(from: target_addr)
-     } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
-         if let tramp = Trampoline(
-            base: target,
-            target: replacement
-         ) {
-             print("[+] ellekit: using trampoline method")
-             
-             return tramp.orig
+         
+         if targetSize == 4 {
+             branchAfter = true
          }
+     } else if let tramp = Trampoline(
+        base: target,
+        target: replacement
+     ) {
+         print("[+] ellekit: using trampoline method")
+         
+         return tramp.orig
+     } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
          if exceptionHandler == nil {
               exceptionHandler = .init()
          }
@@ -92,7 +108,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         target,
         targetSize,
         usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 4,
-        shouldBranchAfter: targetSize != 4,
+        shouldBranchAfter: branchAfter,
         jmpReg: Register.x(safeReg)
     )
     
@@ -143,7 +159,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
         let target_addr = UInt64(UInt(bitPattern: replacement))
 
-        //code = assembleJump(target_addr, pc: 0, link: false, big: true)
+//        code = assembleJump(target_addr, pc: 0, link: false, page: true)
         
         code = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
                 br(.x16).bytes() +
