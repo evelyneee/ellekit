@@ -15,9 +15,7 @@ public struct Trampoline {
     // PAC: strip before initializing
     public init?(base: UnsafeMutableRawPointer, target: UnsafeMutableRawPointer) {
         
-        #if !DEBUG
         return nil
-        #endif
         
         stopAllThreads()
         
@@ -47,7 +45,7 @@ public struct Trampoline {
         let (orig, _) = getOriginal(
             self.base,
             size,
-            usedBigBranch: false,
+            desiredRebindSize: 1*4,
             shouldBranchAfter: size != 4
         )
         
@@ -62,7 +60,6 @@ public struct Trampoline {
             self.trampoline,
             9,
             desiredRebindSize: 8 * 4,
-            usedBigBranch: true,
             shouldBranchAfter: true,
             jmpReg: Register.x(safeReg)
         )

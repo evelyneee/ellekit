@@ -29,23 +29,14 @@ public func hookFunctions(_ hooks: [(destination: UnsafeMutableRawPointer, repla
 
         let target = targetHook.destination.makeReadable()
 
-        let functionSize = findFunctionSize(target)
-
-        let (orig, codesize) = getOriginal(
-            target, functionSize, origPageAddress, totalSize,
-            usedBigBranch: false
-        )
-
-        totalSize = (totalSize + codesize)
-
+        let orig: UnsafeMutableRawPointer? = hook(targetHook.destination, targetHook.replacement)
+        
         if let orig, targetHook.orig != nil {
             targetHook.orig?.pointee = orig.makeCallable()
         }
 
-        let _: Void = hook(targetHook.destination, targetHook.replacement)
-
-        if let orig = targetHook.orig {
-            print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with orig at \(String(describing: orig.pointee ?? nil))")
+        if let orig {
+            print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with orig at \(String(describing: orig))")
         } else {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with no orig")
         }

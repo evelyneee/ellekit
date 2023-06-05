@@ -54,8 +54,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var code = [UInt8]()
 
     var branchAfter: Bool = false
+    var patchSize: Int = -1
     
-    // fast big branch option
     if targetSize >= 3 && abs(branchOffset / 1024 / 1024 / 1024) < 4 {
          print("[*] adrp branch")
 
@@ -64,22 +64,27 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         
         code = assembleJump(replacement_addr, pc: target_addr, link: false, page: true, jmpReg: Register.x(safeReg))
         
-        if targetSize == 3 {
+        if targetSize != 3 {
             branchAfter = true
         }
         
+        patchSize = 3
+        
      } else if targetSize >= 4 && abs(branchOffset / 1024 / 1024) > 128 {
          print("[*] Big branch")
-
-        let target_addr = UInt64(UInt(bitPattern: target))
+         
+        let target_addr = UInt64(UInt(bitPattern: replacement))
         
         code = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
                 br(.x16).bytes() +
                 split(from: target_addr)
          
-         if targetSize == 4 {
+         if targetSize != 4 {
              branchAfter = true
          }
+         
+         patchSize = 4
+         
      } else if let tramp = Trampoline(
         base: target,
         target: replacement
@@ -93,6 +98,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
          }
          print("[*] ellekit: using exception handler method")
          code = [0x20, 0x00, 0x20, 0xD4] // brk #1
+         
+         patchSize = 1
     } else { // fastest and simplest branch
         print("[*] ellekit: Small branch")
         @InstructionBuilder
@@ -100,6 +107,8 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
             b(branchOffset)
         }
         code = codeBuilder
+        
+        patchSize = 1
     }
 
     let size = mach_vm_size_t(MemoryLayout.size(ofValue: code) * code.count) / 8
@@ -107,7 +116,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     let orig = getOriginal(
         target,
         targetSize,
-        usedBigBranch: abs(branchOffset / 1024 / 1024) > 128 && targetSize > 4,
+        desiredRebindSize: patchSize * 4,
         shouldBranchAfter: branchAfter,
         jmpReg: Register.x(safeReg)
     )

@@ -118,6 +118,10 @@ public func print(
     log(items: [item], file: file, line: line)
 }
 
+var islogd: Bool = {
+    ProcessInfo.processInfo.processName.contains("logd")
+}()
+
 private func log<T>(items: [T], file: String, line: String? = nil, separator: String = " ") {
     var out = String()
     for item in items {
@@ -132,7 +136,9 @@ private func log<T>(items: [T], file: String, line: String? = nil, separator: St
     }
     #if DEBUG
     if #available(iOS 14.0, tvOS 14.0, watchOS 8.0, macOS 11.0, *) {
-        logger.log("[\(file)\(line ?? "")] \(out)")
+        if !islogd {
+            logger.log("[\(file)\(line ?? "")] \(out)")
+        }
     }
     #endif
 }

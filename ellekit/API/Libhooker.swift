@@ -35,7 +35,7 @@ public func LHStrError(_ err: LIBHOOKER_ERR) -> UnsafeRawPointer? {
     default: error = "Unknown error"
     }
 
-    return UnsafeRawPointer((error as NSString).utf8String)
+    return UnsafeRawPointer(strdup((error as NSString).utf8String)) // duplicate coz arc
 }
 
 @_cdecl("LHPatchMemory")
@@ -78,54 +78,24 @@ public func LHExecMemory(_ page: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
 public func LHHookFunctions(_ allHooks: UnsafePointer<LHFunctionHook>, _ count: Int) -> Int {
 
     let hooksArray = Array(UnsafeBufferPointer(start: allHooks, count: count))
-
-    var origPageAddress: mach_vm_address_t = 0
-    let krt1 = mach_vm_allocate(mach_task_self_, &origPageAddress, UInt64(vm_page_size), VM_FLAGS_ANYWHERE)
-
-    guard krt1 == KERN_SUCCESS else { return Int(LIBHOOKER_ERR_VM.rawValue) }
-
-    let krt2 = mach_vm_protect(mach_task_self_, origPageAddress, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_WRITE)
-
-    guard krt2 == KERN_SUCCESS else { return Int(LIBHOOKER_ERR_VM.rawValue) }
-
-    var totalSize = 0
+    
     for targetHook in hooksArray {
 
-        guard var target = targetHook.function?.makeReadable() else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
-
-        if let newReplacement = hooks[target] {
-            target = newReplacement.makeReadable()
+        guard let target = targetHook.function,
+                let replacement = targetHook.replacement else { return Int(LIBHOOKER_ERR_NO_SYMBOL.rawValue); }
+        
+        let orig: UnsafeMutableRawPointer? = hook(target, replacement)
+        
+        if let lhORIG = targetHook.oldptr {
+            lhORIG.assumingMemoryBound(to: UnsafeMutableRawPointer?.self).pointee = orig
         }
         
-        let functionSize = findFunctionSize(target) ?? 6
-
-        let branchOffset: UInt64 = (UInt64(UInt(bitPattern: targetHook.replacement.makeReadable())) - UInt64(UInt(bitPattern: target))) / 4
-        
-        let (orig, codesize) = getOriginal(
-            target,
-            functionSize,
-            usedBigBranch: abs(Int(branchOffset) / 1024 / 1024) > 128 && functionSize > 5,
-            shouldBranchAfter: functionSize != 5
-        )
-
-        totalSize = (totalSize + codesize)
-
-        if let orig, targetHook.oldptr != nil {
-            let setter = unsafeBitCast(targetHook.oldptr, to: UnsafeMutablePointer<UnsafeMutableRawPointer?>.self)
-            setter.pointee = orig.makeCallable()
-        }
-
-        let _: Void = hook(targetHook.function, targetHook.replacement)
-        
-        if let orig = targetHook.oldptr {
+        if let orig = orig {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with orig at \(String(describing: orig))")
         } else {
             print("[+] ellekit: Performed one hook in LHHookFunctions from \(String(describing: target)) with no orig")
         }
     }
-
-    let krt3 = mach_vm_protect(mach_task_self_, origPageAddress, UInt64(vm_page_size), 0, VM_PROT_READ | VM_PROT_EXECUTE)
-    guard krt3 == KERN_SUCCESS else { return Int(LIBHOOKER_ERR_VM.rawValue) }
 
     return Int(LIBHOOKER_OK.rawValue)
 }

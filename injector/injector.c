@@ -318,6 +318,16 @@ static void tweaks_iterate(void) {
 __attribute__((constructor))
 static void injection_init(void) {
     
+    char* msSafe = getenv("_MSSafeMode");
+    if (msSafe && atoi(msSafe) == 1) {
+        return;
+    }
+    
+    char* safe = getenv("_SafeMode");
+    if (safe && atoi(safe) == 1) {
+        return;
+    }
+    
 #if !TARGET_OS_OSX
     
     if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {

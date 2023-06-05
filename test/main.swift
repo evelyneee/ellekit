@@ -11,6 +11,8 @@ import ellekit
 import AppKit
 import Darwin
 
+print(isDebugged())
+
 #if false
 @_cdecl("rep1")
 public func rep1() {
