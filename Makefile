@@ -17,14 +17,13 @@ DEB_VERSION = $(VERSION)+debug
 endif
 
 ifneq ($(MAC),)
-$(error macOS is not supported yet)
 COMMON_OPTIONS += -destination 'generic/platform=macOS'
 else
 COMMON_OPTIONS += -destination 'generic/platform=iOS'
 endif
 
 ifneq ($(MAC),)
-PRODUCTS_DIR = build/$(CONFIGURATION)-macosx
+PRODUCTS_DIR = build/$(CONFIGURATION)
 else
 PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
 endif
@@ -51,8 +50,9 @@ build-ios:
 	xcodebuild -scheme safemode-ui $(COMMON_OPTIONS)
 
 build-macos:
-	# TODO
-	$(error macOS is not supported yet)
+	xcodebuild -scheme ellekit $(COMMON_OPTIONS)
+	xcodebuild -scheme launchd $(COMMON_OPTIONS)
+	xcodebuild -scheme loader $(COMMON_OPTIONS)
 
 deb-ios-rootful: ARCHITECTURE = iphoneos-arm
 deb-ios-rootful: INSTALL_PREFIX = 
@@ -110,9 +110,33 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 deb-ios: deb-ios-rootful deb-ios-rootless
 
+deb-macos: ARCHITECTURE = macos
 deb-macos: build-macos
-	# TODO
-	$(error macOS is not supported yet)
+	@rm -rf work-$(ARCHITECTURE)
+	@mkdir -p $(STAGE_DIR)
+
+	@# Because BSD install does not support -D
+	@mkdir -p $(INSTALL_ROOT)/Library/TweakInject
+	@mkdir -p $(INSTALL_ROOT)/Library/Frameworks
+	@mkdir -p $(INSTALL_ROOT)/usr/local/bin
+	@mkdir -p $(INSTALL_ROOT)/usr/local/lib
+
+	@install -m644 $(PRODUCTS_DIR)/libellekit.dylib $(INSTALL_ROOT)/Library/TweakInject/ellekit.dylib
+	@install -m644 $(PRODUCTS_DIR)/pspawn.dylib $(INSTALL_ROOT)/Library/TweakInject/pspawn.dylib
+	@install -m755 $(PRODUCTS_DIR)/loader $(INSTALL_ROOT)/usr/local/bin/loader
+
+	@find $(INSTALL_ROOT)/Library/TweakInject -type f -exec ldid -S {} \;
+	@find $(INSTALL_ROOT)/usr/local/ -type f -exec ldid -S {} \;
+
+	@ln -s $(INSTALL_PREFIX)/Library/TweakInject/ellekit.dylib $(INSTALL_ROOT)/usr/local/lib/libsubstrate.dylib
+	@ln -s $(INSTALL_PREFIX)/Library/TweakInject/ellekit.dylib $(INSTALL_ROOT)/Library/Frameworks/libsubstrate.dylib
+	@ln -s $(INSTALL_PREFIX)/Library/TweakInject/ellekit.dylib $(INSTALL_ROOT)/Library/Frameworks/ellekit.dylib
+
+	@mkdir -p $(INSTALL_ROOT)/usr/local/share/doc/ellekit
+	@install -m644 LICENSE $(INSTALL_ROOT)/usr/local/share/doc/ellekit/LICENSE
+	
+	@tar -czvf packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).tar.gz -C ./$(STAGE_DIR) .
+	@rm -rf work-$(ARCHITECTURE)
 
 ifneq ($(MAC),)
 deb: deb-macos
