@@ -30,6 +30,8 @@ jobs:
             flags: ""
           - name: release
             flags: "RELEASE=1"
+          - name: mac
+            flags: "RELEASE=1 MAC=1"
 
     steps:
       - name: Checkout
