@@ -30,6 +30,8 @@ jobs:
             flags: ""
           - name: release
             flags: "RELEASE=1"
+          - name: mac
+            flags: "RELEASE=1 MAC=1"
 
     steps:
       - name: Checkout
@@ -57,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.name }} package
-          path: ${{ github.workspace }}/packages/*.deb
+          path: ${{ github.workspace }}/packages/*
       - name: Upload packages to release
         if: github.event_name == 'release' && matrix.name == 'release'
         uses: svenstaro/upload-release-action@2.5.0

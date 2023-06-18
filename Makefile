@@ -135,6 +135,7 @@ deb-macos: build-macos
 	@mkdir -p $(INSTALL_ROOT)/usr/local/share/doc/ellekit
 	@install -m644 LICENSE $(INSTALL_ROOT)/usr/local/share/doc/ellekit/LICENSE
 	
+	@mkdir -p packages
 	@tar -czvf packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).tar.gz -C ./$(STAGE_DIR) .
 	@rm -rf work-$(ARCHITECTURE)
 
