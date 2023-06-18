@@ -1,0 +1,9 @@
+Package: dev.objcmsgsend.null
+Name: null
+Version: 1.1
+Architecture: iphoneos-arm
+Replaces: com.kanji.null
+Description: the library that iota runs on to stay undetected.
+Maintainer: objc_msgSend
+Author: objc_msgSend
+Section: Development

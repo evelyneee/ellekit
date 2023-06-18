@@ -11,6 +11,7 @@ import ellekit
 import AppKit
 import Darwin
 
+exit(0);
 print(isDebugged())
 
 #if false
@@ -336,7 +337,7 @@ for image in 0..<_dyld_image_count() {
     ].forEach {
         if let sym = try? ellekit.findSymbol(image: _dyld_get_image_header(image), symbol: $0) {
             print("\($0): \(sym)")
-            let _:Void = hook(UnsafeMutableRawPointer(mutating: sym), dlsym(dlopen(nil, RTLD_NOW), "MSHookFunction"))
+            let _:UnsafeMutableRawPointer? = hook(UnsafeMutableRawPointer(mutating: sym), dlsym(dlopen(nil, RTLD_NOW), "MSHookFunction"))
         }
     }
 }
@@ -359,7 +360,7 @@ print("--------- Hooking a findSymbol result ---------")
 dlopen("/usr/local/lib/libsubstrate.dylib", RTLD_NOW)
 let libsubstrate = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")!
 let _MSHookFunction_sym = try ellekit.findSymbol(image: libsubstrate, symbol: "_MSHookFunction")!
-let _:Void = ellekit.hook(.init(mutating: _MSHookFunction_sym), .init(mutating: _memcpy_sym))
+let _:UnsafeMutableRawPointer? = ellekit.hook(.init(mutating: _MSHookFunction_sym), .init(mutating: _memcpy_sym))
 
 print("--------- Finding _main in myself ---------")
 // selftest

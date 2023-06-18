@@ -69,13 +69,9 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
 
 @_cdecl("MSHookFunction")
 public func MSHookFunction(_ symbol: UnsafeMutableRawPointer, _ replace: UnsafeMutableRawPointer, _ result: UnsafeMutablePointer<UnsafeMutableRawPointer?>?) {
-    if let result {
-        let orig: UnsafeMutableRawPointer? = hook(symbol, replace)
-        if let orig {
-            result.pointee = orig
-        }
-    } else { // no orig needed
-        let _: Void = hook(symbol, replace)
+    let orig: UnsafeMutableRawPointer? = hook(symbol, replace)
+    if let result, let orig {
+        result.pointee = orig
     }
 }
 

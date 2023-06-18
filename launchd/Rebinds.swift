@@ -40,9 +40,14 @@ class Rebinds {
                     
         var rebindinds = [
             rebinding(name: strdup("posix_spawn"), replacement: posix_spawn_replacement, replaced: nil),
-            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil),
-            rebinding(name: strdup("sandbox_check_by_audit_token"), replacement: sandbox_check_replacement, replaced: nil),
+            rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil)
         ]
+        
+        if !FileManager.default.fileExists(atPath: "/var/jb/.installed_dopamine") {
+            rebindinds.append(
+                rebinding(name: strdup("sandbox_check_by_audit_token"), replacement: sandbox_check_replacement, replaced: nil)
+            )
+        }
         
         let index = (0..<_dyld_image_count())
             .filter {

@@ -17,6 +17,7 @@ public struct Trampoline {
         
         return nil
         
+        #if false
         stopAllThreads()
         
         defer { resumeAllThreads() }
@@ -36,6 +37,7 @@ public struct Trampoline {
         self.trampolineCode = code
         self.writeTrampoline() // this is fine coz other threads are blocked.. no race condition possible i think
         self.buildHook()
+        #endif
     }
     
     public func findOrig() -> UnsafeMutableRawPointer? {
@@ -91,6 +93,6 @@ public struct Trampoline {
     }
     
     public func buildHook() {
-        let _: Void = hook(self.base, self.trampoline.advanced(by: 16)) // hook base to tramp + 16 which jumps to the replacement... ellekit /should/ use simple branching for the tiny hook
+        let _: UnsafeMutableRawPointer? = hook(self.base, self.trampoline.advanced(by: 16)) // hook base to tramp + 16 which jumps to the replacement... ellekit /should/ use simple branching for the tiny hook
     }
 }

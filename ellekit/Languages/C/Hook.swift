@@ -151,6 +151,7 @@ func split(from uint64: UInt64) -> [UInt8] {
     return result
 }
 
+#if false
 public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacement: UnsafeMutableRawPointer) {
 
     let target = originalTarget.makeReadable()
@@ -211,6 +212,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         #endif
     }
 }
+#endif
 
 @discardableResult @_optimize(speed)
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {

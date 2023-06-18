@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
+		9E1482EC2A39472100F795CB /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482EB2A39472100F795CB /* test.c */; };
+		9E1482F42A3947A500F795CB /* msgSendHook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482EF2A3947A500F795CB /* msgSendHook.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9E1482F52A3947A500F795CB /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482F02A3947A500F795CB /* Makefile */; };
 		9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
 		9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
 		9E18B4AD2A16BA86002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
@@ -165,6 +168,10 @@
 		9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libes-injector.dylib"; path = "../../../../usr/local/lib/libes-injector.dylib"; sourceTree = "<group>"; };
 		9E12F78F29FD52860021CB75 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		9E12F79129FD528F0021CB75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		9E1482EA2A39472100F795CB /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		9E1482EB2A39472100F795CB /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		9E1482EF2A3947A500F795CB /* msgSendHook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = msgSendHook.mm; sourceTree = "<group>"; };
+		9E1482F02A3947A500F795CB /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trampoline+Location.swift"; sourceTree = "<group>"; };
 		9E18B4AB2A142EAA002E471A /* Trampoline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trampoline.swift; sourceTree = "<group>"; };
 		9E18B75429C4F58900714AB8 /* injector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = injector.h; sourceTree = "<group>"; };
@@ -330,6 +337,10 @@
 			children = (
 				9E2D4F502938389B00EF6619 /* main.swift */,
 				9E33C552298EA581006FD5DD /* hex.swift */,
+				9E1482EA2A39472100F795CB /* test.h */,
+				9E1482EB2A39472100F795CB /* test.c */,
+				9E1482F02A3947A500F795CB /* Makefile */,
+				9E1482EF2A3947A500F795CB /* msgSendHook.mm */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -750,6 +761,7 @@
 				TargetAttributes = {
 					9E2D4F4D2938389B00EF6619 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1500;
 					};
 					9E381C39293D1C87004D36B2 = {
 						CreatedOnToolsVersion = 14.1;
@@ -801,7 +813,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E1482F52A3947A500F795CB /* Makefile in Sources */,
+				9E1482EC2A39472100F795CB /* test.c in Sources */,
 				9E2D4F512938389B00EF6619 /* main.swift in Sources */,
+				9E1482F42A3947A500F795CB /* msgSendHook.mm in Sources */,
 				9E33C553298EA581006FD5DD /* hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -953,19 +968,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64e;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_MODULE_VERIFIER = YES;
 				EXCLUDED_ARCHS = "";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -974,19 +993,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64e;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF46MYDSGH;
 				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_MODULE_VERIFIER = YES;
 				EXCLUDED_ARCHS = "";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

@@ -64,7 +64,7 @@ extension Instructions {
                     let cond = reversed & 0xf
                     let offset: Int32 = (signExtend(((reversed >> 5) & 0x7ffff), 17) * 4 + Int32(4*index))
 
-                    let jump = assembleJump(formerPC + UInt64(offset), pc: newPC, link: false, big: true)
+                    let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
                     return b(8 / 4, cond: .init(Int(cond))).bytes() +
                     b((jump.count + 4) / 4).bytes() +
                         jump
