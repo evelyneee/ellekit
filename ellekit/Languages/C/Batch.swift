@@ -24,7 +24,6 @@ public func hookFunctions(_ hooks: [(destination: UnsafeMutableRawPointer, repla
 
     guard krt2 == KERN_SUCCESS else { throw FunctionHookErrors.protectionFailure }
 
-    var totalSize = 0
     for targetHook in hooks {
 
         let target = targetHook.destination.makeReadable()

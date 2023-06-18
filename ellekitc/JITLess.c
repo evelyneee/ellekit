@@ -132,7 +132,7 @@ struct arm_debug_state64
 };
 
 #define ARM_DEBUG_STATE64 15
-#define ARM_DEBUG_STATE64_COUNT ((mach_msg_type_number_t) \
+#define ARM_DEBUG_STATE64_COUNT_ ((mach_msg_type_number_t) \
    (sizeof (struct arm_debug_state64)/sizeof(uint32_t)))
 
 struct arm_debug_state64 globalDebugState = {};
@@ -238,7 +238,7 @@ void EKJITLessHook(void* _target, void* _replacement, void** orig) {
     
     hookCount++;
     
-    kern_return_t task_setstate_ret = task_set_state(mach_task_self(), ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT);
+    kern_return_t task_setstate_ret = task_set_state(mach_task_self(), ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT_);
     
     if (task_setstate_ret != KERN_SUCCESS) {
         printf("[-] ellekit: JIT hook did not work, task_set_state failed with err: %s\n", mach_error_string(task_setstate_ret));
@@ -258,7 +258,7 @@ void EKJITLessHook(void* _target, void* _replacement, void** orig) {
     for (int i = 0; i < listCnt; i++) {
         thread_t thread = act_list[i];
         
-        thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT);
+        thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT_);
         
         mach_port_deallocate(mach_task_self_, thread);
     }

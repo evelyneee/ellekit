@@ -13,11 +13,8 @@ public struct Trampoline {
     public var orig: UnsafeMutableRawPointer? = nil
     
     // PAC: strip before initializing
+    #warning("Trampolines ARE enabled")
     public init?(base: UnsafeMutableRawPointer, target: UnsafeMutableRawPointer) {
-        
-        return nil
-        
-        #if false
         stopAllThreads()
         
         defer { resumeAllThreads() }
@@ -37,7 +34,6 @@ public struct Trampoline {
         self.trampolineCode = code
         self.writeTrampoline() // this is fine coz other threads are blocked.. no race condition possible i think
         self.buildHook()
-        #endif
     }
     
     public func findOrig() -> UnsafeMutableRawPointer? {
