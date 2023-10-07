@@ -13,6 +13,15 @@ import Darwin
 
 print(isDebugged())
 
+func printSymbol(for sym: String) {
+    print(sym+":", dlsym(dlopen(nil, RTLD_NOW), sym))
+}
+
+printSymbol(for: "read")
+printSymbol(for: "write")
+
+let a = 1+1
+
 #if false
 @_cdecl("rep1")
 public func rep1() {

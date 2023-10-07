@@ -66,7 +66,7 @@ extension Instructions {
 
                     let jump = assembleJump(UInt64(Int64(formerPC) + Int64(offset)), pc: newPC, link: false, big: true)
                     return b(8 / 4, cond: .init(Int(cond))).bytes() +
-                    b(Int((Double(jump.count) / 4))).bytes() +
+                    b(Int((Double(jump.count + 4) / 4))).bytes() +
                         jump
                 }
                 

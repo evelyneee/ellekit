@@ -24,6 +24,8 @@ _dmb_sy:
 .skip 16384
 _test_weirdfunc:
     mov x3, #1
+    cmp x3, #1
+    b.eq _dmb_sy
     cbnz x3, _dmb_sy
     cbz x3, _dmb_sy
     cbnz w3, _dmb_sy
