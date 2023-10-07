@@ -131,7 +131,6 @@ extension Instructions {
                         imm += 4
                     }
 
-                    print(String(format: "imm: %02X former pc: 0x%02llX, new pc: 0x%02llX, in theory: 0x%02llX, _dmb_sy:", imm, formerPC, newPC, formerPC &+ imm), dlsym(dlopen(nil, RTLD_NOW), "dmb_sy"))
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
                         return assembleJump(formerPC &+ imm, pc: newPC, link: true, big: true)
                     } else { // b

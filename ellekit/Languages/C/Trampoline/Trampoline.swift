@@ -13,10 +13,26 @@ public struct Trampoline {
     public var orig: UnsafeMutableRawPointer? = nil
     
     // PAC: strip before initializing
-    #warning("Trampolines ARE enabled")
     public init?(base: UnsafeMutableRawPointer, target: UnsafeMutableRawPointer) {
         
+        #if DEBUG
+        #else
         return nil;
+        #endif
+        
+        var info = Dl_info()
+        dladdr(base, &info)
+        
+        if #available(macOS 11.0, *) {
+            if info.dli_fname != nil && _dyld_shared_cache_contains_path(info.dli_fname) {
+                print("in dyld cache")
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+        
         stopAllThreads()
         
         defer { resumeAllThreads() }
@@ -69,6 +85,7 @@ public struct Trampoline {
             return nil
         }
         
+        print(self.trampoline)
         hooks[self.trampoline] = orig
         
         let origJump: [UInt8] = [0x50, 0x00, 0x00, 0x58] + // ldr x16, #8
@@ -91,6 +108,7 @@ public struct Trampoline {
     }
     
     public func buildHook() {
-        let _: UnsafeMutableRawPointer? = hook(self.base, self.trampoline.advanced(by: 16)) // hook base to tramp + 16 which jumps to the replacement... ellekit /should/ use simple branching for the tiny hook
+        hooks.removeValue(forKey: self.base)
+        let _: UnsafeMutableRawPointer? = hook(self.base, self.trampoline.advanced(by: 16), true) // hook base to tramp + 16 which jumps to the replacement... ellekit /should/ use simple branching for the tiny hook
     }
 }

@@ -11,6 +11,7 @@ import ellekit
 import AppKit
 import Darwin
 
+#if false
 print(isDebugged())
 
 func printSymbol(for sym: String) {
@@ -19,6 +20,18 @@ func printSymbol(for sym: String) {
 
 printSymbol(for: "read")
 printSymbol(for: "write")
+
+@_cdecl("rep3")
+public func rep3() -> Int32 {
+    print("called rep 3")
+    return 41
+}
+
+let tramp = Trampoline(base: dlsym(dlopen(nil, RTLD_NOW), "read"), target: dlsym(dlopen(nil, RTLD_NOW), "rep3"))
+
+print(tramp)
+
+read(0, nil, 0)
 
 let a = 1+1
 
@@ -432,6 +445,7 @@ print(
 
 #endif
 
+#endif
 print("--------- Begin NSPop test ---------")
 
 let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!
@@ -447,13 +461,14 @@ let nspoprepptr = unsafeBitCast(nspoprepcl, to: UnsafeMutableRawPointer.self)
 
 let test2: UnsafeMutableRawPointer = hook(nspopptr, nspoprepptr)!
 
-print("hooked")
+print("hooked", nspopptr)
 
 func test3() {
     let h = unsafeBitCast(nspopptr, to: (@convention (c) () -> Int32).self)()
 
     print(h)
 }
+
 print("testing")
 
 test3()

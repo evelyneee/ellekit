@@ -7,11 +7,9 @@ import Foundation
 extension Trampoline {
     public func findLocation() -> UnsafeMutableRawPointer? {
         for isnIdx in 0..<(128_000_000/4) {
-            let isnptr = self.base.advanced(by: isnIdx * 4).assumingMemoryBound(to: UInt32.self)
+            let isnptr = self.base.advanced(by: 256).advanced(by: isnIdx * 4).assumingMemoryBound(to: UInt32.self)
             let isn = isnptr.pointee
-                        
-            print(String(format: "isn: %02X", isn))
-            
+                                    
             if isn == 0xD503237F {
                 print("[+] trampoline: found pacibsp", isnptr)
 
@@ -23,6 +21,7 @@ extension Trampoline {
                 }
             }
             
+            /*
             if isn == 0xD65F03C0 { // found a ret
                 
                 print("[+] trampoline: found ret")
@@ -34,6 +33,7 @@ extension Trampoline {
                     return UnsafeMutableRawPointer(isnptr)
                 }
             }
+             */
         }
         return nil
     }
