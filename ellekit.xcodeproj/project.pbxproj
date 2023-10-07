@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
-		9E1482EC2A39472100F795CB /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482EB2A39472100F795CB /* test.c */; };
-		9E1482F42A3947A500F795CB /* msgSendHook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482EF2A3947A500F795CB /* msgSendHook.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		9E1482F52A3947A500F795CB /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 9E1482F02A3947A500F795CB /* Makefile */; };
 		9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
 		9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
 		9E18B4AD2A16BA86002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
@@ -90,7 +87,6 @@
 		9E92AAB3290D4E7A0018604C /* Execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA97290D4A040018604C /* Execute.swift */; };
 		9E92AAB4290D4E7A0018604C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA8A290D47540018604C /* General.swift */; };
 		9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AA9A290D4A040018604C /* Branches.swift */; };
-		9E96A5C5295924A4000EDC43 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E96A5C4295924A4000EDC43 /* main.swift */; };
 		9E96A5CB295A3548000EDC43 /* Symbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E96A5CA295A3548000EDC43 /* Symbols.swift */; };
 		9E96A604295BC0E3000EDC43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E96A603295BC0E3000EDC43 /* Image.swift */; };
 		9E97335A2953D6FD0036F339 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E9733582953D6FD0036F339 /* fishhook.c */; };
@@ -168,10 +164,6 @@
 		9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libes-injector.dylib"; path = "../../../../usr/local/lib/libes-injector.dylib"; sourceTree = "<group>"; };
 		9E12F78F29FD52860021CB75 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		9E12F79129FD528F0021CB75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		9E1482EA2A39472100F795CB /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
-		9E1482EB2A39472100F795CB /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
-		9E1482EF2A3947A500F795CB /* msgSendHook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = msgSendHook.mm; sourceTree = "<group>"; };
-		9E1482F02A3947A500F795CB /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trampoline+Location.swift"; sourceTree = "<group>"; };
 		9E18B4AB2A142EAA002E471A /* Trampoline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trampoline.swift; sourceTree = "<group>"; };
 		9E18B75429C4F58900714AB8 /* injector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = injector.h; sourceTree = "<group>"; };
@@ -210,9 +202,6 @@
 		9E6FBB642955478A007B28FC /* handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handler.swift; sourceTree = "<group>"; };
 		9E7750FD2947DE3000747209 /* pac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pac.h; sourceTree = "<group>"; };
 		9E7750FE2947DE3000747209 /* pac.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pac.c; sourceTree = "<group>"; };
-		9E78FBF12916BDD500B3B50B /* trampoline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
-		9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_arm64.S; sourceTree = "<group>"; };
-		9E78FBF32916BDD500B3B50B /* trampoline_x64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = trampoline_x64.S; sourceTree = "<group>"; };
 		9E7DE7E2295293B5008E8BB4 /* pspawn.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = pspawn.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E7DE7E7295293D1008E8BB4 /* launchd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "launchd-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E7DE7E8295293D2008E8BB4 /* entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = entry.swift; sourceTree = "<group>"; };
@@ -230,7 +219,6 @@
 		9E92AAA3290D4A1C0018604C /* Hook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hook.swift; sourceTree = "<group>"; };
 		9E92AAA9290D4E680018604C /* libellekit.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libellekit.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E96A5C2295924A4000EDC43 /* ptrauth-shim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ptrauth-shim"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E96A5C4295924A4000EDC43 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9E96A5CA295A3548000EDC43 /* Symbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Symbols.swift; sourceTree = "<group>"; };
 		9E96A603295BC0E3000EDC43 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		9E9733582953D6FD0036F339 /* fishhook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fishhook.c; sourceTree = "<group>"; };
@@ -337,10 +325,6 @@
 			children = (
 				9E2D4F502938389B00EF6619 /* main.swift */,
 				9E33C552298EA581006FD5DD /* hex.swift */,
-				9E1482EA2A39472100F795CB /* test.h */,
-				9E1482EB2A39472100F795CB /* test.c */,
-				9E1482F02A3947A500F795CB /* Makefile */,
-				9E1482EF2A3947A500F795CB /* msgSendHook.mm */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -459,16 +443,6 @@
 			path = Languages;
 			sourceTree = "<group>";
 		};
-		9E78FBEB2916BDB900B3B50B /* trampoline */ = {
-			isa = PBXGroup;
-			children = (
-				9E78FBF22916BDD500B3B50B /* trampoline_arm64.S */,
-				9E78FBF32916BDD500B3B50B /* trampoline_x64.S */,
-				9E78FBF12916BDD500B3B50B /* trampoline.c */,
-			);
-			path = trampoline;
-			sourceTree = "<group>";
-		};
 		9E7DE7E6295293BB008E8BB4 /* launchd */ = {
 			isa = PBXGroup;
 			children = (
@@ -498,10 +472,8 @@
 				9E381C3B293D1C88004D36B2 /* loader */,
 				9E7DE7E6295293BB008E8BB4 /* launchd */,
 				9EA0D1BE291C5D5B0061B187 /* injector */,
-				9E78FBEB2916BDB900B3B50B /* trampoline */,
 				9E2D4F4F2938389B00EF6619 /* test */,
 				9E6FBB5A29554734007B28FC /* sb */,
-				9E96A5C3295924A4000EDC43 /* ptrauth shim */,
 				9E92AA88290D47540018604C /* Products */,
 				9E2D4F552938391C00EF6619 /* Frameworks */,
 			);
@@ -535,14 +507,6 @@
 				9E48018C290FE5C3007E433F /* PAC */,
 			);
 			path = ellekit;
-			sourceTree = "<group>";
-		};
-		9E96A5C3295924A4000EDC43 /* ptrauth shim */ = {
-			isa = PBXGroup;
-			children = (
-				9E96A5C4295924A4000EDC43 /* main.swift */,
-			);
-			path = "ptrauth shim";
 			sourceTree = "<group>";
 		};
 		9E96A5C9295A352F000EDC43 /* Mach-O */ = {
@@ -813,10 +777,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E1482F52A3947A500F795CB /* Makefile in Sources */,
-				9E1482EC2A39472100F795CB /* test.c in Sources */,
 				9E2D4F512938389B00EF6619 /* main.swift in Sources */,
-				9E1482F42A3947A500F795CB /* msgSendHook.mm in Sources */,
 				9E33C553298EA581006FD5DD /* hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -934,7 +895,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E96A5C5295924A4000EDC43 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -967,11 +927,12 @@
 		9E2D4F522938389B00EF6619 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
@@ -993,11 +954,12 @@
 		9E2D4F532938389B00EF6619 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64e;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;

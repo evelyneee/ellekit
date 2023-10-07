@@ -11,7 +11,6 @@ import ellekit
 import AppKit
 import Darwin
 
-exit(0);
 print(isDebugged())
 
 #if false
@@ -258,6 +257,7 @@ extension FixedWidthInteger {
 }
 #endif
 
+/*
 // CF tests
 let image2 = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
 calculateTime {
@@ -269,6 +269,7 @@ calculateTime {
         )! // private sym
     )
 }
+ */
 
 func calculateTime(block : (() -> Void)) {
         let start = DispatchTime.now()
@@ -303,6 +304,7 @@ calculateTime {
 }
 #endif
 
+/*
 print("--------- Finding objc_direct symbol ---------")
 // CF tests
 let image = try ellekit.openImage(image: "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation")!
@@ -321,6 +323,7 @@ let symbol = try ellekit.findSymbol(
     symbol: "-[CFPrefsDaemon handleSourceMessage:replyHandler:]"
 )! // private sym
 print("Symbol found:", symbol)
+ */
 
 print("--------- Finding Capt's symbol ---------")
 for image in 0..<_dyld_image_count() {
@@ -355,25 +358,28 @@ let _posix_spawn_sym = try ellekit.findSymbol(image: libkernel, symbol: "_posix_
 let _memcpy_sym = try ellekit.findSymbol(image: libkernel, symbol: "_memcpy")!
 print("Symbols found: \(_posix_spawn_sym) \(_memcpy_sym)")
 
+/*
 // normal dylib test
 print("--------- Hooking a findSymbol result ---------")
 dlopen("/usr/local/lib/libsubstrate.dylib", RTLD_NOW)
 let libsubstrate = try ellekit.openImage(image: "/usr/local/lib/libsubstrate.dylib")!
 let _MSHookFunction_sym = try ellekit.findSymbol(image: libsubstrate, symbol: "_MSHookFunction")!
 let _:UnsafeMutableRawPointer? = ellekit.hook(.init(mutating: _MSHookFunction_sym), .init(mutating: _memcpy_sym))
-
+*/
+ 
 print("--------- Finding _main in myself ---------")
 // selftest
 let self_bin = try ellekit.openImage(image: ProcessInfo.processInfo.processName)!
 let _main_self_sym = try ellekit.findSymbol(image: self_bin, symbol: "_main")!
 print("_main:", _main_self_sym)
 
+/*
 print("--------- Finding bundles for thin Mach-O ---------")
 // MobileSMS
 let msms = try ellekit.getLinkedBundleIDs(file: "/Users/charlotte/Downloads/prng_seedctl")
 
 print("Found bundles for MobileSMS:", msms.prefix(2))
-
+*/
 print("--------- Finding bundles for thick Mach-O ---------")
 let dirPath = "/usr/sbin/"
 for path in try FileManager.default.contentsOfDirectory(atPath: dirPath) {

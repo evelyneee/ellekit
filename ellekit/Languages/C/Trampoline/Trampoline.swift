@@ -15,6 +15,8 @@ public struct Trampoline {
     // PAC: strip before initializing
     #warning("Trampolines ARE enabled")
     public init?(base: UnsafeMutableRawPointer, target: UnsafeMutableRawPointer) {
+        
+        return nil;
         stopAllThreads()
         
         defer { resumeAllThreads() }

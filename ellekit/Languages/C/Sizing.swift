@@ -24,11 +24,11 @@ func checkBranchLink(_ isn: [UInt8]) -> Bool {
 
     let isn: UInt64 = (UInt64(isn[3]) | UInt64(isn[2]) << 8 | UInt64(isn[1]) << 16 | UInt64(isn[0]) << 24)
     let opcode = reverse(UInt32(isn))
-            
+                
     // 42
-    if opcode >> 25 == b.base >> 25 {
+    if opcode >> 26 == b.base >> 26 {
         return true
-    } else if opcode >> 25 == bl.base >> 25 {
+    } else if opcode >> 26 == bl.base >> 26 {
         return true
     } else if opcode >> 25 == b.condBase >> 25 {
         return false
