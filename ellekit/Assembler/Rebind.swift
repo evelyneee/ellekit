@@ -122,14 +122,15 @@ extension Instructions {
                 
                 if checkBranchLink(byteArray) {
                     print("Rebinding branch")
-                    var imm = UInt64((reversed & 0x3FFFFFF) << 2)
-                    if (instruction & 0x2000000) != 0 {
+                    var imm = UInt64(Int32((reversed & 0x3FFFFFF) << 2))
+                    if (reversed & 0x2000000) != 0 {
                         // Sign extend
                         imm |= 0xFFFFFFFFFC000000
                     }
-                    if imm > UInt32.max {
-                        imm += 4
-                    }
+
+                    imm += UInt64(4*index)
+                    
+                    print("it's jumping now to : ", String(format: "0x%02llX", formerPC &+ imm))
 
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
                         return assembleJump(formerPC &+ imm, pc: newPC, link: true, big: true)

@@ -11,15 +11,21 @@ import ellekit
 import AppKit
 import Darwin
 
-#if false
 print(isDebugged())
 
 func printSymbol(for sym: String) {
     print(sym+":", dlsym(dlopen(nil, RTLD_NOW), sym))
 }
 
-printSymbol(for: "read")
-printSymbol(for: "write")
+printSymbol(for: "xpc_connection_create_mach_service")
+printSymbol(for: "xpc_connection_set_event_handler")
+printSymbol(for: "unlink")
+
+var check: UInt64 = 0
+
+shared_region_check(&check)
+
+print(String(format: "%02llX", check))
 
 @_cdecl("rep3")
 public func rep3() -> Int32 {
@@ -27,11 +33,11 @@ public func rep3() -> Int32 {
     return 41
 }
 
-let tramp = Trampoline(base: dlsym(dlopen(nil, RTLD_NOW), "read"), target: dlsym(dlopen(nil, RTLD_NOW), "rep3"))
-
-print(tramp)
-
-read(0, nil, 0)
+//let tramp = Trampoline(base: dlsym(dlopen(nil, RTLD_NOW), "unlink"), target: dlsym(dlopen(nil, RTLD_NOW), "rep3"))
+//
+//print(tramp)
+//
+//unlink("/")
 
 let a = 1+1
 
@@ -114,6 +120,8 @@ print(test_weirdfuncptr)
 
 let orig_weirdfunc = hook(test_weirdfuncptr, dlsym(dlopen(nil, RTLD_NOW), "atoi")!)!
 
+printSymbol(for: "dmb_sy")
+printSymbol(for: "shared_region_check")
 print("start")
 print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
@@ -147,13 +155,13 @@ let repptr2 = unsafeBitCast(repcl2, to: UnsafeMutableRawPointer.self)
 var socketorig: UnsafeMutableRawPointer! = nil
 
 @_cdecl("socketrep")
-public func socketrep(_ x0: Int32, _ x1: Int32, _ x2: Int32) -> Int32 {
-    print("called socket")
-    let ret = unsafeBitCast(socketorig, to: (@convention (c) (Int32, Int32, Int32) -> Int32).self)(x0, x1, x2)
-    return ret
+public func socketrep(_ x0: UnsafePointer<CChar>, _ x1: DispatchQueue, _ x2: UInt64) -> UnsafeRawPointer {
+    print("called socket", String(cString: x0))
+    
+    return unsafeBitCast(socketorig, to: (@convention(c) (UnsafePointer<CChar>, DispatchQueue, UInt64) -> UnsafeRawPointer).self)(x0, x1, x2)
 }
 
-let socketrepcl: @convention (c) (Int32, Int32, Int32) -> Int32 = socketrep
+let socketrepcl: @convention (c) (UnsafePointer<CChar>, DispatchQueue, UInt64) -> UnsafeRawPointer = socketrep
 
 let socketrepptr = unsafeBitCast(socketrepcl, to: UnsafeMutableRawPointer.self)
 
@@ -202,16 +210,16 @@ for image in 0..<_dyld_image_count() {
 //        print(unsafeBitCast(sym, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 //    }
     
-    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_socket") {
-        print("_socket: \(sym)")
+    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_xpc_connection_create_mach_service") {
+        print("_xpc_connection_create_mach_service: \(sym)")
                 
-        let ret1 = socket(32, 1, 2)
+        //let ret1 = xpc_connection_create_mach_service("red.charlotte.ellekit", .global(), 0)
         
         socketorig = hook(UnsafeMutableRawPointer(mutating: sym), socketrepptr)!
         
-        let ret = socket(32, 1, 2)
+        let ret = Unmanaged.passRetained(xpc_connection_create_mach_service("red.charlotte.ellekit2", .main, 0))
                 
-        print(ret1, ret)
+        print(ret)
     }
     
     #if false
@@ -445,7 +453,6 @@ print(
 
 #endif
 
-#endif
 print("--------- Begin NSPop test ---------")
 
 let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!

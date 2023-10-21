@@ -146,7 +146,7 @@ public func findPrivateSymbol(
     var check: UInt64 = 0
     
     shared_region_check(&check)
-                
+                    
     for _ in 0..<symInfo.entriesCount {
         let entryPtr = handle
             .readData(ofLength: MemoryLayout<dyld_cache_local_symbols_entry>.size)

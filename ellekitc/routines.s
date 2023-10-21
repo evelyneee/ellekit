@@ -12,11 +12,6 @@
 .global _shared_region_check, _dmb_sy, _test_weirdfunc
 
 #if __arm64__
-
-_shared_region_check:
-    mov x16, #294
-    svc #0x80
-    ret
 _dmb_sy:
     dmb sy
     ret
@@ -24,6 +19,8 @@ _dmb_sy:
 .skip 16384
 _test_weirdfunc:
     mov x3, #1
+    mov x0, xzr
+    bl _shared_region_check
     cmp x3, #1
     b.eq _dmb_sy
     cbnz x3, _dmb_sy
@@ -31,6 +28,10 @@ _test_weirdfunc:
     cbnz w3, _dmb_sy
     ret
 .skip 16384
+_shared_region_check:
+    mov x16, #294
+    svc #0x80
+    ret
 
 #else
 _shared_region_check:
