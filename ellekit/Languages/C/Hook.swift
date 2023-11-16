@@ -42,6 +42,14 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         return hook(newReplacement.makeReadable(), replacement)
     }
     
+//    var info = Dl_info()
+//    dladdr(target, &info)
+//    var info2 = Dl_info()
+//    dladdr(target, &info2)
+//    if let name = info.dli_sname, let frame = info.dli_fname {
+//        NSLog("[hookinfo] \(String(describing: target))/\(String(cString: name)) in \(String(cString: frame)) -> \(String(describing: replacement))/\(info.dli_sname == nil ? "" : String(cString: info.dli_sname))")
+//    }
+    
     print("finding size", target)
     
     let targetSize = findFunctionSize(target) ?? 6
@@ -58,7 +66,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var branchAfter: Bool = false
     var patchSize: Int = -1
     
-    if targetSize >= 3 && abs(branchOffset / 1024 / 1024 / 1024) < 4 {
+    if targetSize >= 3 && abs(branchOffset / 1024 / 1024 / 1024) < 4 && branchOffset > 0 {
          print("[*] adrp branch")
 
         let target_addr = UInt64(UInt(bitPattern: target))
@@ -218,6 +226,8 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
 
 @discardableResult @_optimize(speed)
 func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size: mach_vm_size_t) -> Int {
+    
+    //NSLog("[hookinfo] patching \(String(describing: address)) with \(code == nil ? "nothing!" : Array(UnsafeBufferPointer(start: code, count: Int(size))).map {String(format: "%02X", $0)}.joined())")
     let enforceThreadSafety = enforceThreadSafety
     if enforceThreadSafety {
         stopAllThreads()

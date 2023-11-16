@@ -104,7 +104,7 @@ deb-ios-rootful deb-ios-rootless: build-ios
 	@chmod 0755 $(STAGE_DIR)/DEBIAN/preinst $(STAGE_DIR)/DEBIAN/postinst $(STAGE_DIR)/DEBIAN/postrm
 
 	@mkdir -p packages
-	dpkg-deb -Zzstd --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
+	dpkg-deb --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
 	
 	@rm -rf work-$(ARCHITECTURE)
 

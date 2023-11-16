@@ -43,7 +43,11 @@ extension Instructions {
                 
                 if reversed & 0x9F000000 == 0x10000000 { // adr
                     print("rebinded adr")
-                    return adr(isn: reversed, formerPC: formerPC, newPC: newPC)?.bytes()
+                    let target = adr.destination(reversed, formerPC)
+                    
+                    let register = reversed.bits(0...4)
+                                        
+                    return assembleReference(target: target, register: Int(register)) // this is easier than adrp, since we have unlimited size
                 }
 
                 if reversed & 0x9F000000 == 0x90000000 { // adrp
@@ -133,9 +137,9 @@ extension Instructions {
                     print("it's jumping now to : ", String(format: "0x%02llX", formerPC &+ imm))
 
                     if instruction.reverse() & 0x80000000 == 0x80000000 { // bl
-                        return assembleJump(formerPC &+ imm, pc: newPC, link: true, big: true)
+                        return assembleJump(formerPC &+ imm, pc: newPC, link: true, big: true, jmpReg: .x17)
                     } else { // b
-                        return assembleJump(formerPC &+ imm, pc: newPC, link: false, big: true)
+                        return assembleJump(formerPC &+ imm, pc: newPC, link: false, big: true, jmpReg: .x17)
                     }
                 }
 

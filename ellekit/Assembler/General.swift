@@ -243,11 +243,11 @@ class adrp: Instruction {
 
     static func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64? {
         // Calculate imm from hi and lo
-        var imm_hi_lo = (instruction & 0xFFFFE0) >> 3
-        imm_hi_lo |= (instruction & 0x60000000) >> 29
-        if (instruction & 0x800000) == 1 {
+        var imm_hi_lo = UInt64((instruction >> 3)  & 0x1FFFFC)
+        imm_hi_lo    |= UInt64((instruction >> 29) & 0x3)
+        if (instruction & 0x800000) != 0 {
             // Sign extend
-            imm_hi_lo |= 0xFFE00000
+            imm_hi_lo |= 0xFFFFFFFFFFE00000
         }
 
         // Build real imm
@@ -303,15 +303,15 @@ public class adr: Instruction {
 
     static let base = 0b0_00_10000_0000000000000000000_00000
 
-    static private func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64 {
+    static public func destination(_ instruction: UInt32, _ pc: UInt64) -> UInt64 {
 
-        var imm = (instruction & 0xFFFFE0) >> 3
-        imm |= (instruction & 0x60000000) >> 29
-        if (instruction & 0x800000) == 1 {
+        var imm_hi_lo = UInt64((instruction >> 3)  & 0x1FFFFC)
+        imm_hi_lo    |= UInt64((instruction >> 29) & 0x3)
+        if (instruction & 0x800000) != 0 {
             // Sign extend
-            imm |= 0xFFE00000
+            imm_hi_lo |= 0xFFFFFFFFFFE00000
         }
         
-        return pc + UInt64(imm)
+        return pc &+ UInt64(imm_hi_lo)
     }
 }

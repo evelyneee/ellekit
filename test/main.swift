@@ -11,6 +11,10 @@ import ellekit
 import AppKit
 import Darwin
 
+print(_assembleJump(0x0000000104bc78bc, pc: 0x00000002320dd6cc, link: false, page: true, jmpReg: .x16).map { String(format: "%02X", $0)}.joined()) // 5000005800021FD6BC78BC0401000000 currently
+
+
+#if false
 print(isDebugged())
 
 func printSymbol(for sym: String) {
@@ -24,6 +28,9 @@ printSymbol(for: "unlink")
 var check: UInt64 = 0
 
 shared_region_check(&check)
+
+for i in 0..<_dyld_image_count() { print(String(cString: _dyld_get_image_name(i)))}
+print(dlsym(dlopen("/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation", RTLD_LAZY | RTLD_LOCAL)!, "xpc_connection_create_mach_service"))
 
 print(String(format: "%02llX", check))
 
@@ -123,7 +130,7 @@ let orig_weirdfunc = hook(test_weirdfuncptr, dlsym(dlopen(nil, RTLD_NOW), "atoi"
 printSymbol(for: "dmb_sy")
 printSymbol(for: "shared_region_check")
 print("start")
-print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
+print("ORIG:", unsafeBitCast(orig_weirdfunc, to: (@convention (c) (UnsafePointer<CChar>) -> UnsafeRawPointer).self)("4"))
 print("REPLACEMENT:", unsafeBitCast(test_weirdfuncptr, to: (@convention (c) (UnsafePointer<CChar>) -> Int32).self)("4"))
 
 var orig1_: UnsafeMutableRawPointer! = nil
@@ -182,7 +189,7 @@ var unlinkorig: UnsafeMutableRawPointer! = nil
 
 @_cdecl("unlinkrep")
 public func unlinkrep(_ x0: UnsafePointer<CChar>) -> Int32 {
-    print("called unlink", String(cString: x0))
+    print("called unlink")
     let ret = unsafeBitCast(unlinkorig, to: (@convention(c) (UnsafePointer<CChar>) -> Int32).self)(x0)
     return ret
 }
@@ -190,6 +197,9 @@ public func unlinkrep(_ x0: UnsafePointer<CChar>) -> Int32 {
 let unlinkrepcl: @convention(c) (UnsafePointer<CChar>) -> Int32 = unlinkrep
 
 let unlinkrepptr = unsafeBitCast(unlinkrepcl, to: UnsafeMutableRawPointer.self)
+
+@_silgen_name("kevent_id")
+func kevent_id(x0: UInt64, x1: UInt64, x2: UInt64)
 
 for image in 0..<_dyld_image_count() {
 //    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_atoi") {
@@ -234,18 +244,19 @@ for image in 0..<_dyld_image_count() {
     }
     #endif
     
-    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_unlink") {
-        print("_unlink: \(sym)")
-                        
-        UnsafeRawPointer(bitPattern: (UInt(bitPattern: writeorig) & 0x0000007fffffffff))?.hexDump(0x400)
-        
-        unlinkorig = hook(UnsafeMutableRawPointer(mutating: sym), unlinkrepptr)!
-        
-        let ret = unlink("/var/jb/")
-                
-        print(ret)
-    }
+//    if let sym = MSFindSymbol(_dyld_get_image_header(image), "_kevent_id") {
+//        print("_kevent_id: \(sym)")
+//                        
+//        UnsafeRawPointer(bitPattern: (UInt(bitPattern: writeorig) & 0x0000007fffffffff))?.hexDump(0x400)
+//        
+//        unlinkorig = hook(UnsafeMutableRawPointer(mutating: sym), unlinkrepptr)!
+//        
+//        let ret = kevent_id(x0: 0, x1: 0, x2: 0)
+//                
+//        print(ret)
+//    }
 }
+#if false
 #if false
 
 func demangle(symbol: UnsafePointer<Int8>) -> String? {
@@ -258,6 +269,7 @@ func demangle(symbol: UnsafePointer<Int8>) -> String? {
     }
     return nil
 }
+#endif
 
 // Taken from stdlib, not public Swift3+
 @_silgen_name("swift_demangle")
@@ -455,14 +467,14 @@ print(
 
 print("--------- Begin NSPop test ---------")
 
-let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "NSPopAutoreleasePool")!
+let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "CFNotificationCenterGetDistributedCenter")!
 
 @_cdecl("nspoprep")
-public func nspoprep() -> Int {
-    2
+public func nspoprep() -> UInt64 {
+    unsafeBitCast(test2, to: (@convention (c) () -> UInt64).self)()
 }
 
-let nspoprepcl: @convention(c) () -> Int = nspoprep
+let nspoprepcl: @convention(c) () -> UInt64 = nspoprep
 
 let nspoprepptr = unsafeBitCast(nspoprepcl, to: UnsafeMutableRawPointer.self)
 
@@ -480,8 +492,7 @@ print("testing")
 
 test3()
 
-// unsafeBitCast(test2, to: (@convention (c) () -> Void).self)()
-
+print(CFNotificationCenterGetDistributedCenter())
 //typealias freebody = @convention(c) (UnsafeMutableRawPointer?) -> Void
 //
 //var free_orig: (freebody)?
@@ -497,3 +508,4 @@ test3()
 //free_orig = unsafeBitCast(orig, to: freebody?.self)
 
 print("test bp")
+#endif

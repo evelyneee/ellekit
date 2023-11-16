@@ -6,6 +6,8 @@
 .intel_syntax noprefix
 #endif
 
+.data
+environ: .asciz "Hello, World!"
 .text
 
 .extern _shared_region_check
@@ -18,10 +20,10 @@ _dmb_sy:
 .align 4
 .skip 16384
 _test_weirdfunc:
+    adr x0, _dmb_sy
     mov x3, #1
-    mov x0, xzr
-    bl _shared_region_check
     cmp x3, #1
+    ret
     b.eq _dmb_sy
     cbnz x3, _dmb_sy
     cbz x3, _dmb_sy

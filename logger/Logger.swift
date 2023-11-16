@@ -10,10 +10,8 @@ import os.log
 private let ENABLE_LINE_LOGGING: Bool = true
 private let ENABLE_FILE_EXTENSION_LOGGING: Bool = false
 
-#if DEBUG
 @available(iOS 14.0, tvOS 14.0, watchOS 8.0, macOS 11.0, *)
-fileprivate let logger = Logger(subsystem: "red.charlotte.ellekit", category: "all")
-#endif
+public let logger = Logger(subsystem: "red.charlotte.ellekit", category: "all")
 
 public func dprint(
     _ items: Any..., // first variadic parameter
@@ -29,7 +27,7 @@ public func dprint(
     log(items: items, file: file, line: line, separator: separator)
 }
 
-private struct TextLog: TextOutputStream {
+struct TextLog: TextOutputStream {
 
     static var shared = TextLog()
     
@@ -37,14 +35,13 @@ private struct TextLog: TextOutputStream {
         #if !os(macOS)
         FileManager.default.fileExists(atPath: "/private/var/mobile/.ekenablelogging")
         #else
-        FileManager.default.fileExists(atPath: "/Library/TweakInject.ekenablelogging")
+        FileManager.default.fileExists(atPath: "/Library/TweakInject/.ekenablelogging")
         #endif
     }
     
     func write(_ string: String) {
-        guard enableLogging else { return }
         #if os(iOS)
-        let log = NSURL.fileURL(withPath: "/private/var/mobile/log.txt")
+        let log = NSURL.fileURL(withPath: ("/var/jb/var/mobile/log.txt" as NSString).resolvingSymlinksInPath)
         #else
         let log = NSURL.fileURL(withPath: "/Users/charlotte/log.txt")
         #endif

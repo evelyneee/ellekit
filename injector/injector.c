@@ -353,5 +353,6 @@ static void injection_init(void) {
     if (extension) {
         sandbox_extension_consume(extension);
     }
+    
     tweaks_iterate();
 }
