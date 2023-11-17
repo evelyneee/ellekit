@@ -26,6 +26,19 @@ func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
             
             clobbers.append(reg)
         }
+        
+        let bicBase = 0b0_00_100100_0_000000_000000_00000_00000
+        if opcode == (bicBase >> 25) || opcode == (bicBase | 1 << 31) >> 25 {
+            // we found a movz
+            // let's check for the register
+            let reg = isn & 0x1F
+            
+            guard reg <= 20 || reg >= 10 else {
+                return
+            }
+            
+            clobbers.append(reg)
+        }
     }
     
     if !clobbers.contains(16) {
