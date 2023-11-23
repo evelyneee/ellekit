@@ -60,7 +60,12 @@ deb-ios-rootful: INSTALL_PREFIX =
 deb-ios-rootless: ARCHITECTURE = iphoneos-arm64
 deb-ios-rootless: INSTALL_PREFIX = /var/jb
 
-deb-ios-rootful deb-ios-rootless: build-ios
+deb-ios-roothide: clean #build roothide last, clean module cache
+deb-ios-roothide: COMMON_OPTIONS += "GCC_PREPROCESSOR_DEFINITIONS='ROOTHIDE=1"
+deb-ios-roothide: ARCHITECTURE = iphoneos-arm64e
+deb-ios-roothide: INSTALL_PREFIX = 
+
+deb-ios-rootful deb-ios-rootless deb-ios-roothide: build-ios
 	@rm -rf work-$(ARCHITECTURE)
 	@mkdir -p $(STAGE_DIR)
 
@@ -108,7 +113,7 @@ deb-ios-rootful deb-ios-rootless: build-ios
 	
 	@rm -rf work-$(ARCHITECTURE)
 
-deb-ios: deb-ios-rootful deb-ios-rootless
+deb-ios: deb-ios-rootful deb-ios-rootless deb-ios-roothide
 
 deb-macos: ARCHITECTURE = macos
 deb-macos: build-macos
