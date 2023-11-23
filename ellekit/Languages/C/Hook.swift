@@ -232,6 +232,11 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     if enforceThreadSafety {
         stopAllThreads()
     }
+    defer {
+        if enforceThreadSafety {
+            resumeAllThreads()
+        }
+    }
     
     let goodSize = Int(size)
     let machAddr = mach_vm_address_t(UInt(bitPattern: address))
@@ -263,9 +268,6 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
 
     guard err2 == KERN_SUCCESS else {
         return Int(err2)
-    }
-    if enforceThreadSafety {
-        resumeAllThreads()
     }
 
     return 0
