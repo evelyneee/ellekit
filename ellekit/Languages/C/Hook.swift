@@ -170,7 +170,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     let targetSize = findFunctionSize(target) ?? 6
     print("[*] ellekit: Size of target:", targetSize as Any)
 
-    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target)))
+    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
 
     var code = [UInt8]()
 
@@ -202,7 +202,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
-            b(branchOffset / 4)
+            b(branchOffset)
         }
         code = codeBuilder
     }
