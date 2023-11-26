@@ -45,7 +45,7 @@ extension UIViewController {
         
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             
-            let exitAction = UIAlertAction(title: "Exit Safe Mode (+ Respring)", style: .default, handler: { action in
+            let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
                 try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
                 exit(0)
             })
