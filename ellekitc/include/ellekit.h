@@ -14,6 +14,12 @@
 
 #import "xpc.h"
 
+#ifdef ROOTHIDE
+#include <roothide/roothide.h>
+#else
+#include <roothide/stub.h>
+#endif
+
 struct sCSRange {
    unsigned long long location;
    unsigned long long length;

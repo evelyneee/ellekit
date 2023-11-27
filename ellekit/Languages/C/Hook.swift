@@ -57,7 +57,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
 
     print("[*] ellekit: Size of target:", targetSize as Any)
 
-    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
+    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target)))
 
     hooks[target] = replacement
 
@@ -114,7 +114,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
-            b(branchOffset)
+            b(branchOffset / 4)
         }
         code = codeBuilder
         
@@ -170,7 +170,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
     let targetSize = findFunctionSize(target) ?? 6
     print("[*] ellekit: Size of target:", targetSize as Any)
 
-    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target))) / 4
+    let branchOffset = (Int(UInt(bitPattern: replacement)) - Int(UInt(bitPattern: target)))
 
     var code = [UInt8]()
 
@@ -202,7 +202,7 @@ public func hook(_ originalTarget: UnsafeMutableRawPointer, _ originalReplacemen
         print("[*] ellekit: Small branch")
         @InstructionBuilder
         var codeBuilder: [UInt8] {
-            b(branchOffset)
+            b(branchOffset / 4)
         }
         code = codeBuilder
     }
@@ -231,6 +231,11 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     let enforceThreadSafety = enforceThreadSafety
     if enforceThreadSafety {
         stopAllThreads()
+    }
+    defer {
+        if enforceThreadSafety {
+            resumeAllThreads()
+        }
     }
     
     let goodSize = Int(size)
@@ -263,9 +268,6 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
 
     guard err2 == KERN_SUCCESS else {
         return Int(err2)
-    }
-    if enforceThreadSafety {
-        resumeAllThreads()
     }
 
     return 0

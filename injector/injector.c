@@ -11,9 +11,16 @@
 #include <os/log.h>
 #include <mach-o/dyld.h>
 
+#ifdef ROOTHIDE
+#include <roothide/roothide.h>
+#else
+#include <roothide/stub.h>
+#endif
+
 extern void NSLog(CFStringRef, ...);
 
 static bool rootless = false;
+static bool roothide = false;
 
 static int filter_dylib(const struct dirent *entry) {
     char* dot = strrchr(entry->d_name, '.');
@@ -30,10 +37,13 @@ static int isApp(const char* path) {
 #else
 #define TWEAKS_DIRECTORY_ROOTFUL "/usr/lib/TweakInject/"
 #define TWEAKS_DIRECTORY_ROOTLESS "/var/jb/usr/lib/TweakInject/"
+#define TWEAKS_DIRECTORY_ROOTHIDE jbroot("/usr/lib/TweakInject/")
 #define MOBILESAFETY_PATH_ROOTFUL "/usr/lib/ellekit/MobileSafety.dylib"
 #define MOBILESAFETY_PATH_ROOTLESS "/var/jb/usr/lib/ellekit/MobileSafety.dylib"
+#define MOBILESAFETY_PATH_ROOTHIDE jbroot("/usr/lib/ellekit/MobileSafety.dylib")
 #define OLDABI_PATH_ROOTFUL "/usr/lib/ellekit/OldABI.dylib"
 #define OLDABI_PATH_ROOTLESS "/var/jb/usr/lib/ellekit/OldABI.dylib"
+#define OLDABI_PATH_ROOTHIDE jbroot("/usr/lib/ellekit/OldABI.dylib")
 #endif
 
 char* append_str(const char* str, const char* append_str) {
@@ -252,6 +262,8 @@ static void tweaks_iterate(void) {
 
     if (rootless) {
         n = scandir(TWEAKS_DIRECTORY_ROOTLESS, &files, filter_dylib, alphasort2);
+    } else if (roothide) {
+        n = scandir(TWEAKS_DIRECTORY_ROOTHIDE, &files, filter_dylib, alphasort2);
     } else {
         n = scandir(TWEAKS_DIRECTORY_ROOTFUL, &files, filter_dylib, alphasort2);
     }
@@ -266,6 +278,8 @@ static void tweaks_iterate(void) {
             char* full_path;
             if (rootless) {
                 full_path = append_str(TWEAKS_DIRECTORY_ROOTLESS, files[n]->d_name);
+            } else if (roothide) {
+                full_path = append_str(TWEAKS_DIRECTORY_ROOTHIDE, files[n]->d_name);
             } else {
                 full_path = append_str(TWEAKS_DIRECTORY_ROOTFUL, files[n]->d_name);
             }
@@ -292,6 +306,10 @@ static void tweaks_iterate(void) {
                     if (rootless) {
                         if (!access(OLDABI_PATH_ROOTLESS, F_OK)) {
                             dlopen(OLDABI_PATH_ROOTLESS, RTLD_LAZY);
+                        }
+                    } else if (roothide) {
+                        if (!access(OLDABI_PATH_ROOTHIDE, F_OK)) {
+                            dlopen(OLDABI_PATH_ROOTHIDE, RTLD_LAZY);
                         }
                     } else {
                         if (!access(OLDABI_PATH_ROOTFUL, F_OK)) {
@@ -332,19 +350,23 @@ static void injection_init(void) {
     
     if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
         rootless = true;
+    } else if (!access(jbroot("/usr/lib/ellekit/libinjector.dylib"), F_OK)) {
+        roothide = true;
     }
     
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
             if (rootless) {
                 dlopen(MOBILESAFETY_PATH_ROOTLESS, RTLD_NOW);
+            } else if (roothide) {
+                dlopen(MOBILESAFETY_PATH_ROOTHIDE, RTLD_NOW);
             } else {
                 dlopen(MOBILESAFETY_PATH_ROOTFUL, RTLD_NOW);
             }
         }
     }
     
-    if (!access("/var/mobile/.eksafemode", F_OK)) {
+    if (!access(jbroot("/var/mobile/.eksafemode"), F_OK)) {
         return;
     }
 #endif
