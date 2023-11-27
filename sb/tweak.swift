@@ -37,23 +37,27 @@ extension UIViewController {
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
         
         let title = "Safe Mode"
-        let message = "You've entered safe mode. SpringBoard tweaks will not get injected until you respring your device. You can also safely remove your broken tweaks."
+        let message = "You've entered safe mode. Tweaks will not be injected until you exit Safe Mode. You can select Dismiss to safely remove your broken tweaks."
         DispatchQueue.main.async(execute: {
             guard let alertWindow = UIApplication.shared.keyWindow else { return }
             
             alertWindow.rootViewController = alertWindow.rootViewController?.top
         
-            let alert2 = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             
-            let defaultAction2 = UIAlertAction(title: "OK", style: .default, handler: { action in
+            let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
                 try? FileManager.default.removeItem(atPath: jbroot("/var/mobile/.eksafemode"))
+                exit(0)
             })
+
+            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
             
-            alert2.addAction(defaultAction2)
+            alert.addAction(exitAction)
+            alert.addAction(dismissAction)
         
             alertWindow.makeKeyAndVisible()
         
-            alertWindow.rootViewController?.present(alert2, animated: true, completion: nil)
+            alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
         })
         
     }
