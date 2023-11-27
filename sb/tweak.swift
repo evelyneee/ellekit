@@ -28,50 +28,66 @@ extension UIViewController {
     }
 }
 
-@objc class SpringBoard2: NSObject {
+func showSafeModeAlert() {
+    let title = "Safe Mode"
+    let message = "You've entered Safe Mode. Tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar to show this alert again."
+    DispatchQueue.main.async(execute: {
+        guard let alertWindow = UIApplication.shared.keyWindow else { return }
+        
+        alertWindow.rootViewController = alertWindow.rootViewController?.top
     
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
+            try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
+            exit(0)
+        })
+
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+        
+        alert.addAction(exitAction)
+        alert.addAction(dismissAction)
+    
+        alertWindow.makeKeyAndVisible()
+    
+        alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
+    })
+}
+
+@objc class SpringBoard2: NSObject {
     @objc func applicationDidFinishLaunching(_ application: UIApplication) {
-        
         let block = unsafeBitCast(orig, to: (@convention (c) (NSObject, Selector, UIApplication) -> Void).self)
-        
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
         
-        let title = "Safe Mode"
-        let message = "You've entered safe mode. Tweaks will not be injected until you exit Safe Mode. You can select Dismiss to safely remove your broken tweaks."
-        DispatchQueue.main.async(execute: {
-            guard let alertWindow = UIApplication.shared.keyWindow else { return }
-            
-            alertWindow.rootViewController = alertWindow.rootViewController?.top
-        
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            
-            let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
-                try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
-                exit(0)
-            })
+        showSafeModeAlert()
+    }
+}
 
-            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
-            
-            alert.addAction(exitAction)
-            alert.addAction(dismissAction)
-        
-            alertWindow.makeKeyAndVisible()
-        
-            alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
-        })
-        
+@objc class SBStatusBarManager2: NSObject {
+    @objc func handleStatusBarTapWithEvent(_ event: UIEvent) {
+        showSafeModeAlert()
     }
 }
 
 func performHooks() {
-    guard let sb = NSClassFromString("SpringBoard") else { return }
+    guard let springboard = NSClassFromString("SpringBoard") else { return }
     let replacement = class_getMethodImplementation(
         SpringBoard2.self,
         #selector(SpringBoard2.applicationDidFinishLaunching(_:))
     )!
     messageHook(
-        sb, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
+        springboard, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
         replacement, &orig
+    )
+
+    guard let statusbar = NSClassFromString("SBStatusBarManager") else { return }
+    let replacement2 = class_getMethodImplementation(
+        SBStatusBarManager2.self,
+        #selector(SBStatusBarManager2.handleStatusBarTapWithEvent(_:))
+    )!
+    messageHook(
+        statusbar, NSSelectorFromString("handleStatusBarTapWithEvent:"),
+        replacement2, nil
     )
 }
 
