@@ -37,7 +37,7 @@ extension UIViewController {
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
         
         let title = "Safe Mode"
-        let message = "You've entered safe mode. Tweaks will not get injected until you select Exit Safe Mode. You can select Dismiss to safely remove your broken tweaks."
+        let message = "You've entered safe mode. Tweaks will not be injected until you exit Safe Mode. You can select Dismiss to safely remove your broken tweaks."
         DispatchQueue.main.async(execute: {
             guard let alertWindow = UIApplication.shared.keyWindow else { return }
             
