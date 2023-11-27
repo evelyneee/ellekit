@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
     paths-ignore:
       - "**/*.md"
       - ".gitignore"
@@ -62,7 +60,7 @@ jobs:
           path: ${{ github.workspace }}/packages/*
       - name: Upload packages to release
         if: github.event_name == 'release' && matrix.name == 'release'
-        uses: svenstaro/upload-release-action@2.5.0
+        uses: svenstaro/upload-release-action@2.7.0
         with:
           file: ${{ github.workspace }}/packages/*.deb
           file_glob: true
