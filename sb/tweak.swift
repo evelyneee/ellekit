@@ -7,7 +7,8 @@ import ObjectiveC
 import UIKit
 import os.log
 
-var orig: UnsafeMutableRawPointer? = nil
+var orig: UnsafeMutableRawPointer? = nil // for SpringBoard applicationDidFinishLaunching
+var orig2: UnsafeMutableRawPointer? = nil // for _UIStatusBar layoutSubviews
 
 // Thanks to Amy While (@elihwyma) for this piece of code
 extension UIViewController {
@@ -54,7 +55,7 @@ func showSafeModeAlert() {
     })
 }
 
-@objc class SpringBoard2: NSObject {
+@objc class SpringBoard: NSObject {
     @objc func applicationDidFinishLaunching(_ application: UIApplication) {
         let block = unsafeBitCast(orig, to: (@convention (c) (NSObject, Selector, UIApplication) -> Void).self)
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
@@ -63,31 +64,50 @@ func showSafeModeAlert() {
     }
 }
 
-@objc class SBStatusBarManager2: NSObject {
+@objc class SBStatusBarManager: NSObject {
     @objc func handleStatusBarTapWithEvent(_ event: UIEvent) {
         showSafeModeAlert()
     }
 }
 
+@objc class _UIStatusBar: UIView {
+    @objc func layoutSubviews2() {
+        let block = unsafeBitCast(orig2, to: (@convention (c) (NSObject, Selector) -> Void).self)
+        block(self, #selector(UIView.layoutSubviews))
+
+        self.backgroundColor = UIColor.systemRed
+    }
+}
+
 func performHooks() {
-    guard let springboard = NSClassFromString("SpringBoard") else { return }
+    guard let springboard_class = NSClassFromString("SpringBoard") else { return }
     let replacement = class_getMethodImplementation(
-        SpringBoard2.self,
-        #selector(SpringBoard2.applicationDidFinishLaunching(_:))
+        SpringBoard.self,
+        #selector(SpringBoard.applicationDidFinishLaunching(_:))
     )!
     messageHook(
-        springboard, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
+        springboard_class, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
         replacement, &orig
     )
 
-    guard let statusbar = NSClassFromString("SBStatusBarManager") else { return }
+    guard let statusbar_class = NSClassFromString("SBStatusBarManager") else { return }
     let replacement2 = class_getMethodImplementation(
-        SBStatusBarManager2.self,
-        #selector(SBStatusBarManager2.handleStatusBarTapWithEvent(_:))
+        SBStatusBarManager.self,
+        #selector(SBStatusBarManager.handleStatusBarTapWithEvent(_:))
     )!
     messageHook(
-        statusbar, NSSelectorFromString("handleStatusBarTapWithEvent:"),
+        statusbar_class, NSSelectorFromString("handleStatusBarTapWithEvent:"),
         replacement2, nil
+    )
+
+    guard let statusbar_class2 = NSClassFromString("_UIStatusBar") else { return }
+    let replacement3 = class_getMethodImplementation(
+        _UIStatusBar.self,
+        #selector(_UIStatusBar.layoutSubviews2)
+    )!
+    messageHook(
+        statusbar_class2, #selector(UIView.layoutSubviews),
+        replacement3, &orig2
     )
 }
 
