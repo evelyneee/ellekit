@@ -14,9 +14,30 @@ function finish() {
     echo "finish:${f}" >&${cydia[0]}
 }
 
-if [ ! -f /var/jb/.installed_dopamine ] && [ ! -f /var/jb/.installed_fugu15max ] && [ ! -f /.installed_taurine ] && [ ! -f /.installed_odyssey ]; then
-    # run loader on non-Dopamine jailbreaks
+function run_loader() {
     @INSTALL_PREFIX@/usr/libexec/ellekit/loader
+}
+
+if [[ -f /dev/rmd0 ]]; then
+    # checkra1n based jailbreak (palera1n-c, odysseyra1n)
+    if [[ -f /var/jb/.palecursus_strapped && -f /cores/binpack/usr/lib/systemhook.dylib ]]; then
+        # palera1n v2.0.0 beta 9's systemhook loads /var/jb/usr/lib/TweakInject.dylib
+        true
+    else
+        run_loader
+    fi
+elif [[ -f /var/jb/.installed_dopamine || -f /var/jb/.installed_fugu15max ]]; then
+    # Dopamine's systemhook loads /var/jb/usr/lib/TweakLoader.dylib
+    true
+elif [[ -f /var/jb/.installed_meowbrek ]]; then
+    # meowbrek2's systemhook loads /var/jb/usr/lib/TweakLoader.dylib
+    true
+elif [[ -f /.installed_taurine || -f /.installed_odyssey ]]; then
+    # Taurine and Odyssey (but not odysseyra1n) load /usr/lib/TweakInject.dylib
+    true
+else
+    # Run loader on all unrecognized jailbreaks
+    run_loader
 fi
 
 finish usreboot
