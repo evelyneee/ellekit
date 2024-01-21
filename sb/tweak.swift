@@ -7,7 +7,8 @@ import ObjectiveC
 import UIKit
 import os.log
 
-var orig: UnsafeMutableRawPointer? = nil
+var orig: UnsafeMutableRawPointer? = nil // for SpringBoard applicationDidFinishLaunching
+var orig2: UnsafeMutableRawPointer? = nil // for _UIStatusBar layoutSubviews
 
 // Thanks to Amy While (@elihwyma) for this piece of code
 extension UIViewController {
@@ -28,50 +29,85 @@ extension UIViewController {
     }
 }
 
-@objc class SpringBoard2: NSObject {
+func showSafeModeAlert() {
+    let title = "Safe Mode"
+    let message = "You've entered Safe Mode. Tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar to show this alert again."
+    DispatchQueue.main.async(execute: {
+        guard let alertWindow = UIApplication.shared.keyWindow else { return }
+        
+        alertWindow.rootViewController = alertWindow.rootViewController?.top
     
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
+            try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
+            exit(0)
+        })
+
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+        
+        alert.addAction(exitAction)
+        alert.addAction(dismissAction)
+    
+        alertWindow.makeKeyAndVisible()
+    
+        alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
+    })
+}
+
+@objc class SpringBoard: NSObject {
     @objc func applicationDidFinishLaunching(_ application: UIApplication) {
-        
         let block = unsafeBitCast(orig, to: (@convention (c) (NSObject, Selector, UIApplication) -> Void).self)
-        
         block(self, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)), application)
         
-        let title = "Safe Mode"
-        let message = "You've entered safe mode. Tweaks will not be injected until you exit Safe Mode. You can select Dismiss to safely remove your broken tweaks."
-        DispatchQueue.main.async(execute: {
-            guard let alertWindow = UIApplication.shared.keyWindow else { return }
-            
-            alertWindow.rootViewController = alertWindow.rootViewController?.top
-        
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            
-            let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
-                try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
-                exit(0)
-            })
+        showSafeModeAlert()
+    }
+}
 
-            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
-            
-            alert.addAction(exitAction)
-            alert.addAction(dismissAction)
-        
-            alertWindow.makeKeyAndVisible()
-        
-            alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
-        })
-        
+@objc class SBStatusBarManager: NSObject {
+    @objc func handleStatusBarTapWithEvent(_ event: UIEvent) {
+        showSafeModeAlert()
+    }
+}
+
+@objc class _UIStatusBar: UIView {
+    @objc func layoutSubviews2() {
+        let block = unsafeBitCast(orig2, to: (@convention (c) (NSObject, Selector) -> Void).self)
+        block(self, #selector(UIView.layoutSubviews))
+
+        self.backgroundColor = UIColor.systemRed
     }
 }
 
 func performHooks() {
-    guard let sb = NSClassFromString("SpringBoard") else { return }
+    guard let springboard_class = NSClassFromString("SpringBoard") else { return }
     let replacement = class_getMethodImplementation(
-        SpringBoard2.self,
-        #selector(SpringBoard2.applicationDidFinishLaunching(_:))
+        SpringBoard.self,
+        #selector(SpringBoard.applicationDidFinishLaunching(_:))
     )!
     messageHook(
-        sb, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
+        springboard_class, #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),
         replacement, &orig
+    )
+
+    guard let statusbar_class = NSClassFromString("SBStatusBarManager") else { return }
+    let replacement2 = class_getMethodImplementation(
+        SBStatusBarManager.self,
+        #selector(SBStatusBarManager.handleStatusBarTapWithEvent(_:))
+    )!
+    messageHook(
+        statusbar_class, NSSelectorFromString("handleStatusBarTapWithEvent:"),
+        replacement2, nil
+    )
+
+    guard let statusbar_class2 = NSClassFromString("_UIStatusBar") else { return }
+    let replacement3 = class_getMethodImplementation(
+        _UIStatusBar.self,
+        #selector(_UIStatusBar.layoutSubviews2)
+    )!
+    messageHook(
+        statusbar_class2, #selector(UIView.layoutSubviews),
+        replacement3, &orig2
     )
 }
 
