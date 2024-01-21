@@ -8,7 +8,8 @@ import UIKit
 import os.log
 
 var orig: UnsafeMutableRawPointer? = nil // for SpringBoard applicationDidFinishLaunching
-var orig2: UnsafeMutableRawPointer? = nil // for _UIStatusBar layoutSubviews
+var orig2: UnsafeMutableRawPointer? = nil // for UIStatusBarWindow initWithFrame
+var orig3: UnsafeMutableRawPointer? = nil // for _UIStatusBar layoutSubviews
 
 // Thanks to Amy While (@elihwyma) for this piece of code
 extension UIViewController {
@@ -29,29 +30,48 @@ extension UIViewController {
     }
 }
 
+var alert: UIAlertController? = nil
+
 func showSafeModeAlert() {
+    if alert != nil {
+        DispatchQueue.main.async(execute: {
+            alert!.dismiss(animated: true, completion: {
+                alert = nil
+                _showSafeModeAlert()
+            })
+        })
+    } else {
+        _showSafeModeAlert()
+    }
+}
+
+func _showSafeModeAlert() {
     let title = "Safe Mode"
-    let message = "You've entered Safe Mode. Tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar to show this alert again."
+    let message = "You've entered Safe Mode. Tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar from the home screen to show this alert again."
     DispatchQueue.main.async(execute: {
         guard let alertWindow = UIApplication.shared.keyWindow else { return }
         
         alertWindow.rootViewController = alertWindow.rootViewController?.top
     
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        guard alert != nil else { return }
         
         let exitAction = UIAlertAction(title: "Exit Safe Mode", style: .default, handler: { action in
+            alert = nil
             try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
             exit(0)
         })
 
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
+            alert = nil            
+        })
         
-        alert.addAction(exitAction)
-        alert.addAction(dismissAction)
+        alert!.addAction(exitAction)
+        alert!.addAction(dismissAction)
     
         alertWindow.makeKeyAndVisible()
     
-        alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
+        alertWindow.rootViewController?.present(alert!, animated: true, completion: nil)
     })
 }
 
@@ -64,15 +84,26 @@ func showSafeModeAlert() {
     }
 }
 
-@objc class SBStatusBarManager: NSObject {
-    @objc func handleStatusBarTapWithEvent(_ event: UIEvent) {
+@objc class UIStatusBarWindow: NSObject {
+    @objc func initWithFrame(_ frame: CGRect) -> AnyObject? {
+        let block = unsafeBitCast(orig2, to: (@convention (c) (NSObject, Selector, CGRect) -> AnyObject?).self)
+        let result = block(self, #selector(UIStatusBarWindow.initWithFrame(_:)), frame)
+        if result != nil {
+            result?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleMobileSafetyTrigger(_:))))
+        }
+
+        return result
+    }
+
+    @objc func handleMobileSafetyTrigger(_ sender: UITapGestureRecognizer) {
         showSafeModeAlert()
     }
 }
 
+
 @objc class _UIStatusBar: UIView {
     @objc func layoutSubviews2() {
-        let block = unsafeBitCast(orig2, to: (@convention (c) (NSObject, Selector) -> Void).self)
+        let block = unsafeBitCast(orig3, to: (@convention (c) (NSObject, Selector) -> Void).self)
         block(self, #selector(UIView.layoutSubviews))
 
         self.backgroundColor = UIColor.systemRed
@@ -90,14 +121,25 @@ func performHooks() {
         replacement, &orig
     )
 
-    guard let statusbar_class = NSClassFromString("SBStatusBarManager") else { return }
+    guard let statusbar_class = NSClassFromString("UIStatusBarWindow") else { return }
     let replacement2 = class_getMethodImplementation(
-        SBStatusBarManager.self,
-        #selector(SBStatusBarManager.handleStatusBarTapWithEvent(_:))
+        UIStatusBarWindow.self,
+        #selector(UIStatusBarWindow.initWithFrame(_:))
     )!
     messageHook(
-        statusbar_class, NSSelectorFromString("handleStatusBarTapWithEvent:"),
-        replacement2, nil
+        statusbar_class, NSSelectorFromString("initWithFrame:"),
+        replacement2, &orig2
+    )
+
+    let handleMobileSafetyTrigger = class_getInstanceMethod(
+        UIStatusBarWindow.self,
+        #selector(UIStatusBarWindow.handleMobileSafetyTrigger(_:))
+    )!
+    class_addMethod(
+        statusbar_class,
+        NSSelectorFromString("handleMobileSafetyTrigger:"),
+        method_getImplementation(handleMobileSafetyTrigger),
+        method_getTypeEncoding(handleMobileSafetyTrigger)
     )
 
     guard let statusbar_class2 = NSClassFromString("_UIStatusBar") else { return }
@@ -107,7 +149,7 @@ func performHooks() {
     )!
     messageHook(
         statusbar_class2, #selector(UIView.layoutSubviews),
-        replacement3, &orig2
+        replacement3, &orig3
     )
 }
 
