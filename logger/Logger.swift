@@ -40,6 +40,7 @@ struct TextLog: TextOutputStream {
     }
     
     func write(_ string: String) {
+        guard enableLogging else { return }
         #if os(iOS)
         let log = NSURL.fileURL(withPath: ("/var/jb/var/mobile/log.txt" as NSString).resolvingSymlinksInPath)
         #else
