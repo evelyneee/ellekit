@@ -47,7 +47,7 @@ func showSafeModeAlert() {
 
 func _showSafeModeAlert() {
     let title = "Safe Mode"
-    let message = "You've entered Safe Mode. Tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar from the home screen to show this alert again."
+    let message = "You've entered Safe Mode. SpringBoard tweaks will not be injected until you exit Safe Mode.\n\nYou can select Dismiss to safely remove any broken tweaks.\n\nTap the status bar from the home screen to show this alert again."
     DispatchQueue.main.async(execute: {
         guard let alertWindow = UIApplication.shared.keyWindow else { return }
         
