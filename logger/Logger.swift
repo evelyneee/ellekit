@@ -28,6 +28,9 @@ public func dprint(
 }
 
 struct TextLog: TextOutputStream {
+    #if os(iOS)
+    let rootless = FileManager.default.fileExists(atPath: "/var/jb")
+    #endif
 
     static var shared = TextLog()
     
@@ -42,7 +45,13 @@ struct TextLog: TextOutputStream {
     func write(_ string: String) {
         guard enableLogging else { return }
         #if os(iOS)
-        let log = NSURL.fileURL(withPath: ("/var/jb/var/mobile/log.txt" as NSString).resolvingSymlinksInPath)
+        var log: URL {
+            if rootless {
+                NSURL.fileURL(withPath: ("/var/jb/var/mobile/log.txt" as NSString).resolvingSymlinksInPath)
+            } else {
+                NSURL.fileURL(withPath: "/private/var/mobile/log.txt")
+            }
+        }
         #else
         let log = NSURL.fileURL(withPath: "/Users/charlotte/log.txt")
         #endif
@@ -51,7 +60,7 @@ struct TextLog: TextOutputStream {
             handle.write((string+"\n").data(using: .utf8)!)
             handle.closeFile()
         } else {
-            try? string.data(using: .utf8)?.write(to: log)
+            try? (string+"\n").data(using: .utf8)?.write(to: log)
         }
     }
 }
