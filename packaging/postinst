@@ -25,7 +25,6 @@ if [[ -f /var/mobile/log.txt ]]; then
     rm /var/mobile/log.txt
 fi
 
-
 if [[ -f /dev/rmd0 ]]; then
     # checkra1n based jailbreak (palera1n-c, odysseyra1n)
     if [[ -f /var/jb/.palecursus_strapped && -f /cores/binpack/usr/lib/systemhook.dylib ]]; then
@@ -34,11 +33,10 @@ if [[ -f /dev/rmd0 ]]; then
     else
         run_loader
     fi
-elif [[ -f /var/jb/.installed_dopamine || -f /var/jb/.installed_fugu15max ]]; then
-    # Dopamine's systemhook loads /var/jb/usr/lib/TweakLoader.dylib
-    true
-elif [[ -f /var/jb/.installed_meowbrek ]]; then
-    # meowbrek2's systemhook loads /var/jb/usr/lib/TweakLoader.dylib
+elif [[ -f /var/jb/.installed_dopamine || -f /var/jb/.installed_fugu15max ||
+    -f /var/jb/.installed_meowbrek ||
+    -f /var/jb/.xia0o0o0o_jb_installed ]]; then
+    # Dopamine/meowbrek2/Def1nit3lyN0tAJa1lbr3akTool systemhooks load /var/jb/usr/lib/TweakLoader.dylib
     true
 elif [[ -f /.installed_taurine || -f /.installed_odyssey ]]; then
     # Taurine and Odyssey (but not odysseyra1n) load /usr/lib/TweakInject.dylib

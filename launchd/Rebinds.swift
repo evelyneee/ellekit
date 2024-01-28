@@ -4,6 +4,12 @@
 
 import Foundation
 
+let hasSandboxCheckHook = [
+    "/var/jb/.installed_dopamine",
+    "/var/jb/.installed_meowbrek",
+    "/var/jb/.xia0o0o0o_jb_installed"
+]
+
 class Rebinds {
     
     static var shared = Rebinds()
@@ -43,7 +49,7 @@ class Rebinds {
             rebinding(name: strdup("posix_spawnp"), replacement: posix_spawnp_replacement, replaced: nil)
         ]
         
-        if !FileManager.default.fileExists(atPath: "/var/jb/.installed_dopamine") {
+        if !hasSandboxCheckHook.contains(where: FileManager.default.fileExists(atPath:)) {
             rebindinds.append(
                 rebinding(name: strdup("sandbox_check_by_audit_token"), replacement: sandbox_check_replacement, replaced: nil)
             )
