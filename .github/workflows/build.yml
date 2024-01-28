@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: macos-12
+    runs-on: macos-13
     strategy:
       matrix:
         include:
@@ -39,9 +39,9 @@ jobs:
       - name: Get tags
         run: git fetch --prune --unshallow --tags
 
-      - name: Select Xcode version (14.2)
+      - name: Select Xcode version (15.1)
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.2.app
+          sudo xcode-select --switch /Applications/Xcode_15.1.app
 
       - name: Bootstrap Procursus
         uses: dhinakg/procursus-action@main
