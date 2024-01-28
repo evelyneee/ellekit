@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get tags
         run: git fetch --prune --unshallow --tags
 
@@ -49,20 +49,18 @@ jobs:
           packages: ldid findutils sed coreutils
           cache: true
           cache-path: ~/__cache
-        env:
-          DEBIAN_FRONTEND: noninteractive
 
       - name: Build ${{ matrix.name }}
         run: make ${{ matrix.flags }}
 
       - name: Upload packages to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }} package
           path: ${{ github.workspace }}/packages/*
       - name: Upload packages to release
         if: github.event_name == 'release' && matrix.name == 'release'
-        uses: svenstaro/upload-release-action@2.5.0
+        uses: svenstaro/upload-release-action@2.7.0
         with:
           file: ${{ github.workspace }}/packages/*.deb
           file_glob: true
