@@ -87,16 +87,17 @@ func spawn_replacement(
         xpcBlacklist.insert(contentsOf: iOS16XPCBlacklist, at: 0)
     }
     
-
     var blacklisted = binaryBlacklist
         .map { path.lowercased().contains($0.lowercased()) }
         .contains(true)
     
     if !blacklisted && xpcproxy {
-        let xpcIdentifier = argv?[1].flatMap { String(cString: $0) }
-        blacklisted = xpcBlacklist
-            .map { xpcIdentifier?.lowercased().contains($0.lowercased()) }
-            .contains(true)
+        let argv_array = argv?.array ?? []
+        if let xpcIdentifier = argv_array.indices.contains(1) ? argv_array[1] : nil {
+            blacklisted = xpcBlacklist
+                .map { $0.lowercased() }
+                .contains(xpcIdentifier.lowercased())
+        }
     }
 
     // check if we're spawning springboard
