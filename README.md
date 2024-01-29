@@ -21,7 +21,7 @@
 
 ### Used by
 - Dopamine (jailbreak for A12-A15 + M1 on iOS 15.0-15.4.1)
-- palera1n (jailbreak for A7-A11 on iOS 14.0-16.5+)
+- palera1n (jailbreak for A8-A11 on iOS 15.0+)
 - meowbrek2 (jailbreak for A8-A11 on iOS 15.0-15.8.1)
 - Def1nit3lyN0tAJa1lbr3akTool (jailbreak for A9-A11 on iOS 16.0-16.6.1)
 
