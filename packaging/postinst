@@ -27,12 +27,16 @@ fi
 
 if [[ -f /dev/rmd0 ]]; then
     # checkra1n based jailbreak (palera1n-c, odysseyra1n)
-    if [[ -f /var/jb/.palecursus_strapped && -f /cores/binpack/usr/lib/systemhook.dylib ]]; then
-        # palera1n v2.0.0 beta 9's systemhook loads /var/jb/usr/lib/TweakInject.dylib
-        true
-    else
-        run_loader
-    fi
+
+    # if [[ -f /var/jb/.palecursus_strapped && -f /cores/binpack/usr/lib/systemhook.dylib ]]; then
+    #     # palera1n v2.0.0 beta ?'s systemhook loads /var/jb/usr/lib/TweakInject.dylib
+    #     true
+    # else
+    #     run_loader
+    # fi
+
+    # palera1n changes not currently implemented, so always run loader
+    run_loader
 elif [[ -f /var/jb/.installed_dopamine || -f /var/jb/.installed_fugu15max ||
     -f /var/jb/.installed_meowbrek ||
     -f /var/jb/.xia0o0o0o_jb_installed ]]; then
