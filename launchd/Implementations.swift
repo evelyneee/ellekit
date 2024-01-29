@@ -41,39 +41,10 @@ func findBundleID(path: String) -> String? {
     return nil
 }
 
-let iOS16Blacklist = [
-    "launchd", // no
-    "fairplayd", // not in libexec
-    "logd", // no
-    "configd", // no
-    "mobiletimerd", // no
-    "keybagd", // no
-    "thermalmonitord",
-    "sleepd", // maybe
-    "timed",
-    "rapportd",
-    "mtmmergeprops",
-    "jbloader",
-    "ptpd",
-    "distnoted",
-    "remoted",
-    "IOMFB_fdr_loader",
-    "fseventsd",
-    "usermanagerd",
-    "notifyd",
-    "dash",
-    "uicache",
-    "routined",
-    "accessoryupdated",
-    "softwareupdated",
-    "familynotificationd",
-    "wcd",
-    "contextstored",
-    "axassetsd",
-    "healthd",
-    "tccd",
-    "biomed",
-    "cloudpaird",
+let iOS16XPCBlacklist = [
+    "com.apple.logd",
+    "com.apple.notifyd",
+    "com.apple.mobile.usermanagerd",
 ]
 
 @inline(never)
@@ -97,11 +68,10 @@ func spawn_replacement(
         
     tprint("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
         
-    let launchd = path.contains("xpcproxy") || path.contains("launchd")
-        
-    // this time: removing mediaserverd, removing containermanagerd, securityd, cfprefsd, installd, lockdownd,  nfcd, afcd, runningboardd
-    
-    var blacklist = [
+    let launchd = path.contains("launchd")
+    let xpcproxy = path.contains("xpcproxy")
+
+    var binaryBlacklist = [
         "BlastDoor",
         "mobile_assertion_agent",
         "watchdog",
@@ -111,14 +81,24 @@ func spawn_replacement(
         "GSSCred",
     ]
     
+    var xpcBlacklist = [] as [String]
+    
     if #available(iOS 16.0, *) {
-        blacklist.insert(contentsOf: iOS16Blacklist, at: 0)
+        xpcBlacklist.insert(contentsOf: iOS16XPCBlacklist, at: 0)
     }
+    
 
-    let blacklisted = blacklist
+    var blacklisted = binaryBlacklist
         .map { path.lowercased().contains($0.lowercased()) }
         .contains(true)
     
+    if !blacklisted && xpcproxy {
+        let xpcIdentifier = argv?[1].flatMap { String(cString: $0) }
+        blacklisted = xpcBlacklist
+            .map { xpcIdentifier?.lowercased().contains($0.lowercased()) }
+            .contains(true)
+    }
+
     // check if we're spawning springboard
     // usually launchd spawns springboard directly, without going through xpcproxy
     // since we cache tweaks, a respring will forcefully refresh it
@@ -146,12 +126,15 @@ func spawn_replacement(
     }
     
     if launchd {
-        
         // Inject pspawn.dylib in launchd and xpcproxy
         tprint("launchd \(path)")
         addDYLDEnv(selfPath)
-        
-    } else if safeMode {
+    } else if xpcproxy {
+        if !blacklisted {
+            addDYLDEnv(selfPath)
+        }
+    }
+    else if safeMode {
                 
         // We always inject the SpringBoard MobileSafety.dylib, I believe it is safe
         // If it isn't SpringBoard, skip ahead
