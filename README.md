@@ -35,7 +35,7 @@ See [here](./launchd-plist/LAUNCHDAEMON.md) for a guide on how to install a Laun
 
 ### Building
 
-To build a dynamic library, use Xcode 14. To build the library, run `xcodebuild -target ellekit-mac` for a Mac library or `xcodebuild -target ellekit` for an iOS library.
+To build a dynamic library, use Xcode 14. To build the library and the package, run `make deb`. For the macOS library, set MAC=1.
 You can also use this as a Swift package.
 
 ### Status
