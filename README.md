@@ -20,7 +20,7 @@
 - iOS 16.1 (arm64e)
 
 ### Used by
-- Dopamine (jailbreak for A12-A15 + M1 on iOS 15.0-15.4.1)
+- Dopamine (jailbreak for A9-A11 on 15.0-16.6.1, A12-A14 + M1 on iOS 15.0-16.5.1 and A15-A16 + M2 on iOS 15.0-16.5)
 - palera1n (jailbreak for A8-A11 on iOS 15.0+)
 - meowbrek2 (jailbreak for A8-A11 on iOS 15.0-15.8.1)
 - Def1nit3lyN0tAJa1lbr3akTool (jailbreak for A9-A11 on iOS 16.0-16.6.1)
