@@ -18,12 +18,16 @@ endif
 
 ifneq ($(MAC),)
 COMMON_OPTIONS += -destination 'generic/platform=macOS'
+else ifneq ($(TV),)
+COMMON_OPTIONS += -destination 'generic/platform=tvOS'
 else
 COMMON_OPTIONS += -destination 'generic/platform=iOS'
 endif
 
 ifneq ($(MAC),)
 PRODUCTS_DIR = build/$(CONFIGURATION)
+else ifneq ($(TV),)
+PRODUCTS_DIR = build/$(CONFIGURATION)-appletvos
 else
 PRODUCTS_DIR = build/$(CONFIGURATION)-iphoneos
 endif
@@ -49,6 +53,12 @@ build-ios:
 	xcodebuild -scheme loader $(COMMON_OPTIONS)
 	xcodebuild -scheme safemode-ui $(COMMON_OPTIONS)
 
+build-tvos:
+	xcodebuild -scheme ellekit $(COMMON_OPTIONS)
+	xcodebuild -scheme injector $(COMMON_OPTIONS)
+	xcodebuild -scheme launchd $(COMMON_OPTIONS)
+	xcodebuild -scheme loader $(COMMON_OPTIONS)
+
 build-macos:
 	xcodebuild -scheme ellekit $(COMMON_OPTIONS)
 	xcodebuild -scheme launchd $(COMMON_OPTIONS)
@@ -59,6 +69,9 @@ deb-ios-rootful: INSTALL_PREFIX =
 
 deb-ios-rootless: ARCHITECTURE = iphoneos-arm64
 deb-ios-rootless: INSTALL_PREFIX = /var/jb
+
+deb-tvos-rootful: ARCHITECTURE = appletvos-arm64
+deb-tvos-rootful: INSTALL_PREFIX = 
 
 deb-ios-rootful deb-ios-rootless: build-ios
 	@rm -rf work-$(ARCHITECTURE)
@@ -76,7 +89,7 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 	@find $(INSTALL_ROOT)/usr/lib -type f -exec ldid -S {} \;
 	@ldid -S./loader/taskforpid.xml $(INSTALL_ROOT)/usr/libexec/ellekit/loader
-	
+
 	@ln -s $(INSTALL_PREFIX)/usr/lib/ellekit/libinjector.dylib $(INSTALL_ROOT)/usr/lib/TweakLoader.dylib
 	@ln -s $(INSTALL_PREFIX)/usr/lib/ellekit/libinjector.dylib $(INSTALL_ROOT)/usr/lib/TweakInject.dylib
 	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libsubstrate.dylib
@@ -105,10 +118,58 @@ deb-ios-rootful deb-ios-rootless: build-ios
 
 	@mkdir -p packages
 	dpkg-deb --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
-	
+
+	@rm -rf work-$(ARCHITECTURE)
+
+deb-tvos-rootful: build-tvos
+	@rm -rf work-$(ARCHITECTURE)
+	@mkdir -p $(STAGE_DIR)
+
+	@# Because BSD install does not support -D
+	@mkdir -p $(INSTALL_ROOT)/usr/lib/ellekit
+	@mkdir -p $(INSTALL_ROOT)/usr/libexec/ellekit
+
+	@install -m644 $(PRODUCTS_DIR)/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libellekit.dylib
+	@install -m644 $(PRODUCTS_DIR)/libinjector.dylib $(INSTALL_ROOT)/usr/lib/ellekit/libinjector.dylib
+	@install -m644 $(PRODUCTS_DIR)/pspawn.dylib $(INSTALL_ROOT)/usr/lib/ellekit/pspawn.dylib
+	@install -m755 $(PRODUCTS_DIR)/loader $(INSTALL_ROOT)/usr/libexec/ellekit/loader
+
+	@find $(INSTALL_ROOT)/usr/lib -type f -exec ldid -S {} \;
+	@ldid -S./loader/taskforpid.xml $(INSTALL_ROOT)/usr/libexec/ellekit/loader
+
+	@ln -s $(INSTALL_PREFIX)/usr/lib/ellekit/libinjector.dylib $(INSTALL_ROOT)/usr/lib/TweakLoader.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/ellekit/libinjector.dylib $(INSTALL_ROOT)/usr/lib/TweakInject.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libsubstrate.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libhooker.dylib
+	@ln -s $(INSTALL_PREFIX)/usr/lib/libellekit.dylib $(INSTALL_ROOT)/usr/lib/libblackjack.dylib
+
+	@mkdir -p $(INSTALL_ROOT)/etc/rc.d
+	@ln -s ${INSTALL_PREFIX}/usr/libexec/ellekit/loader $(INSTALL_ROOT)/etc/rc.d/ellekit-loader
+
+	@mkdir -p $(INSTALL_ROOT)/usr/lib/TweakInject
+
+	@mkdir -p $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework
+	@ln -s ${INSTALL_PREFIX}/usr/lib/libellekit.dylib $(INSTALL_ROOT)/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate
+	@mkdir -p $(INSTALL_ROOT)/Library/MobileSubstrate
+	@ln -s ${INSTALL_PREFIX}/usr/lib/TweakInject $(INSTALL_ROOT)/Library/MobileSubstrate/DynamicLibraries
+
+	@mkdir -p $(INSTALL_ROOT)/usr/share/doc/ellekit
+	@install -m644 LICENSE $(INSTALL_ROOT)/usr/share/doc/ellekit/LICENSE
+
+	@mkdir -p $(STAGE_DIR)/DEBIAN
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" packaging/control >$(STAGE_DIR)/DEBIAN/control
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_PREFIX@|$(INSTALL_PREFIX)|g" packaging/preinst >$(STAGE_DIR)/DEBIAN/preinst
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_PREFIX@|$(INSTALL_PREFIX)|g" packaging/postinst >$(STAGE_DIR)/DEBIAN/postinst
+	@sed -e "s|@DEB_VERSION@|$(DEB_VERSION)|g" -e "s|@DEB_ARCH@|$(ARCHITECTURE)|g" -e "s|@INSTALL_PREFIX@|$(INSTALL_PREFIX)|g" packaging/postrm >$(STAGE_DIR)/DEBIAN/postrm
+	@chmod 0755 $(STAGE_DIR)/DEBIAN/preinst $(STAGE_DIR)/DEBIAN/postinst $(STAGE_DIR)/DEBIAN/postrm
+
+	@mkdir -p packages
+	dpkg-deb --root-owner-group -b $(STAGE_DIR) packages/ellekit_$(DEB_VERSION)_$(ARCHITECTURE).deb
+
 	@rm -rf work-$(ARCHITECTURE)
 
 deb-ios: deb-ios-rootful deb-ios-rootless
+deb-tvos: deb-tvos-rootful
 
 deb-macos: ARCHITECTURE = macos
 deb-macos: build-macos
@@ -141,12 +202,16 @@ deb-macos: build-macos
 
 ifneq ($(MAC),)
 deb: deb-macos
+else ifeq ($(TV),1)
+deb: deb-tvos
 else
 deb: deb-ios
 endif
 
 ifneq ($(MAC),)
 build: build-macos
+else ifeq ($(TV),1)
+build: build-tvos
 else
 build: build-ios
 endif

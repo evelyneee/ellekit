@@ -251,7 +251,7 @@ void EKJITLessHook(void* _target, void* _replacement, void** orig) {
     
     hookCount++;
     
-    kern_return_t task_setstate_ret = task_set_state(mach_task_self(), ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT_);
+    kern_return_t task_setstate_ret = custom_task_set_state(mach_task_self(), ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT_);
     
     if (task_setstate_ret != KERN_SUCCESS) {
         printf("[-] ellekit: JIT hook did not work, task_set_state failed with err: %s\n", mach_error_string(task_setstate_ret));

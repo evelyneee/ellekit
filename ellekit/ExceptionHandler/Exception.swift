@@ -34,7 +34,7 @@ public final class ExceptionHandler {
         }
 
         #if arch(arm64) || _ptrauth(_arm64e)
-        if task_set_exception_ports(
+        if custom_task_set_exception_ports(
             mach_task_self_,
             exception_mask_t(EXC_MASK_BREAKPOINT),
             targetPort,
@@ -69,7 +69,7 @@ public final class ExceptionHandler {
 
         defer { msg_header.deallocate() }
 
-        let krt1 = mach_msg(
+        let krt1 = custom_mach_msg(
             msg_header,
             MACH_RCV_MSG | MACH_RCV_LARGE | Int32(MACH_MSG_TIMEOUT_NONE),
             0,
@@ -106,7 +106,7 @@ public final class ExceptionHandler {
             reply.NDR = req.NDR
             reply.RetCode = KERN_SUCCESS
 
-            mach_msg (
+            custom_mach_msg (
                 &reply.Head,
                 1,
                 reply.Head.msgh_size,
