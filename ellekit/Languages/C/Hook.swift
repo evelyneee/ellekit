@@ -232,41 +232,11 @@ func rawHook(address: UnsafeMutableRawPointer, code: UnsafePointer<UInt8>?, size
     if enforceThreadSafety {
         stopAllThreads()
     }
-    
-    let goodSize = Int(size)
-    let machAddr = mach_vm_address_t(UInt(bitPattern: address))
-            
-    let krt1 = custom_mach_vm_protect(
-        mach_task_self_,
-        machAddr,
-        size,
-        0,
-        VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY
-    )
-        
-    guard krt1 == KERN_SUCCESS else {
-        return Int(krt1)
+    defer {
+        if enforceThreadSafety {
+            resumeAllThreads()
+        }
     }
 
-    manual_memcpy(address, code, goodSize)
-        
-    let err2 = custom_mach_vm_protect(
-        mach_task_self_,
-        machAddr,
-        size,
-        0,
-        VM_PROT_READ | VM_PROT_EXECUTE
-    )
-
-    // flush page cache so we don't hit cached unpatched functions
-    sys_icache_invalidate(address, Int(vm_page_size))
-
-    guard err2 == KERN_SUCCESS else {
-        return Int(err2)
-    }
-    if enforceThreadSafety {
-        resumeAllThreads()
-    }
-
-    return 0
+    return Int(EKHookMemoryRaw(address, code, Int(size)))
 }
