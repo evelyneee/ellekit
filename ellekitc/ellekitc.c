@@ -7,6 +7,11 @@
 #endif
 
 #include <mach/message.h>
+#include <mach/vm_region.h>
+#include <mach/vm_map.h>
+#include <mach/mach.h>
+#include <stdbool.h>
+#include <libkern/OSCacheControl.h>
 
 // MARK: - PAC
 
@@ -95,3 +100,46 @@ void manual_memcpy(void *restrict dest, const void *src, size_t len) {
     while (len--)
         *d8++ = *s8++;
 }
+
+kern_return_t EKHookMemoryRaw_impl(void *target, const void *data, size_t size)
+{
+    kern_return_t kr = KERN_SUCCESS;
+
+    vm_address_t machTarget = (vm_address_t)target;
+    vm_size_t machSize = size;
+    struct vm_region_submap_short_info_64 info;
+    mach_msg_type_number_t infoCount = VM_REGION_SUBMAP_SHORT_INFO_COUNT_64;
+    natural_t maxDepth = 99999;
+    kr = vm_region_recurse_64(mach_task_self_, &machTarget, &machSize,
+                                            &maxDepth,
+                                            (vm_region_recurse_info_t) &info,
+                                            &infoCount);
+    machTarget = (vm_address_t)target;
+
+    if (kr != KERN_SUCCESS) return kr;
+
+    bool needsRemap = !(info.protection & VM_PROT_WRITE);
+
+    if (needsRemap) {
+        int newFlags = VM_PROT_READ | VM_PROT_WRITE;
+        if (!(info.max_protection & VM_PROT_WRITE)) {
+            newFlags |= VM_PROT_COPY;
+        }
+
+        kr = custom_mach_vm_protect(mach_task_self_, machTarget, size, 0, newFlags);
+		
+        if (kr != KERN_SUCCESS) return kr;
+    }
+
+    manual_memcpy(target, data, size);
+
+    if (needsRemap) {
+        kr = custom_mach_vm_protect(mach_task_self_, machTarget, size, 0, info.protection);
+        if (kr != KERN_SUCCESS) return kr;
+    }
+
+    sys_icache_invalidate(target, size);
+    return kr;
+}
+
+__attribute__((visibility ("default"))) kern_return_t (*EKHookMemoryRaw)(void *, const void *, size_t) = EKHookMemoryRaw_impl;
