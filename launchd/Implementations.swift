@@ -68,8 +68,8 @@ func spawn_replacement(
         
     tprint("\(path) \(envp.joined(separator: "\n")) \(argv?.array.joined(separator: "\n") ?? "")")
         
-    let launchd = path.contains("launchd")
-    let xpcproxy = path.contains("xpcproxy")
+    let launchd = path.contains("/launchd")
+    let xpcproxy = path.contains("/xpcproxy")
 
     var binaryBlacklist = [
         "BlastDoor",
