@@ -153,24 +153,7 @@ func performHooks() {
     )
 }
 
-func trap(signals: [Int32], action: (@convention(c) (Int32) -> Void)?) {
-    var signalAction = sigaction()
-    signalAction.__sigaction_u.__sa_handler = action
-
-    signals.forEach { sig in
-        signal(sig, action)
-    }
-}
-
-func handleSBCrash(currentSig: Int32) {
-    FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
-    allSignals.forEach {
-        signal($0, SIG_DFL)
-    }
-    raise(currentSig)
-}
-
-let allSignals = [
+let crashSignals = [
     SIGQUIT,
     SIGILL,
     SIGTRAP,
@@ -182,6 +165,44 @@ let allSignals = [
     SIGSYS
 ]
 
+let exitSafeModeSignals = [
+    SIGINT,
+    SIGTERM
+]
+
+func trap(signals: [Int32], action: (@convention(c) (Int32) -> Void)?) {
+    var signalAction = sigaction()
+    signalAction.__sigaction_u.__sa_handler = action
+
+    signals.forEach { sig in
+        signal(sig, action)
+    }
+}
+
+func handleExitSafeModeRequest(currentSig: Int32) {
+    try? FileManager.default.removeItem(atPath: "/var/mobile/.eksafemode")
+    exitSafeModeSignals.forEach {
+        signal($0, SIG_DFL)
+    }
+    raise(currentSig)
+}
+
+func enterSafeMode(_ reason: String) {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss xxx"
+    formatter.timeZone = TimeZone.current
+    let date = formatter.string(from: Date())
+    FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: "[\(date)] \(reason)".data(using: .utf8))
+}
+
+func handleSBCrash(currentSig: Int32) {
+    enterSafeMode("SB crash occured: signal \(currentSig)")
+    crashSignals.forEach {
+        signal($0, SIG_DFL)
+    }
+    raise(currentSig)
+}
+
 @_cdecl("tweak_entry")
 public func tweak_entry() {
         
@@ -191,9 +212,10 @@ public func tweak_entry() {
         performHooks()
     } else if checkVolumeUp() {
         tprint("Volume up!!!")
-        FileManager.default.createFile(atPath: "/var/mobile/.eksafemode", contents: Data())
+        enterSafeMode("Volume up detected")
         exit(0)
     }
         
-    trap(signals: allSignals, action: handleSBCrash)
+    trap(signals: exitSafeModeSignals, action: handleExitSafeModeRequest)
+    trap(signals: crashSignals, action: handleSBCrash)
 }
