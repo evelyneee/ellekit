@@ -105,6 +105,11 @@ public func LHOpenImage(_ path: UnsafePointer<CChar>) -> UnsafePointer<mach_head
     try? ellekit.openImage(image: String(cString: path))
 }
 
+@_cdecl("LHCloseImage")
+public func LHCloseImage(_ image: UnsafePointer<mach_header>) {
+    // no-op
+}
+
 @_cdecl("LHFindSymbols")
 public func LHFindSymbols(
     _ image: UnsafePointer<mach_header_64>,

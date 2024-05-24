@@ -13,6 +13,11 @@ public func MSGetImageByName(_ name: UnsafeRawPointer) -> UnsafeRawPointer? {
     return nil
 }
 
+@_cdecl("MSCloseImage")
+public func MSCloseImage(_ image: UnsafeRawPointer) {
+    // no-op
+}
+
 @_cdecl("MSFindSymbol")
 public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) -> UnsafeRawPointer? {
     guard let name else { return nil }
