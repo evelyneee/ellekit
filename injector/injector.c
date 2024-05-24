@@ -5,17 +5,17 @@
 #include "injector.h"
 
 #include <CoreFoundation/CoreFoundation.h>
-#include <objc/runtime.h>
 #include <dirent.h>
 #include <dlfcn.h>
-#include <os/log.h>
 #include <mach-o/dyld.h>
+#include <objc/runtime.h>
+#include <os/log.h>
 
 extern void NSLog(CFStringRef, ...);
 
 static bool rootless = false;
 
-static int filter_dylib(const struct dirent *entry) {
+static int filter_dylib(const struct dirent* entry) {
     char* dot = strrchr(entry->d_name, '.');
     return dot && strcmp(dot + 1, "dylib") == 0;
 }
@@ -45,73 +45,70 @@ char* append_str(const char* str, const char* append_str) {
         return NULL;  // allocation failed
     }
 
-    memcpy(new_str, str, str_len); // copy the original string to the new string
-    strncpy(new_str + str_len, append_str, append_str_len); // append the new string to the end
-    new_str[str_len + append_str_len] = '\0';  // terminate the new string
+    memcpy(new_str, str, str_len);                           // copy the original string to the new string
+    strncpy(new_str + str_len, append_str, append_str_len);  // append the new string to the end
+    new_str[str_len + append_str_len] = '\0';                // terminate the new string
 
     return new_str;
 }
 
-char *get_last_path_component(const char *path)
-{
-    char *last_component = strrchr(path, '/');
+char* get_last_path_component(const char* path) {
+    char* last_component = strrchr(path, '/');
     if (last_component == NULL) {
         return NULL;
     }
     return last_component + 1;
 }
 
-#define MAX_TWEAKMANAGERS 20 // this is very reasonable
+#define MAX_TWEAKMANAGERS 20  // this is very reasonable
 char* tweakManagers[MAX_TWEAKMANAGERS];
 
 static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
-    
-    CFStringRef plistPath;
-    CFURLRef url;
-    CFDataRef data;
-    CFPropertyListRef plist;
-    
-    char* path = append_str(orig_path, ".plist");
-        
-    plistPath = CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingUTF8);
+    CFURLRef url = NULL;
+    CFDataRef data = NULL;
+    CFPropertyListRef plist = NULL;
 
-    if (access(path, F_OK) != F_OK) {
+    char* path = append_str(orig_path, ".plist");
+
+    if (!access(path, F_OK)) {
         free(path);
-        CFRelease(plistPath);
         return false;
     }
-    
+
+    url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorDefault, path, strlen(path), false);
     free(path);
-    
-    url = CFURLCreateWithFileSystemPath(kCFAllocatorSystemDefault, plistPath, kCFURLPOSIXPathStyle, false);
-        
+
+    if (!url) {
+        return false;
+    }
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if (url && CFURLCreateDataAndPropertiesFromResource(kCFAllocatorSystemDefault, url, &data, NULL, NULL, NULL)) {
+    bool ret = CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault, url, &data, NULL, NULL, NULL);
 #pragma clang diagnostic pop
-        plist = CFPropertyListCreateWithData(kCFAllocatorSystemDefault, data, kCFPropertyListImmutable, NULL, NULL);
-        CFRelease(data);
-    } else {
-        if (url) {
-            CFRelease(url);
-        }
-        CFRelease(plistPath);
+    CFRelease(url);
+
+    if (!ret) {
         return false;
     }
-    CFRelease(url);
-    CFRelease(plistPath);
-                            
+
+    plist = CFPropertyListCreateWithData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL, NULL);
+    CFRelease(data);
+
+    if (!plist) {
+        return false;
+    }
+
     CFDictionaryRef filter = CFDictionaryGetValue(plist, CFSTR("Filter"));
-    
+
     CFBooleanRef tweakManager = CFDictionaryGetValue(plist, CFSTR("IsTweakManager"));
-    
+
     if (tweakManager != NULL) {
         *isTweakManager = CFBooleanGetValue(tweakManager);
     }
 
     CFArrayRef versions = CFDictionaryGetValue(filter, CFSTR("CoreFoundationVersion"));
     if (versions) {
-
         if (CFArrayGetCount(versions) == 1) {
             CFTypeRef value = CFArrayGetValueAtIndex(versions, 0);
             if (CFGetTypeID(value) == CFNumberGetTypeID()) {
@@ -123,7 +120,7 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
                 }
             }
         }
-        
+
         if (CFArrayGetCount(versions) == 2) {
             CFTypeRef value1 = CFArrayGetValueAtIndex(versions, 0);
             CFTypeRef value2 = CFArrayGetValueAtIndex(versions, 0);
@@ -141,7 +138,7 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
     }
 
     CFArrayRef bundles = CFDictionaryGetValue(filter, CFSTR("Bundles"));
-    
+
     if (bundles) {
         for (CFIndex i = 0; i < CFArrayGetCount(bundles); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(bundles, i);
@@ -160,9 +157,9 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
             }
         }
     }
-    
+
     CFArrayRef classes = CFDictionaryGetValue(filter, CFSTR("Classes"));
-    
+
     if (classes) {
         for (CFIndex i = 0; i < CFArrayGetCount(classes); i++) {
             CFStringRef id = CFArrayGetValueAtIndex(classes, i);
@@ -171,10 +168,9 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
                 if (objc_getClass(str)) {
                     goto success;
                 }
-            }
-            else {
-                char* copiedStr = malloc(CFStringGetLength(id)+1);
-                CFStringGetCString(id, copiedStr, CFStringGetLength(id)+1, kCFStringEncodingASCII);
+            } else {
+                char* copiedStr = malloc(CFStringGetLength(id) + 1);
+                CFStringGetCString(id, copiedStr, CFStringGetLength(id) + 1, kCFStringEncodingASCII);
                 if (objc_getClass(copiedStr)) {
                     free(copiedStr);
                     goto success;
@@ -183,16 +179,14 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
             }
         }
     }
-    
+
     CFArrayRef executables = CFDictionaryGetValue(filter, CFSTR("Executables"));
 
     if (executables) {
-        
         char executable[1024];
         uint32_t size = 1024;
 
         if (_NSGetExecutablePath(executable, &size) == 0) {
-            
             for (CFIndex i = 0; i < CFArrayGetCount(executables); i++) {
                 CFStringRef id = CFArrayGetValueAtIndex(executables, i);
                 const char* str = CFStringGetCStringPtr(id, kCFStringEncodingASCII);
@@ -200,10 +194,9 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
                     if (!strcmp(str, get_last_path_component(executable))) {
                         goto success;
                     }
-                }
-                else {
-                    char* copiedStr = malloc(CFStringGetLength(id)+1);
-                    CFStringGetCString(id, copiedStr, CFStringGetLength(id)+1, kCFStringEncodingASCII);
+                } else {
+                    char* copiedStr = malloc(CFStringGetLength(id) + 1);
+                    CFStringGetCString(id, copiedStr, CFStringGetLength(id) + 1, kCFStringEncodingASCII);
                     if (!strcmp(copiedStr, get_last_path_component(executable))) {
                         free(copiedStr);
                         goto success;
@@ -231,23 +224,19 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
             }
         }
     }
-    
+
     CFRelease(plist);
     return false;
-    
+
 success:
     CFRelease(plist);
     return true;
 }
 
-int
-alphasort2 (const struct dirent **a, const struct dirent **b)
-{
-  return -strcoll ((*a)->d_name, (*b)->d_name);
-}
+int alphasort2(const struct dirent** a, const struct dirent** b) { return -strcoll((*a)->d_name, (*b)->d_name); }
 
 static void tweaks_iterate(void) {
-    struct dirent **files;
+    struct dirent** files;
     int n;
 
     if (rootless) {
@@ -261,7 +250,6 @@ static void tweaks_iterate(void) {
     }
 
     while (n--) {
-        
         if (*(files[n]->d_name)) {
             char* full_path;
             if (rootless) {
@@ -270,25 +258,26 @@ static void tweaks_iterate(void) {
                 full_path = append_str(TWEAKS_DIRECTORY_ROOTFUL, files[n]->d_name);
             }
             char* plist = strndup(full_path, strlen(full_path) - 6);
-            
+
             bool isTweakManager = false;
             bool ret = tweak_needinject(plist, &isTweakManager);
-                        
+
             if (ret) {
                 if (isTweakManager) {
                     int i;
-                    for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++); // find the end of the array
-                    
-                    if (i == MAX_TWEAKMANAGERS) return; // array is full
-                    tweakManagers[i] = malloc(strlen(full_path) + 1); // allocate memory for the new string
-                    strcpy(tweakManagers[i], full_path); // copy the string into the new memory location
+                    for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++)
+                        ;  // find the end of the array
+
+                    if (i == MAX_TWEAKMANAGERS) return;                // array is full
+                    tweakManagers[i] = malloc(strlen(full_path) + 1);  // allocate memory for the new string
+                    strcpy(tweakManagers[i], full_path);               // copy the string into the new memory location
                 } else {
                     int i;
                     for (i = 0; i < MAX_TWEAKMANAGERS && tweakManagers[i] != NULL; i++) {
                         dlopen(tweakManagers[i], RTLD_LAZY);
                     }
-                    
-                    #if !TARGET_OS_OSX
+
+#if !TARGET_OS_OSX
                     if (rootless) {
                         if (!access(OLDABI_PATH_ROOTLESS, F_OK)) {
                             dlopen(OLDABI_PATH_ROOTLESS, RTLD_LAZY);
@@ -298,42 +287,40 @@ static void tweaks_iterate(void) {
                             dlopen(OLDABI_PATH_ROOTFUL, RTLD_LAZY);
                         }
                     }
-                    #endif
+#endif
 
                     dlopen(full_path, RTLD_LAZY);
 
                     dlerror();
                 }
             }
-            
+
             free(full_path);
             free(plist);
             free(files[n]);
         }
     }
-    
+
     free(files);
 }
 
-__attribute__((constructor))
-static void injection_init(void) {
-    
+__attribute__((constructor)) static void injection_init(void) {
     char* msSafe = getenv("_MSSafeMode");
     if (msSafe && atoi(msSafe) == 1) {
         return;
     }
-    
+
     char* safe = getenv("_SafeMode");
     if (safe && atoi(safe) == 1) {
         return;
     }
-    
+
 #if !TARGET_OS_OSX
-    
+
     if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
         rootless = true;
     }
-    
+
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
             if (rootless) {
@@ -343,16 +330,16 @@ static void injection_init(void) {
             }
         }
     }
-    
+
     if (!access("/var/mobile/.eksafemode", F_OK)) {
         return;
     }
 #endif
-    
+
     const char* extension = getenv("SANDBOX_EXTENSION");
     if (extension) {
         sandbox_extension_consume(extension);
     }
-    
+
     tweaks_iterate();
 }
