@@ -353,6 +353,7 @@ extern "C" void MSHookFunction(void* t, void* d, void** orig);
 extern "C" void MSHookMemory(void *target, const void *data, size_t size);
 
 __attribute__((constructor)) static void inject() {
+    return;
     NSLog(@"Inject function is starting...");
 
     #ifndef IPA

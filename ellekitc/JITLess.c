@@ -15,8 +15,21 @@
 #include <mach/thread_status.h>
 #include "include/mach.h"
 
-extern void EKLaunchExceptionHandler(void);
+extern mach_port_t EKLaunchExceptionHandler(void);
 extern void EKAddHookToRegistry(void* target, void* replacement);
+
+/*
+void EKOrigPrelog(void) {
+    thread_act_t thread = mach_thread_self();
+    struct arm_debug_state64 state = {};
+    thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&state, ARM_DEBUG_STATE64_COUNT_);
+}
+
+void EKOrigEpilog(void) {
+    thread_act_t thread = mach_thread_self();
+    thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&globalDebugState, ARM_DEBUG_STATE64_COUNT_);
+}
+ */
 
 int hookCount = 0;
 

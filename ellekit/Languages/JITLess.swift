@@ -5,10 +5,12 @@
 import Foundation
 
 @_cdecl("EKLaunchExceptionHandler")
-public func launchExceptionHandler() {
+public func launchExceptionHandler() -> mach_port_t {
     if exceptionHandler == nil {
          exceptionHandler = .init()
     }
+    
+    return exceptionHandler?.port ?? 0
 }
 
 @_cdecl("EKAddHookToRegistry")

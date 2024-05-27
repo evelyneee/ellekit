@@ -4,7 +4,7 @@
 
 import Foundation
 
-func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
+public func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
     
     var clobbers: [UInt32] = []
     
@@ -18,6 +18,33 @@ func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
             // we found a movz
             // let's check for the register
             let reg = isn & 0x1F 
+            print("register found:", reg)
+            
+            guard reg <= 20 || reg >= 10 else {
+                return
+            }
+            
+            clobbers.append(reg)
+        }
+        if opcode == ((ldr.base | 0b11 << 30) >> 25) || opcode == ((ldr.base | 0b10 << 30) >> 25) {
+            print("Found ldr")
+            // we found a movz
+            // let's check for the register
+            let reg = isn & 0x1F
+            print("register found:", reg)
+            
+            guard reg <= 20 || reg >= 10 else {
+                return
+            }
+            
+            clobbers.append(reg)
+        }
+        
+        if opcode == (adrp.base >> 25) {
+            print("Found adrp")
+            // we found a movz
+            // let's check for the register
+            let reg = isn & 0x1F
             print("register found:", reg)
             
             guard reg <= 20 || reg >= 10 else {

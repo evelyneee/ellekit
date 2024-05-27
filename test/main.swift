@@ -11,7 +11,22 @@ import ellekit
 import AppKit
 import Darwin
 
-print(_assembleJump(0x0000000104bc78bc, pc: 0x00000002320dd6cc, link: false, page: true, jmpReg: .x16).map { String(format: "%02X", $0)}.joined()) // 5000005800021FD6BC78BC0401000000 currently
+// tests Clobber.swift for ldr, movz & adrp
+
+let buf1 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
+buf1.pointee = 0xF9400010   // 100040F9 // ldr x16
+
+let buf2 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
+buf2.pointee = 0xD2800050 // 500080D2 // movz x16
+
+let buf3 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
+buf3.pointee = 0x90000030 // adrp x16
+
+assert(findSafeRegister(buf1) == 17)
+assert(findSafeRegister(buf2) == 17)
+assert(findSafeRegister(buf3) == 17)
+
+//print(_assembleJump(0x0000000104bc78bc, pc: 0x00000002320dd6cc, link: false, page: true, jmpReg: .x16).map { String(format: "%02X", $0)}.joined()) // 5000005800021FD6BC78BC0401000000 currently
 
 
 #if false
