@@ -4,7 +4,7 @@
 
 import Foundation
 
-public func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
+func findSafeRegister(_ fn: UnsafeMutableRawPointer, isns: Int? = nil) -> Int {
     
     var clobbers: [UInt32] = []
     
