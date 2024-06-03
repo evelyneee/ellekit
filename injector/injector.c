@@ -70,7 +70,7 @@ static bool tweak_needinject(const char* orig_path, bool* isTweakManager) {
 
     char* path = append_str(orig_path, ".plist");
 
-    if (!access(path, F_OK)) {
+    if (access(path, F_OK) != 0) {
         free(path);
         return false;
     }
@@ -279,11 +279,11 @@ static void tweaks_iterate(void) {
 
 #if !TARGET_OS_OSX
                     if (rootless) {
-                        if (!access(OLDABI_PATH_ROOTLESS, F_OK)) {
+                        if (access(OLDABI_PATH_ROOTLESS, F_OK) == 0) {
                             dlopen(OLDABI_PATH_ROOTLESS, RTLD_LAZY);
                         }
                     } else {
-                        if (!access(OLDABI_PATH_ROOTFUL, F_OK)) {
+                        if (access(OLDABI_PATH_ROOTFUL, F_OK) == 0) {
                             dlopen(OLDABI_PATH_ROOTFUL, RTLD_LAZY);
                         }
                     }
@@ -317,7 +317,7 @@ __attribute__((constructor)) static void injection_init(void) {
 
 #if !TARGET_OS_OSX
 
-    if (!access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK)) {
+    if (access("/var/jb/usr/lib/ellekit/libinjector.dylib", F_OK) == 0) {
         rootless = true;
     }
 
@@ -331,7 +331,7 @@ __attribute__((constructor)) static void injection_init(void) {
         }
     }
 
-    if (!access("/var/mobile/.eksafemode", F_OK)) {
+    if (access("/var/mobile/.eksafemode", F_OK) == 0) {
         return;
     }
 #endif
