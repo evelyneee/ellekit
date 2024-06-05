@@ -98,6 +98,7 @@
 		9EA498AA295662F10099A3ED /* Objective-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019B2910A04E007E433F /* Objective-C.swift */; };
 		9EA498AC295663240099A3ED /* PAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E48019029108EF0007E433F /* PAC.swift */; };
 		9EA498AD2956633A0099A3ED /* ellekitc.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E19B240291814CB00F8C4C7 /* ellekitc.c */; };
+		9EA797F92C0521D1005539D6 /* SVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA797F82C0521D1005539D6 /* SVC.swift */; };
 		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
@@ -230,6 +231,7 @@
 		9EA4989A29565D0B0099A3ED /* tweak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tweak.swift; sourceTree = "<group>"; };
 		9EA4989C29565D830099A3ED /* load.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = load.s; sourceTree = "<group>"; };
 		9EA498A229565DC80099A3ED /* libsafemode-ui.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libsafemode-ui.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EA797F82C0521D1005539D6 /* SVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVC.swift; sourceTree = "<group>"; };
 		9EC2B2E0296B96350079379D /* Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Batch.swift; sourceTree = "<group>"; };
 		9EC2B2E5296C89920079379D /* Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Replacements.swift; sourceTree = "<group>"; };
 		9ECAA39129FC61720024CB07 /* JITLess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JITLess.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 		9E78FBE52916BD3700B3B50B /* Languages */ = {
 			isa = PBXGroup;
 			children = (
+				9EA797F72C0521C9005539D6 /* ARM */,
 				9E48019B2910A04E007E433F /* Objective-C.swift */,
 				9ECAA39129FC61720024CB07 /* JITLess.swift */,
 				9E4801A02911EB29007E433F /* C */,
@@ -555,6 +558,14 @@
 				9E6FBB642955478A007B28FC /* handler.swift */,
 			);
 			path = "safe mode";
+			sourceTree = "<group>";
+		};
+		9EA797F72C0521C9005539D6 /* ARM */ = {
+			isa = PBXGroup;
+			children = (
+				9EA797F82C0521D1005539D6 /* SVC.swift */,
+			);
+			path = ARM;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -877,6 +888,7 @@
 				9E96A604295BC0E3000EDC43 /* Image.swift in Sources */,
 				9E92AAB5290D4E7A0018604C /* Branches.swift in Sources */,
 				9E489EC02929793D00F81BBD /* Slide.swift in Sources */,
+				9EA797F92C0521D1005539D6 /* SVC.swift in Sources */,
 				9E19B24629183A5600F8C4C7 /* ellekitc.c in Sources */,
 				9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */,
 				9E698577290E015E00408E14 /* Libhooker.swift in Sources */,

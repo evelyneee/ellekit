@@ -8,9 +8,66 @@
 
 import Foundation
 import ellekit
+
 import AppKit
 import Darwin
 
+// MARK: TESTING _dyld_get_image_name() hooking
+#if false
+let _dyld_image = dlsym(dlopen(nil, RTLD_NOW), "_dyld_get_image_name")!
+
+@_cdecl("rep")
+public func rep(_ idx: UInt32) -> UnsafePointer<CChar>? {
+    return unsafeBitCast(test, to: (@convention(c) (UInt32) -> UnsafePointer<CChar>?).self)(idx)
+}
+
+let repcl: @convention(c) (UInt32) -> UnsafePointer<CChar>? = rep
+
+let repptr = unsafeBitCast(repcl, to: UnsafeMutableRawPointer.self)
+
+let queue = DispatchQueue.global()
+queue.async {
+    while true {
+        let two = _dyld_get_image_name(2)!
+        assert(two != nil)
+    }
+}
+
+let test: UnsafeMutableRawPointer = hook(_dyld_image, repptr)!
+
+print(String(cString: _dyld_get_image_name(0)))
+
+sleep(1)
+
+queue.suspend()
+#endif
+
+// MARK: TESTING PRECISIONHOOK()
+#if false
+let addr = UnsafeMutableRawPointer(bitPattern: 0x18dcc0848)
+
+@_cdecl("rep2")
+public func rep2(_ x1: UnsafePointer<CChar>) -> Int32 {
+    print("called rep 2", String(cString: x1))
+    return 41
+}
+
+let repcl2: @convention(c) (UnsafePointer<CChar>) -> Int32 = rep2
+
+let repptr2 = unsafeBitCast(repcl2, to: UnsafeMutableRawPointer.self)
+
+let hook = precisionHook(addr!, repptr2)
+
+print(hook)
+
+unlink("")
+#endif
+
+#if false
+
+#endif
+
+#if true
 // tests Clobber.swift for ldr, movz & adrp
 
 let buf1 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
@@ -20,12 +77,12 @@ let buf2 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
 buf2.pointee = 0xD2800050 // 500080D2 // movz x16
 
 let buf3 = UnsafeMutablePointer<UInt32>.allocate(capacity: 40)
-buf3.pointee = 0x90000030 // adrp x16
+buf3.pointee = 0xAA1F0010 // adrp x16
 
 assert(findSafeRegister(buf1) == 17)
 assert(findSafeRegister(buf2) == 17)
 assert(findSafeRegister(buf3) == 17)
-
+#endif
 //print(_assembleJump(0x0000000104bc78bc, pc: 0x00000002320dd6cc, link: false, page: true, jmpReg: .x16).map { String(format: "%02X", $0)}.joined()) // 5000005800021FD6BC78BC0401000000 currently
 
 
@@ -447,6 +504,9 @@ for path in try FileManager.default.contentsOfDirectory(atPath: dirPath) {
 
 print(try? ellekit.getLinkedBundleIDs(file: "/usr/local/lib/libsubstrate.dylib"))
 
+#endif
+
+// MARK: THREAD SAFETY TESTS
 #if false
 let atoiptr = dlsym(dlopen(nil, RTLD_NOW), "atoll")!
 
@@ -480,6 +540,7 @@ print(
 
 #endif
 
+#if false
 print("--------- Begin NSPop test ---------")
 
 let nspopptr = dlsym(dlopen(nil, RTLD_NOW), "CFNotificationCenterGetDistributedCenter")!

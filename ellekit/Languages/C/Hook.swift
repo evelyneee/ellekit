@@ -131,6 +131,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
         jmpReg: Register.x(safeReg)
     )
     
+    
     let ret = code.withUnsafeBufferPointer { buf in
         let result = rawHook(address: target, code: buf.baseAddress, size: size)
         #if DEBUG
