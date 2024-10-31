@@ -1,6 +1,6 @@
 
 // This file is licensed under the BSD-3 Clause License
-// Copyright 2022 © Charlotte Belanger
+// Copyright 2022 © ElleKit Team
 
 // my playground!
 // this file goes in layers depending on what i'm working on.

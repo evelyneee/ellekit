@@ -1,6 +1,6 @@
 
 // This file is licensed under the BSD-3 Clause License
-// Copyright 2022 © Charlotte Belanger
+// Copyright 2022 © ElleKit Team
 
 public func disassembleBranchImm(_ opcode: UInt64) -> Int {
     var imm = (opcode & 0x3FFFFFF) << 2

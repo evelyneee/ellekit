@@ -1,6 +1,6 @@
 
 // This file is licensed under the BSD-3 Clause License
-// Copyright 2022 © Charlotte Belanger
+// Copyright 2022 © ElleKit Team
 
 extern kern_return_t
 mach_vm_allocate(mach_port_name_t target, mach_vm_address_t *address, mach_vm_size_t size, int flags);

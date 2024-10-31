@@ -1,6 +1,6 @@
 
 // This file is licensed under the BSD-3 Clause License
-// Copyright 2022 © Charlotte Belanger
+// Copyright 2022 © ElleKit Team
 
 import Foundation
 import Darwin
