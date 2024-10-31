@@ -30,6 +30,8 @@ jobs:
             flags: ""
           - name: release
             flags: "RELEASE=1"
+          - name: release-tv
+            flags: "RELEASE=1 TV=1"
           - name: mac
             flags: "RELEASE=1 MAC=1"
 
@@ -59,7 +61,7 @@ jobs:
           name: ${{ matrix.name }} package
           path: ${{ github.workspace }}/packages/*
       - name: Upload packages to release
-        if: github.event_name == 'release' && matrix.name == 'release'
+        if: github.event_name == 'release' && (matrix.name == 'release' || matrix.name == 'release-tv')
         uses: svenstaro/upload-release-action@2.7.0
         with:
           file: ${{ github.workspace }}/packages/*.deb

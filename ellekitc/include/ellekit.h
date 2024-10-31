@@ -10,7 +10,11 @@
 
 #include <stdlib.h>
 
+#include <spawn.h>
+
 #import "sandbox.h"
+
+#import "mach.h"
 
 #if __has_include(<xpc/xpc.h>)
 #import <xpc/xpc.h>
@@ -90,6 +94,21 @@ mach_vm_write(vm_map_t target_task, mach_vm_address_t address, vm_offset_t data,
 
 extern kern_return_t
 mach_vm_remap(vm_map_t target_task, mach_vm_address_t *target_address, mach_vm_size_t size, mach_vm_offset_t mask, int flags, vm_map_t src_task, mach_vm_address_t src_address, boolean_t copy, vm_prot_t *cur_protection, vm_prot_t *max_protection, vm_inherit_t inheritance);
+
+extern int     custom_posix_spawn(pid_t * __restrict, const char * __restrict,
+    const posix_spawn_file_actions_t *,
+    const posix_spawnattr_t * __restrict,
+    char *const __argv[__restrict],
+                                  char *const __envp[__restrict])
+asm("_posix_spawn");
+
+
+int     custom_posix_spawnp(pid_t * __restrict, const char * __restrict,
+    const posix_spawn_file_actions_t *,
+    const posix_spawnattr_t * __restrict,
+    char *const __argv[__restrict],
+                     char *const __envp[__restrict])
+asm("_posix_spawnp");
 
 extern void manual_memcpy(void *restrict dest, const void *src, size_t len);
 extern kern_return_t (*EKHookMemoryRaw)(void *target, const void *data, size_t size);

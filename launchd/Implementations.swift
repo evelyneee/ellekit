@@ -298,11 +298,11 @@ func spawn_replacement(
         if Rebinds.shared.usedFishhook {
             tprint("calling fishhook orig")
             if p {
-                let ret = posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = custom_posix_spawnp(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("origp returned \(ret)")
                 return ret
             } else {
-                let ret = posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
+                let ret = custom_posix_spawn(pid, path, file_actions, spawnattr, argv, buf.baseAddress)
                 tprint("orig returned \(ret)")
                 return ret
             }

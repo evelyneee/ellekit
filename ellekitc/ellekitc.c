@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include <libkern/OSCacheControl.h>
 
+#include "include/mach.h"
+
 // MARK: - PAC
 
 void* sign_pointer(void* ptr) {

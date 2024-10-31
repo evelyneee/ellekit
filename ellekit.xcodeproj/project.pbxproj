@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		017796D52BAF2E1D00BCC2C3 /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 017796D42BAF2E1D00BCC2C3 /* IOKit.tbd */; };
+		017796D62BAF2E2E00BCC2C3 /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 017796D42BAF2E1D00BCC2C3 /* IOKit.tbd */; };
 		9E12F79229FD528F0021CB75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E12F79129FD528F0021CB75 /* Foundation.framework */; platformFilters = (ios, maccatalyst, macos, tvos, watchos, ); };
 		9E18B4A92A142E8D002E471A /* Trampoline+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4A82A142E8D002E471A /* Trampoline+Location.swift */; };
 		9E18B4AC2A142EAA002E471A /* Trampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18B4AB2A142EAA002E471A /* Trampoline.swift */; };
@@ -102,12 +104,10 @@
 		9EC2B2DF296B8CAE0079379D /* Load Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EBF99296136A300D0D186 /* Load Commands.swift */; };
 		9EC2B2E1296B96350079379D /* Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E0296B96350079379D /* Batch.swift */; };
 		9EC2B2E3296C774B0079379D /* button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5277E29673BC9009319AA /* button.swift */; };
-		9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; };
 		9EC2B2E6296C89920079379D /* Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC2B2E5296C89920079379D /* Replacements.swift */; };
 		9ECAA39229FC61720024CB07 /* JITLess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAA39129FC61720024CB07 /* JITLess.swift */; };
 		9ECAA39429FC625F0024CB07 /* JITLess.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAA39329FC625F0024CB07 /* JITLess.c */; };
 		9ED080CA29417AA900A81AF1 /* launchd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED080C929417AA900A81AF1 /* launchd.swift */; };
-		9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED5278129673C0F009319AA /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,6 +162,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		017796D42BAF2E1D00BCC2C3 /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = ellekitc/IOKit.tbd; sourceTree = "<group>"; };
 		9E080FA2294AA5A000EDC301 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../../../../usr/local/lib; sourceTree = "<group>"; };
 		9E080FA4294AA5AC00EDC301 /* libes-injector.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libes-injector.dylib"; path = "../../../../usr/local/lib/libes-injector.dylib"; sourceTree = "<group>"; };
 		9E12F78F29FD52860021CB75 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -277,7 +278,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EC2B2E4296C77610079379D /* IOKit.framework in Frameworks */,
+				017796D62BAF2E2E00BCC2C3 /* IOKit.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +286,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9ED5278229673C0F009319AA /* IOKit.framework in Frameworks */,
+				017796D52BAF2E1D00BCC2C3 /* IOKit.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +338,7 @@
 		9E2D4F552938391C00EF6619 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				017796D42BAF2E1D00BCC2C3 /* IOKit.tbd */,
 				9E12F79129FD528F0021CB75 /* Foundation.framework */,
 				9E12F78F29FD52860021CB75 /* CoreFoundation.framework */,
 				9ED5278129673C0F009319AA /* IOKit.framework */,
@@ -1135,6 +1137,10 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ellekitc",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_SWIFT_FLAGS = "";
@@ -1172,6 +1178,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ellekitc",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1326,6 +1336,11 @@
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = (
+					"-U__TVOS_PROHIBITED",
+					"-U__WATCHOS_PROHIBITED",
+				);
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1360,6 +1375,11 @@
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = (
+					"-U__TVOS_PROHIBITED",
+					"-U__WATCHOS_PROHIBITED",
+				);
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1413,6 +1433,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ellekitc",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1434,6 +1458,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ellekitc",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

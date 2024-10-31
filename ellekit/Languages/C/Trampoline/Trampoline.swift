@@ -23,7 +23,7 @@ public struct Trampoline {
         var info = Dl_info()
         dladdr(base, &info)
         
-        if #available(iOS 9999.0, macOS 11.0, *) {
+        if #available(iOS 9999.0, tvOS 9999.0, watchOS 9999.0, macOS 11.0, *) {
             if info.dli_fname != nil && _dyld_shared_cache_contains_path(info.dli_fname) {
                 print("in dyld cache")
             } else {
