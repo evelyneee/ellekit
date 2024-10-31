@@ -16,14 +16,13 @@
 
 - macOS Ventura (arm64)
 - macOS Ventura (arm64e)
-- iOS 16.1 (arm64)
-- iOS 16.1 (arm64e)
+- iOS 15-18 (arm64)
+- iOS 15-17 (arm64e)
 
 ### Used by
-- Dopamine (jailbreak for A12-A15 + M1 on iOS 15.0-15.4.1)
+- Dopamine (jailbreak for A12-A15 + M1 on iOS 15.0-16.6.1)
 - palera1n (jailbreak for A8-A11 on iOS 15.0+)
 - meowbrek2 (jailbreak for A8-A11 on iOS 15.0-15.8.1)
-- Def1nit3lyN0tAJa1lbr3akTool (jailbreak for A9-A11 on iOS 16.0-16.6.1)
 
 ### Usage
 
