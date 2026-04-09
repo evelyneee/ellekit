@@ -210,9 +210,11 @@ public func tweak_entry() {
                 
     if FileManager.default.fileExists(atPath: "/var/mobile/.eksafemode") {
         performHooks()
-    } else if checkVolumeUp() {
-        tprint("Volume up!!!")
-        enterSafeMode("Volume up detected")
+    } else if !FileManager.default.fileExists(atPath: "/var/mobile/.ekdisablevolume")
+        && checkVolume(up: !FileManager.default.fileExists(atPath: "/var/mobile/.ekvolumedown"))
+    {
+        tprint("Volume button detected!!!")
+        enterSafeMode("Volume button detected")
         exit(0)
     }
         

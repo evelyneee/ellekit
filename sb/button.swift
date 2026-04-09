@@ -127,7 +127,7 @@ func checkVolumeUp() -> Bool {
 
 */
 
-func checkVolumeUp() -> Bool {
+func checkVolume(up: Bool) -> Bool {
     
     if sharedClient == nil {
         tprint("Opened new event client")
@@ -157,7 +157,7 @@ func checkVolumeUp() -> Bool {
             let KeyboardEvent = IOHIDEventCreateKeyboardEvent(
                 kCFAllocatorDefault,
                 mach_absolute_time(),
-                0x0c, 0xe9, // volume up
+                0x0c, up ? 0xe9 : 0xea, // volume up or down
                 false, 0x0
             )
             if let KeyboardEvent
