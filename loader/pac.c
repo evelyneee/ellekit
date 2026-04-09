@@ -3,6 +3,7 @@
 // Copyright 2022 © ElleKit Team
 
 #include "pac.h"
+#include <stdlib.h>
 #include <ptrauth.h>
 #include <mach/arm/thread_status.h>
 
