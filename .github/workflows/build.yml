@@ -37,9 +37,9 @@ jobs:
       - name: Get tags
         run: git fetch --prune --unshallow --tags
 
-      - name: Select Xcode version (16.3)
+      - name: Select Xcode version (26.2)
         run: |
-          sudo xcode-select --switch /Applications/Xcode_16.3.app
+          sudo xcode-select --switch /Applications/Xcode_26.2.app
 
       - name: Bootstrap Procursus
         uses: dhinakg/procursus-action@main
