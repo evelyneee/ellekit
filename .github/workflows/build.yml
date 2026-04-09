@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Get tags
         run: git fetch --prune --unshallow --tags
 
@@ -52,13 +52,13 @@ jobs:
         run: make ${{ matrix.flags }}
 
       - name: Upload packages to artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.name }} package
           path: ${{ github.workspace }}/packages/*
       - name: Upload packages to release
         if: github.event_name == 'release' && matrix.name == 'release'
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@2.11.5
         with:
           file: ${{ github.workspace }}/packages/*.deb
           file_glob: true
