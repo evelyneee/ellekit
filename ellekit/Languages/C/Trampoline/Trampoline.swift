@@ -3,6 +3,7 @@
 // Copyright 2022 © ElleKit Team
 
 import Foundation
+import MachO
 
 public struct Trampoline {
     var base: UnsafeMutableRawPointer

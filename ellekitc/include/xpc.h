@@ -4,7 +4,7 @@
 
 @import Foundation;
 
-#if !TARGET_OS_OSX
+#if !__has_include(<xpc/xpc.h>)
 typedef void * xpc_object_t;
 typedef void * xpc_connection_t;
 

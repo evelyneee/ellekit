@@ -1,6 +1,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import ellekitc
+#endif
+
 /**
  `void* EKPrecisionHook(void* target, void* replacement);`
  Beta, WIP. Please report bugs but test extensively before using in prod.
