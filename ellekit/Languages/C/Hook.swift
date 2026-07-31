@@ -66,6 +66,12 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
     var branchAfter: Bool = false
     var patchSize: Int = -1
     
+    // unavailable after 17.4 according to opa334
+    var enableEXCHooks = true
+    if #available(iOS 17.4, *) {
+        enableEXCHooks = false
+    }
+
     if targetSize >= 3 && abs(branchOffset / 1024 / 1024 / 1024) < 4 && branchOffset > 0 {
          print("[*] adrp branch")
 
@@ -102,7 +108,7 @@ public func hook(_ stockTarget: UnsafeMutableRawPointer, _ stockReplacement: Uns
          print("[+] ellekit: using trampoline method")
          
          return tramp.orig
-     } else if abs(branchOffset / 1024 / 1024) > 128 { // tiny function beyond 4gb hook... using exception handler
+     } else if abs(branchOffset / 1024 / 1024) > 128 && enableEXCHooks { // tiny function beyond 4gb hook... using exception handler
          if exceptionHandler == nil {
               exceptionHandler = .init()
          }

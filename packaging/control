@@ -6,7 +6,7 @@ Maintainer: Dhinak G <dhinak@dhinak.net>
 Conflicts: com.ex.substitute, org.coolstar.libhooker, science.xnu.substitute, mobilesubstrate, com.saurik.substrate.safemode
 Replaces: com.ex.libsubstitute, org.coolstar.libhooker, mobilesubstrate
 Provides: mobilesubstrate (= 99), org.coolstar.libhooker (= 1.6.9)
-Author: Evelyn
+Author: ElleKit Team
 Section: Tweak Injection
 Priority: optional
 Icon: https://ellekit.space/logos/logo.png

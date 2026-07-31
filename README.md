@@ -14,9 +14,8 @@
 
 ### Tested configurations
 
-- macOS Ventura (arm64)
-- macOS Ventura (arm64e)
-- iOS 15-18 (arm64)
+- macOS Ventura (arm64 and arm64e) (NOTE: ellekit is now unsupported on latest macOS due to codesigning changes on Apple's side)
+- iOS 15-27 (arm64)
 - iOS 15-17 (arm64e)
 
 ### Used by
