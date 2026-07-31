@@ -21,18 +21,17 @@ public func sharedCachePath() -> String {
         #endif
     }
     #else
-    if #available(iOS 16.0, *) {
-        if FileManager.default.fileExists(atPath: "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e") {
-            return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e"
-        } else {
-            return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64"
-        }
+    // We do this as a side effect of forcing iOS libellekit to run on tvOS
+    // The systemhook will attempt to correct iOS availability into tvOS, but that
+    // would be wrong here.
+    if FileManager.default.fileExists(atPath: "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e") {
+        return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e"
+    } else if FileManager.default.fileExists(atPath: "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64") {
+        return "/System/Cryptexes/OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64"
+    } else if FileManager.default.fileExists(atPath: "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e") {
+        return "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e"
     } else {
-        if FileManager.default.fileExists(atPath: "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e") {
-            return "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64e"
-        } else {
-            return "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64"
-        }
+        return "/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64"
     }
     #endif
 }

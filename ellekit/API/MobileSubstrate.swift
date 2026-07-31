@@ -58,7 +58,7 @@ public func MSFindSymbol(_ image: UnsafeRawPointer?, _ name: UnsafeRawPointer?) 
                 if swiftName.first == "_", let symbol = dlsym(UnsafeMutableRawPointer(mutating: UnsafeRawPointer(hdr)), String(swiftName.dropFirst())) {
                     return .init(symbol)
                 }
-                if #available(iOS 14.0, macOS 11.0, *) {
+                if #available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *) {
                     if _dyld_shared_cache_contains_path(_dyld_get_image_name(img)), let symbol = try? ellekit.findPrivateSymbol(image: hdr, symbol: swiftName) {
                         return .init(symbol)
                     }
