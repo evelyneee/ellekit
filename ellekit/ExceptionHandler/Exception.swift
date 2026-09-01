@@ -64,7 +64,8 @@ public final class ExceptionHandler {
             print("ellekit: exception handler deallocated.")
             return
         }
-                
+        while true {
+
         let msg_header = UnsafeMutablePointer<mach_msg_header_t>.allocate(capacity: Int(vm_page_size))
 
         defer { msg_header.deallocate() }
@@ -115,8 +116,6 @@ public final class ExceptionHandler {
                 MACH_MSG_TIMEOUT_NONE,
                 mach_port_name_t(MACH_PORT_NULL)
             )
-            
-            Self.portLoop(self)
         }
 
         #if arch(x86_64)
@@ -133,18 +132,18 @@ public final class ExceptionHandler {
 
         guard krt2 == KERN_SUCCESS else {
             print("[-] couldn't get state for thread")
-            return
+            continue
         }
 
         #if _ptrauth(_arm64e)
         guard let formerPtr = state.__opaque_pc?.makeReadable() else {
             print("[-] couldn't get ptr from pc reg")
-            return
+            continue
         }
         #else
         guard let formerPtr = UnsafeMutableRawPointer(bitPattern: UInt(state.__pc)) else {
             print("[-] couldn't get ptr from pc reg")
-            return
+            continue
         }
         #endif
         
@@ -164,7 +163,7 @@ public final class ExceptionHandler {
 
             guard krt_set == KERN_SUCCESS else {
                 print("[-] couldn't set state for thread")
-                return
+                continue
             }
                                     
             thread_resume(thread_port)
@@ -172,5 +171,7 @@ public final class ExceptionHandler {
             exit(1) // idk what i should do
         }
         #endif
+
+        }
     }
 }
