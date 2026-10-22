@@ -125,35 +125,6 @@ func performHooks() {
     )
 }
 
-func trap(signals: [Int32], action: (@convention(c) (Int32) -> Void)?) {
-    var signalAction = sigaction()
-    signalAction.__sigaction_u.__sa_handler = action
-
-    signals.forEach { sig in
-        signal(sig, action)
-    }
-}
-
-func handleSBCrash(currentSig: Int32) {
-    FileManager.default.createFile(atPath: jbroot("/var/mobile/.eksafemode"), contents: Data())
-    allSignals.forEach {
-        signal($0, SIG_DFL)
-    }
-    raise(currentSig)
-}
-
-let allSignals = [
-    SIGQUIT,
-    SIGILL,
-    SIGTRAP,
-    SIGABRT,
-    SIGEMT,
-    SIGFPE,
-    SIGBUS,
-    SIGSEGV,
-    SIGSYS
-]
-
 @_cdecl("tweak_entry")
 public func tweak_entry() {
     
@@ -168,5 +139,4 @@ public func tweak_entry() {
         exit(0)
     }
         
-    trap(signals: allSignals, action: handleSBCrash)
 }
