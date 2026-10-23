@@ -139,4 +139,7 @@ public func tweak_entry() {
         exit(0)
     }
         
+    // Preserve the previous registration point after MobileSafety has loaded.
+    let safeModePath: String = jbroot("/var/mobile/.eksafemode")
+    safeModePath.withCString { EKInstallSBCrashHandler($0) }
 }

@@ -13,11 +13,6 @@
 #include <mach-o/dyld.h>
 #include <roothide/roothide.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <signal.h>
-#include <string.h>
-#include <unistd.h>
 
 #define OS_REASON_DYLD          6
 #define DYLD_EXIT_REASON_OTHER                  9
@@ -445,45 +440,6 @@ static void tweaks_iterate(void) {
     free(files);
 }
 
-
-#if !TARGET_OS_OSX
-
-static char safeModeFilePath[PATH_MAX];
-
-static const int crashSignals[] = {
-    SIGQUIT,
-    SIGILL,
-    SIGTRAP,
-    SIGABRT,
-    SIGEMT,
-    SIGFPE,
-    SIGBUS,
-    SIGSEGV,
-    SIGSYS
-};
-
-static void handleSBCrash(int sig)
-{
-    for (unsigned i = 0; i < sizeof(crashSignals) / sizeof(crashSignals[0]); i++)
-        signal(crashSignals[i], SIG_DFL);
-
-    int fd = open(safeModeFilePath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd >= 0)
-        close(fd);
-
-    raise(sig);
-}
-
-static void installSBCrashHandler(void)
-{
-    const char *path = jbroot("/var/mobile/.eksafemode");
-    strlcpy(safeModeFilePath, path, sizeof(safeModeFilePath));
-    for (unsigned i = 0; i < sizeof(crashSignals) / sizeof(crashSignals[0]); i++)
-        signal(crashSignals[i], handleSBCrash);
-}
-
-#endif
-
 __attribute__((constructor))
 static void injection_init(void) {
     
@@ -506,7 +462,6 @@ static void injection_init(void) {
     
     if (CFBundleGetMainBundle() && CFBundleGetIdentifier(CFBundleGetMainBundle())) {
         if (CFEqual(CFBundleGetIdentifier(CFBundleGetMainBundle()), CFSTR("com.apple.springboard"))) {
-            installSBCrashHandler();
             if (rootless) {
                 dlopen(MOBILESAFETY_PATH_ROOTLESS, RTLD_NOW);
             } else {

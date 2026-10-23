@@ -142,3 +142,45 @@ kern_return_t EKHookMemoryRaw_impl(void *target, const void *data, size_t size)
 }
 
 __attribute__((visibility ("default"))) kern_return_t (*EKHookMemoryRaw)(void *, const void *, size_t) = EKHookMemoryRaw_impl;
+
+/// Safe Mode ///////////////////////////////////////////
+
+#include <fcntl.h>
+#include <limits.h>
+#include <signal.h>
+#include <unistd.h>
+#include <assert.h>
+
+static char ekSafeModePath[PATH_MAX];
+
+static const int crashSignals[] = {
+    SIGQUIT,
+    SIGILL,
+    SIGTRAP,
+    SIGABRT,
+    SIGEMT,
+    SIGFPE,
+    SIGBUS,
+    SIGSEGV,
+    SIGSYS
+};
+
+static void handleSBCrash(int sig)
+{
+    for (unsigned i = 0; i < sizeof(crashSignals) / sizeof(crashSignals[0]); i++)
+        signal(crashSignals[i], SIG_DFL);
+
+    int fd = open(ekSafeModePath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd >= 0)
+        close(fd);
+
+    raise(sig);
+}
+
+void EKInstallSBCrashHandler(const char *safeModePath)
+{
+    strlcpy(ekSafeModePath, safeModePath, sizeof(ekSafeModePath));
+
+    for (unsigned i = 0; i < sizeof(crashSignals) / sizeof(crashSignals[0]); i++)
+        signal(crashSignals[i], handleSBCrash);
+}

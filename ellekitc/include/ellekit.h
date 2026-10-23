@@ -20,6 +20,8 @@
 
 #include <roothide/roothide.h>
 
+void EKInstallSBCrashHandler(const char *safeModePath);
+
 struct sCSRange {
    unsigned long long location;
    unsigned long long length;
